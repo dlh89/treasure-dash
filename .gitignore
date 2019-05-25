@@ -1,1 +1,3 @@
 virtualenv
+node_modules
+.sass-cache

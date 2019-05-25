@@ -2,9 +2,10 @@ import random
 def game(row, col):
     columns = 5
     rows = 5
-    treasureRow = random.randint(1,columns)
-    treasureColumn = random.randint(1,rows)
+    treasureRow = str(random.randint(1,columns))
+    treasureColumn = str(random.randint(1,rows))
     if col == treasureColumn and row == treasureRow:
-        return 'true'
+        return 'success'
     else:
-        return 'false'
+        # TODO: return cold, warm or hot
+        return 'cold'

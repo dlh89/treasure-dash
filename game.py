@@ -5,6 +5,6 @@ def game(row, col):
     treasureRow = random.randint(1,columns)
     treasureColumn = random.randint(1,rows)
     if col == treasureColumn and row == treasureRow:
-        return True
+        return 'true'
     else:
-        return False
+        return 'false'

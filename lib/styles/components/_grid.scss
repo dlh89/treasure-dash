@@ -13,6 +13,10 @@
   border: 1px solid #f9f947;
 }
 
+.grid__cell--dug {
+  background: #6d5207;
+}
+
 .grid__cell:hover {
   transition: ease-out .5s;
   background: darken(#ffbc00, 10%);

@@ -31,5 +31,6 @@ function cellClick(e) {
     var infoTextModifierClass = 'info__text info__text--' + msg;
     jQuery(infoText).removeClass();
     jQuery(infoText).addClass(infoTextModifierClass);
+    jQuery(e.target).addClass('grid__cell--dug');
   });
 }

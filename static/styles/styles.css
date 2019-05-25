@@ -30,6 +30,9 @@ body {
   background: #ffbc00;
   border: 1px solid #f9f947; }
 
+.grid__cell--dug {
+  background: #6d5207; }
+
 .grid__cell:hover {
   transition: ease-out .5s;
   background: #cc9600; }

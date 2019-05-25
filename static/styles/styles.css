@@ -28,14 +28,21 @@ body {
   width: 50px;
   height: 50px;
   background: #ffbc00;
-  border: 1px solid #f9f947; }
+  background: linear-gradient(to bottom right, #fdf137, #ffbc00);
+  border: 1px solid #c89b1c; }
+  .grid__cell:hover {
+    transition: ease-out .5s;
+    opacity: .5; }
 
 .grid__cell--dug {
-  background: #6d5207; }
+  background: linear-gradient(to bottom right, #b98b0e, #6d5207); }
+  .grid__cell--dug:hover {
+    opacity: 1; }
 
-.grid__cell:hover {
-  transition: ease-out .5s;
-  background: #cc9600; }
+.grid__cell--treasure {
+  background: linear-gradient(to bottom right, #ffff15, #fffdcf); }
+  .grid__cell--treasure:hover {
+    opacity: 1; }
 
 .info__text--cold {
   color: blue; }

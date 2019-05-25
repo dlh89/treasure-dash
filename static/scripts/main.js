@@ -13,9 +13,11 @@ function cellClick(e) {
   })
   .done(function( msg ) {
     var infoResult = '';
+    var gridClass = 'grid__cell--dug';
     switch (msg) {
       case 'success':
         infoResult = 'Congratulations!';
+        gridClass = 'grid__cell--treasure';
         break;
       case 'cold':
         infoResult = 'Ice cold.';
@@ -31,6 +33,6 @@ function cellClick(e) {
     var infoTextModifierClass = 'info__text info__text--' + msg;
     jQuery(infoText).removeClass();
     jQuery(infoText).addClass(infoTextModifierClass);
-    jQuery(e.target).addClass('grid__cell--dug');
+    jQuery(e.target).addClass(gridClass);
   });
 }

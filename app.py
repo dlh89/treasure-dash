@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from game import game
 app = Flask(__name__)
 
 
@@ -8,6 +9,8 @@ def index():
 
 @app.route("/result", methods=['POST', 'GET'])
 def result():
-    print(request)
     if request.method == 'POST':
-        return 'success'
+        row = request.form['row']
+        col = request.form['col']
+        result = game(row, col)
+        return result

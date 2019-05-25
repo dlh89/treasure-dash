@@ -6,7 +6,8 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route("/result")
-def result():   
-    #if request.method == 'POST':
-     return 'success'
+@app.route("/result", methods=['POST', 'GET'])
+def result():
+    print(request)
+    if request.method == 'POST':
+        return 'success'

@@ -1,0 +1,19 @@
+.grid {
+  @include clearfix;
+  float: left;
+  width: 350px;
+}
+
+.grid__cell {
+  box-sizing: border-box;
+  width: 70px;
+  height: 70px;
+  background: #ffbc00;
+  // background: linear-gradient(to bottom right, #f9f947, #ffbc00);
+  border: 1px solid #f9f947;
+}
+
+.grid__cell:hover {
+  transition: ease-out .5s;
+  background: darken(#ffbc00, 10%);
+}

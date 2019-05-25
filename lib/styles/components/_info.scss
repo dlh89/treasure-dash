@@ -1,0 +1,17 @@
+.info {
+}
+
+.info__text
+{
+  &--cold {
+    color: blue;
+  }
+
+  &--warm {
+    color: orange;
+  }
+
+  &--hot {
+    color: red;
+  }
+}

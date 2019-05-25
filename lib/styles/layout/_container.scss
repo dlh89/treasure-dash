@@ -1,0 +1,10 @@
+.container {
+  margin: auto;
+  max-width: 96rem;
+  position: relative;
+
+  @include respond(tab-land) {
+    margin: 0 3.2rem;
+    max-width: none;
+  }
+}

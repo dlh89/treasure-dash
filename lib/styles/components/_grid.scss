@@ -15,7 +15,7 @@
 
   &:hover {
     transition: ease-out .5s;
-    opacity: .5;
+    filter: brightness(.75);
   }
 }
 
@@ -23,7 +23,7 @@
   background: linear-gradient(to bottom right, #b98b0e, #6d5207);
 
   &:hover {
-    opacity: 1;
+    filter: brightness(1);
   }
 }
 
@@ -31,6 +31,6 @@
   background: linear-gradient(to bottom right, #ffff15, #fffdcf);
 
   &:hover {
-    opacity: 1;
+    filter: brightness(1);
   }
 }

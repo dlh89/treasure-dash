@@ -29,10 +29,14 @@ function cellClick(e) {
         infoResult = 'Red hot!';
         break;
     }
-    jQuery(infoText).text(infoResult);
     var infoTextModifierClass = 'info__text info__text--' + msg;
-    jQuery(infoText).removeClass();
-    jQuery(infoText).addClass(infoTextModifierClass);
+    jQuery(infoText).text(infoResult)
+                    .finish()
+                    .removeClass()
+                    .addClass(infoTextModifierClass)
+                    .fadeIn(1000)
+                    .delay(2000)
+                    .fadeOut(1000);
     jQuery(e.target).addClass(gridClass);
   });
 }

@@ -1,8 +1,8 @@
 $.ajax({
+  method: "POST",
   url: "/result",
-  context: document.body,
-  success: function(){
-    // $(this).addClass("done");
-    console.log('success');
-  }
+  data: { row: 2, col: 3 }
+})
+.done(function( msg ) {
+  alert( "Data Saved: " + msg );
 });

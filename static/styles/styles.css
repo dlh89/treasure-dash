@@ -19,6 +19,7 @@ body {
       max-width: none; } }
 
 .grid {
+  position: relative;
   float: left;
   width: 500px; }
 
@@ -44,11 +45,21 @@ body {
   .grid__cell--treasure:hover {
     opacity: 1; }
 
-.info__text--cold {
-  color: blue; }
-.info__text--warm {
-  color: orange; }
-.info__text--hot {
-  color: red; }
+.info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
+
+.info__text {
+  display: none;
+  font-size: 51px;
+  text-shadow: 5px 3px #ffffff; }
+  .info__text--cold {
+    color: #0c0cb7; }
+  .info__text--warm {
+    color: #ffb326; }
+  .info__text--hot {
+    color: #f12d1f; }
 
 /*# sourceMappingURL=styles.css.map */

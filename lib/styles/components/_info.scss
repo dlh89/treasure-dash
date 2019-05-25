@@ -1,17 +1,28 @@
 .info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .info__text
 {
+  display: none;
+  font-size: 51px;
+  text-shadow: 5px 3px #ffffff;
+
   &--cold {
-    color: blue;
+    // text-shadow: 5px 3px #0c0cb7;
+    color: #0c0cb7;
   }
 
   &--warm {
-    color: orange;
+    // text-shadow: 5px 3px #ffb326;
+    color: #ffb326;
   }
 
   &--hot {
-    color: red;
+    // text-shadow: 5px 3px #f12d1f;
+    color: #f12d1f;
   }
 }

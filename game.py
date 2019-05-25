@@ -1,7 +1,7 @@
 import random
 
-grid_columns = 5
-grid_rows = 5
+grid_columns = 10
+grid_rows = 10
 
 treasureRow = random.randint(1, grid_columns)
 treasureCol = random.randint(1, grid_rows)

@@ -28,7 +28,8 @@ function cellClick(e) {
         break;
     }
     jQuery(infoText).text(infoResult);
-    var infoTextModifierClass = 'info__text--' + msg;
+    var infoTextModifierClass = 'info__text info__text--' + msg;
+    jQuery(infoText).removeClass();
     jQuery(infoText).addClass(infoTextModifierClass);
   });
 }

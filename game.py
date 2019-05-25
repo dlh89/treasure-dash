@@ -1,11 +1,22 @@
 import random
+
+grid_columns = 5
+grid_rows = 5
+
+treasureRow = random.randint(1, grid_columns)
+treasureCol = random.randint(1, grid_rows)
+
 def game(row, col):
-    columns = 5
-    rows = 5
-    treasureRow = str(random.randint(1,columns))
-    treasureColumn = str(random.randint(1,rows))
-    if col == treasureColumn and row == treasureRow:
+    global treasureRow
+    global treasureCol
+
+    print('treasureRow: ' + str(treasureRow))
+    print('treasureCol: ' + str(treasureCol))
+    row = int(row)
+    col = int(col)
+    if col == treasureCol and row == treasureRow:
         return 'success'
+    elif row in range(treasureRow - 1, treasureRow + 2) and col in range(treasureCol - 1, treasureCol + 2):
+        return 'warm'
     else:
-        # TODO: return cold, warm or hot
         return 'cold'

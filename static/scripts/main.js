@@ -1,42 +1,47 @@
+var socket = io();
+
 var cells = $('.grid__cell');
 $(cells).on('click', cellClick);
 
 function cellClick(e) {
   var row = jQuery(e.target).data('row');
   var col = jQuery(e.target).data('col');
-  var infoText = jQuery('.info__text');
-  
-  $.ajax({
-    method: "POST",
-    url: "/result",
-    data: { row: row, col: col }
-  })
-  .done(function( msg ) {
-    var infoResult = '';
-    var gridClass = 'grid__cell--dug';
-    switch (msg) {
-      case 'success':
-        infoResult = 'Congratulations!';
-        gridClass = 'grid__cell--treasure';
-        break;
-      case 'cold':
-        infoResult = 'Ice cold.';
-        break;
-      case 'warm':
-        infoResult = 'Getting warm.';
-        break;
-      case 'hot':
-        infoResult = 'Red hot!';
-        break;
-    }
-    var infoTextModifierClass = 'info__text info__text--' + msg;
-    jQuery(infoText).text(infoResult)
-                    .finish()
-                    .removeClass()
-                    .addClass(infoTextModifierClass)
-                    .fadeIn(1000)
-                    .delay(2000)
-                    .fadeOut(1000);
-    jQuery(e.target).addClass(gridClass);
-  });
+
+  socket.emit('clientDig', {'row': row, 'col': col});
 }
+
+socket.on('msg', function(msg) {
+  console.log('msg: ', msg);
+});
+
+socket.on('serverDig', function(data) {
+  var digCell = jQuery('[data-row=' + data.coordinates.row + '][data-col=' + data.coordinates.col + ']');
+
+  var infoText = jQuery('.info__text');
+  var infoResult = '';
+  var gridClass = 'grid__cell--dug';
+  switch (data.closeness) {
+    case 'success':
+      infoResult = 'Congratulations!';
+      gridClass = 'grid__cell--treasure';
+      break;
+    case 'cold':
+      infoResult = 'Ice cold.';
+      break;
+    case 'warm':
+      infoResult = 'Getting warm.';
+      break;
+    case 'hot':
+      infoResult = 'Red hot!';
+      break;
+  }
+  var infoTextModifierClass = 'info__text info__text--' + data.closeness;
+  jQuery(infoText).text(infoResult)
+                  .finish()
+                  .removeClass()
+                  .addClass(infoTextModifierClass)
+                  .fadeIn(1000)
+                  .delay(2000)
+                  .fadeOut(1000);
+  digCell.addClass(gridClass);
+});

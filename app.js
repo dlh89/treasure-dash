@@ -19,8 +19,17 @@ io.on('connection', function(socket) {
   socket.on('clientDig', function(coordinates) {
     const socketRoom = getSocketRoom(socket);
 
-    const closeness = getCloseness(socketRoom, coordinates);
-    io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
+    // check if it's their turn
+    if (socketRoom.playerTurn === socket.id) {
+      const closeness = getCloseness(socketRoom, coordinates);
+      io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
+
+      // switch turn to other player
+      const currentPlayerIndex = socketRoom.users.indexOf(socketRoom.playerTurn);
+      socketRoom.playerTurn = socketRoom.users[(currentPlayerIndex + 1) % socketRoom.users.length];
+    } else {
+      socket.emit('msg', 'Wait for your turn!');
+    }
   });
 
   socket.on('disconnect', function() {
@@ -70,6 +79,12 @@ function joinRoom(socket, room) {
 
   if (room.users.length === playersPerGame) {
     setTreasureCoordinates(room);
+
+    // randomly choose player to go first
+    const playerTurn = room.users[Math.floor(Math.random() * Math.floor(playersPerGame))];
+    room.playerTurn = playerTurn;
+
+    io.in(room.name).emit('msg', 'Player ' + playerTurn + ' has been chosen to go first!');
   }
 }
 

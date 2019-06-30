@@ -21,8 +21,11 @@ io.on('connection', function(socket) {
 
     // check if it's their turn
     if (socketRoom.playerTurn === socket.id) {
-      const closeness = getCloseness(socketRoom, coordinates);
+      const closeness = getCloseness(socketRoom, coordinates); 
       io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
+      
+      // only send closeness to the player
+      socket.emit('closenessMsg', {'closeness': closeness});
 
       // switch turn to other player
       const currentPlayerIndex = socketRoom.users.indexOf(socketRoom.playerTurn);

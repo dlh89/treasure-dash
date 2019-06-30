@@ -17,9 +17,19 @@ socket.on('msg', function(msg) {
 socket.on('serverDig', function(data) {
   var digCell = jQuery('[data-row=' + data.coordinates.row + '][data-col=' + data.coordinates.col + ']');
 
+  var gridClass = 'grid__cell--dug';
+
+  if (data.closeness === 'success') {
+    gridClass = 'grid__cell--treasure';
+  }
+
+  digCell.addClass(gridClass);
+});
+
+socket.on('closenessMsg', function(data) {
   var infoText = jQuery('.info__text');
   var infoResult = '';
-  var gridClass = 'grid__cell--dug';
+
   switch (data.closeness) {
     case 'success':
       infoResult = 'Congratulations!';
@@ -35,6 +45,7 @@ socket.on('serverDig', function(data) {
       infoResult = 'Red hot!';
       break;
   }
+
   var infoTextModifierClass = 'info__text info__text--' + data.closeness;
   jQuery(infoText).text(infoResult)
                   .finish()
@@ -43,5 +54,5 @@ socket.on('serverDig', function(data) {
                   .fadeIn(1000)
                   .delay(2000)
                   .fadeOut(1000);
-  digCell.addClass(gridClass);
-});
+
+})

@@ -16,18 +16,22 @@ io.on('connection', function(socket) {
   console.log('a user connected');
   findRoom(socket);
 
-  let socketRoom = '';
-
   socket.on('clientDig', function(coordinates) {
-    // find room with current socket id in users
-    rooms.forEach(room => {
-      if (room.users.indexOf(socket.id) > -1) {
-        socketRoom = room;
-      };
-    });
+    const socketRoom = getSocketRoom(socket);
 
     const closeness = getCloseness(socketRoom, coordinates);
     io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
+  });
+
+  socket.on('disconnect', function() {
+    // remove player from room users
+    const socketRoom = getSocketRoom(socket);
+    const socketIndex = socketRoom.users.indexOf(socketRoom);
+  
+    socketRoom.users.splice(socketIndex, 1);
+  
+    // emit msg to that room to notify other player
+    socket.broadcast.to(socketRoom.name).emit('msg', 'Player ' + socket.id + ' has left the room.');
   });
 });
 
@@ -54,7 +58,7 @@ function findRoom(socket) {
 }
 
 function joinRoom(socket, room) {
-  room.users.push(socket.conn.id); // add user to that room
+  room.users.push(socket.id); // add user to that room
   socket.join(room.name);
 
   // send message to the client
@@ -62,11 +66,22 @@ function joinRoom(socket, room) {
   socket.emit('msg', 'Your ID is '  + socket.id);
 
   // send message to the room
-  socket.broadcast.to(room.name).emit('msg', 'Player ' + socket.conn.id + ' has joined the room.');
+  socket.broadcast.to(room.name).emit('msg', 'Player ' + socket.id + ' has joined the room.');
 
   if (room.users.length === playersPerGame) {
     setTreasureCoordinates(room);
   }
+}
+
+function getSocketRoom(socket) {
+  let socketRoom;
+  rooms.forEach(room => {
+    if (room.users.indexOf(socket.id) > -1) {
+      socketRoom = room;
+    };
+  });
+
+  return socketRoom;
 }
 
 function setTreasureCoordinates(room) {

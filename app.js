@@ -17,6 +17,8 @@ io.on('connection', function(socket) {
   findRoom(socket);
 
   socket.on('clientDig', function(coordinates) {
+    socket.emit('clearMsg', '');
+
     const socketRoom = getSocketRoom(socket);
 
     // check if it's their turn
@@ -87,7 +89,12 @@ function joinRoom(socket, room) {
     const playerTurn = room.users[Math.floor(Math.random() * Math.floor(playersPerGame))];
     room.playerTurn = playerTurn;
 
-    io.in(room.name).emit('msg', 'Player ' + playerTurn + ' has been chosen to go first!');
+    if (playerTurn === socket.id) {
+      socket.emit('msg', 'You have been chosen to go first!')
+    }
+    socket.broadcast.emit('msg', 'Your opponent has been chosen to go first.')
+  } else {
+    socket.emit('msg', 'Waiting for an opponent...')
   }
 }
 

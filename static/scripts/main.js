@@ -12,6 +12,13 @@ function cellClick(e) {
 
 socket.on('msg', function(msg) {
   console.log('msg: ', msg);
+  var msgBoxText = jQuery('.msg-box__text');
+  msgBoxText.text(msg);
+});
+
+socket.on('clearMsg', function(msg) {
+  var msgBoxText = jQuery('.msg-box__text');
+  msgBoxText.text('');
 });
 
 socket.on('serverDig', function(data) {

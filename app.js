@@ -17,8 +17,6 @@ io.on('connection', function(socket) {
   findRoom(socket);
 
   socket.on('clientDig', function(coordinates) {
-    socket.emit('clearMsg', '');
-
     const socketRoom = getSocketRoom(socket);
 
     // check if it's their turn
@@ -32,8 +30,12 @@ io.on('connection', function(socket) {
       // switch turn to other player
       const currentPlayerIndex = socketRoom.users.indexOf(socketRoom.playerTurn);
       socketRoom.playerTurn = socketRoom.users[(currentPlayerIndex + 1) % socketRoom.users.length];
+
+      updateTurnText(socket, socketRoom);
     } else {
-      socket.emit('msg', 'Wait for your turn!');
+      if (socketRoom.users.length == playersPerGame) {
+        socket.emit('msg', 'Wait for your turn!');
+      }
     }
   });
 
@@ -141,6 +143,16 @@ function inRange(value, min, max) {
   }
 
   return false;
+}
+
+function updateTurnText(socket, socketRoom) {
+  if (socketRoom.playerTurn === socket.id) {
+    socket.emit('msg', 'It\'s your turn!');    
+    socket.broadcast.emit('msg', 'It\'s your opponent\'s turn.');    
+  } else {
+    socket.emit('msg', 'It\'s your opponent\'s turn.');
+    socket.broadcast.emit('msg', 'It\'s your turn!');    
+  }
 }
 
 http.listen(3000, function() {

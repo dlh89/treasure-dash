@@ -124,4 +124,25 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+.two-columns__main {
+  float: left;
+  width: 68%;
+}
+
+.two-columns__sidebar {
+  float: left;
+  width: calc(32% - 20px);
+  margin-right: 20px;
+}
+
+.sidebar {
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  padding: 20px 25px;
+}
+
+.sidebar__heading {
+  font-size: 26px;
+}
+
 /*# sourceMappingURL=styles.css.map */

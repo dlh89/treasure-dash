@@ -78,8 +78,8 @@ function joinRoom(socket, room) {
   socket.join(room.name);
 
   // send message to the client
-  socket.emit('msg', 'You have joined '  + room.name);
-  socket.emit('msg', 'Your ID is '  + socket.id);
+  socket.emit('sidebarMsg', 'You have joined '  + room.name);
+  socket.emit('sidebarMsg', 'Your ID is '  + socket.id);
 
   // send message to the room
   socket.broadcast.to(room.name).emit('msg', 'Player ' + socket.id + ' has joined the room.');
@@ -119,6 +119,7 @@ function setTreasureCoordinates(room) {
   const treasureCol = Math.floor(Math.random() * Math.floor(colCount + 1));
 
   room.treasureCoordinates = {'row': treasureRow, 'col': treasureCol};
+  console.log('treasureCoordinates: ', room.treasureCoordinates);
 }
 
 function getCloseness(room, coordinates) {

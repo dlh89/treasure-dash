@@ -16,6 +16,12 @@ socket.on('msg', function(msg) {
   msgBoxText.text(msg);
 });
 
+socket.on('sidebarMsg', function(msg) {
+  console.log('sidebarMsg: ', msg);
+  var sidebarText = jQuery('.sidebar__text');
+  sidebarText.append('<p>' + msg + '<p>'); 
+});
+
 socket.on('clearMsg', function(msg) {
   var msgBoxText = jQuery('.msg-box__text');
   msgBoxText.text('');

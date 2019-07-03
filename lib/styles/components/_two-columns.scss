@@ -1,0 +1,15 @@
+.two-columns {
+
+}
+
+.two-columns__main {
+    float: left;
+    width: 68%;
+}
+
+.two-columns__sidebar
+{
+    float: left;
+    width: calc(32% - 20px);
+    margin-right: $med-margin;
+}

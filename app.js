@@ -82,7 +82,7 @@ function joinRoom(socket, room) {
   socket.emit('sidebarMsg', 'Your ID is '  + socket.id);
 
   // send message to the room
-  socket.broadcast.to(room.name).emit('msg', 'Player ' + socket.id + ' has joined the room.');
+  socket.broadcast.to(room.name).emit('sidebarMsg', 'Player ' + socket.id + ' has joined the room.');
 
   if (room.users.length === playersPerGame) {
     setTreasureCoordinates(room);
@@ -115,8 +115,8 @@ function setTreasureCoordinates(room) {
   const rowCount = 10;
   const colCount =  10;
 
-  const treasureRow = Math.floor(Math.random() * Math.floor(rowCount + 1));
-  const treasureCol = Math.floor(Math.random() * Math.floor(colCount + 1));
+  const treasureRow = Math.floor(Math.random() * Math.floor(rowCount) + 1);
+  const treasureCol = Math.floor(Math.random() * Math.floor(colCount) + 1);
 
   room.treasureCoordinates = {'row': treasureRow, 'col': treasureCol};
   console.log('treasureCoordinates: ', room.treasureCoordinates);

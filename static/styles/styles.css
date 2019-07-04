@@ -145,4 +145,8 @@ body {
   font-size: 26px;
 }
 
+.sidebar__text {
+  opacity: 0.5;
+}
+
 /*# sourceMappingURL=styles.css.map */

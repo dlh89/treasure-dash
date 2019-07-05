@@ -22,7 +22,12 @@ io.on('connection', function(socket) {
     // check if it's their turn
     if (socketRoom.playerTurn === socket.id) {
       const closeness = getCloseness(socketRoom, coordinates); 
-      io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
+
+      if (closeness === 'success') {
+        io.to(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
+      } else {
+        io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
+      }
       
       // only send closeness to the player
       socket.emit('closenessMsg', {'closeness': closeness});
@@ -91,9 +96,6 @@ function joinRoom(socket, room) {
     const playerTurn = room.users[Math.floor(Math.random() * Math.floor(playersPerGame))];
     room.playerTurn = playerTurn;
 
-    // if (playerTurn === socket.id) {
-    //   socket.emit('msg', 'You have been chosen to go first!');
-    // }
     io.to(playerTurn).emit('msg', 'You have been chosen to go first!');
     socket.broadcast.emit('msg', 'Your opponent has been chosen to go first.');
   } else {

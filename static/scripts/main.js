@@ -30,19 +30,17 @@ socket.on('clearMsg', function(msg) {
 });
 
 socket.on('serverDig', function(data) {
-  var digCell = jQuery('[data-row=' + data.coordinates.row + '][data-col=' + data.coordinates.col + ']');
+  renderDig(data.coordinates.row, data.coordinates.col);
+});
 
-  var gridClass = 'grid__cell--dug';
+socket.on('playerWin', function(data) {
+  var successMsg = 'Player ' + data.winner + ' has won the game!';
+  splashMsg('success', successMsg);
 
-  if (data.closeness === 'success') {
-    gridClass = 'grid__cell--treasure';
-  }
-
-  digCell.addClass(gridClass);
+  renderDig(data.coordinates.row, data.coordinates.col, true);
 });
 
 socket.on('closenessMsg', function(data) {
-  var infoText = jQuery('.info__text');
   var infoResult = '';
 
   switch (data.closeness) {
@@ -61,13 +59,30 @@ socket.on('closenessMsg', function(data) {
       break;
   }
 
-  var infoTextModifierClass = 'info__text info__text--' + data.closeness;
-  jQuery(infoText).text(infoResult)
+  splashMsg(data.closeness, infoResult);
+});
+
+function splashMsg(closeness, msg) {
+  var infoText = jQuery('.info__text');
+  var infoTextModifierClass = 'info__text info__text--' + closeness;
+  jQuery(infoText).text(msg)
                   .finish()
                   .removeClass()
                   .addClass(infoTextModifierClass)
                   .fadeIn(1000)
                   .delay(2000)
                   .fadeOut(1000);
+}
 
-})
+function renderDig(row, col, success = false) {
+  var digCell = jQuery('[data-row=' + row + '][data-col=' + col + ']');
+
+  var gridClass = 'grid__cell--dug';
+
+  if (success)
+  {
+    gridClass = 'grid__cell--treasure';
+  }
+
+  digCell.addClass(gridClass);
+}

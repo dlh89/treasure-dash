@@ -78,11 +78,11 @@ function joinRoom(socket, room) {
   socket.join(room.name);
 
   // send message to the client
-  socket.emit('sidebarMsg', 'You have joined '  + room.name);
-  socket.emit('sidebarMsg', 'Your ID is '  + socket.id);
+  socket.emit('logMsg', 'You have joined '  + room.name);
+  socket.emit('logMsg', 'Your ID is '  + socket.id);
 
   // send message to the room
-  socket.broadcast.to(room.name).emit('sidebarMsg', 'Player ' + socket.id + ' has joined the room.');
+  socket.broadcast.to(room.name).emit('logMsg', 'Player ' + socket.id + ' has joined the room.');
 
   if (room.users.length === playersPerGame) {
     setTreasureCoordinates(room);
@@ -91,12 +91,13 @@ function joinRoom(socket, room) {
     const playerTurn = room.users[Math.floor(Math.random() * Math.floor(playersPerGame))];
     room.playerTurn = playerTurn;
 
-    if (playerTurn === socket.id) {
-      socket.emit('msg', 'You have been chosen to go first!')
-    }
-    socket.broadcast.emit('msg', 'Your opponent has been chosen to go first.')
+    // if (playerTurn === socket.id) {
+    //   socket.emit('msg', 'You have been chosen to go first!');
+    // }
+    io.to(playerTurn).emit('msg', 'You have been chosen to go first!');
+    socket.broadcast.emit('msg', 'Your opponent has been chosen to go first.');
   } else {
-    socket.emit('msg', 'Waiting for an opponent...')
+    socket.emit('msg', 'Waiting for an opponent...');
   }
 }
 
@@ -113,7 +114,7 @@ function getSocketRoom(socket) {
 
 function setTreasureCoordinates(room) {
   const rowCount = 10;
-  const colCount =  10;
+  const colCount = 10;
 
   const treasureRow = Math.floor(Math.random() * Math.floor(rowCount) + 1);
   const treasureCol = Math.floor(Math.random() * Math.floor(colCount) + 1);

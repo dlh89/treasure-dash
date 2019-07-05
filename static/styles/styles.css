@@ -145,7 +145,7 @@ body {
   font-size: 26px;
 }
 
-.sidebar__text {
+.sidebar__text--history {
   opacity: 0.5;
 }
 

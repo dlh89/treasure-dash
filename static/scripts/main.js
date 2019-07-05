@@ -19,7 +19,9 @@ socket.on('msg', function(msg) {
 socket.on('sidebarMsg', function(msg) {
   console.log('sidebarMsg: ', msg);
   var sidebarText = jQuery('.sidebar__text');
-  sidebarText.prepend('<p>' + msg + '<p>'); 
+  var sidebarHistory = jQuery('.sidebar__text--history');
+  sidebarHistory.prepend(sidebarText.text()); 
+  sidebarText.html('<p>' + msg + '<p>'); 
 });
 
 socket.on('clearMsg', function(msg) {

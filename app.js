@@ -16,6 +16,11 @@ io.on('connection', function(socket) {
   console.log('a user connected');
   findRoom(socket);
 
+  socket.on('startPos', function(coordinates) {
+    const socketRoom = getSocketRoom(socket);
+    // TODO set player starting positions to socketRoom
+  });
+
   socket.on('clientDig', function(coordinates) {
     const socketRoom = getSocketRoom(socket);
 
@@ -87,17 +92,20 @@ function joinRoom(socket, room) {
   socket.emit('logMsg', 'Your ID is '  + socket.id);
 
   // send message to the room
-  socket.broadcast.to(room.name).emit('logMsg', 'Player ' + socket.id + ' has joined the room.');
+  io.in(room.name).emit('logMsg', 'Player ' + socket.id + ' has joined the room.');
 
   if (room.users.length === playersPerGame) {
     setTreasureCoordinates(room);
 
-    // randomly choose player to go first
-    const playerTurn = room.users[Math.floor(Math.random() * Math.floor(playersPerGame))];
-    room.playerTurn = playerTurn;
+    io.in(room.name).emit('msg', 'Select a starting position.');
+    // TODO wait for both players to pick starting point then emit gameStart
 
-    io.to(playerTurn).emit('msg', 'You have been chosen to go first!');
-    socket.broadcast.emit('msg', 'Your opponent has been chosen to go first.');
+    // // randomly choose player to go first
+    // const playerTurn = room.users[Math.floor(Math.random() * Math.floor(playersPerGame))];
+    // room.playerTurn = playerTurn;
+
+    // io.to(playerTurn).emit('msg', 'You have been chosen to go first!');
+    // socket.broadcast.emit('msg', 'Your opponent has been chosen to go first.');
   } else {
     socket.emit('msg', 'Waiting for an opponent...');
   }

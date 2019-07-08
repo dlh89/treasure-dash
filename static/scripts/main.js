@@ -1,3 +1,7 @@
+global = {
+  gameLive: false
+}
+
 var socket = io();
 
 var cells = $('.grid__cell');
@@ -6,9 +10,16 @@ $(cells).on('click', cellClick);
 function cellClick(e) {
   var row = jQuery(e.target).data('row');
   var col = jQuery(e.target).data('col');
-
-  socket.emit('clientDig', {'row': row, 'col': col});
+  if (global.gameLive === true) {
+    socket.emit('clientDig', {'row': row, 'col': col});
+  } else {
+    socket.emit('startPos', {'row': row, 'col': col});
+  }
 }
+
+socket.on('gameStart', function(msg) {
+  global.gameLive = true;
+});
 
 socket.on('msg', function(msg) {
   console.log('msg: ', msg);

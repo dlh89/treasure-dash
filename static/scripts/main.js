@@ -17,7 +17,7 @@ function cellClick(e) {
   }
 }
 
-socket.on('gameStart', function(msg) {
+socket.on('gameStart', function() {
   global.gameLive = true;
 });
 

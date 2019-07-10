@@ -13,12 +13,27 @@ app.get('/', function(req, res) {
 app.use(express.static('static'));
 
 io.on('connection', function(socket) {
-  console.log('a user connected');
+  console.log('user connected:' + socket.id);
   findRoom(socket);
 
   socket.on('startPos', function(coordinates) {
     const socketRoom = getSocketRoom(socket);
-    // TODO set player starting positions to socketRoom
+
+    const socketRoomUser = socketRoom.users.filter(function(user) {
+      return user.id === socket.id;
+    });
+
+    socketRoomUser[0].startPos = coordinates;
+
+    // TODO emit gameLive if both users have starting positions
+    const allUsersHaveSelectedStartPos = socketRoom.users.every((user) => {
+      user['startPos'] != false
+    });
+
+    if (allUsersHaveSelectedStartPos) {
+      io.in(socketRoom.name).emit('gameLive');
+      io.in(socketRoom.name).emit('msg', 'The game is now live!');
+    }
   });
 
   socket.on('clientDig', function(coordinates) {
@@ -84,7 +99,11 @@ function findRoom(socket) {
 }
 
 function joinRoom(socket, room) {
-  room.users.push(socket.id); // add user to that room
+  const newUser = {
+    id: socket.id,
+    startPos: null
+  }
+  room.users.push(newUser); // add user to that room
   socket.join(room.name);
 
   // send message to the client
@@ -114,9 +133,16 @@ function joinRoom(socket, room) {
 function getSocketRoom(socket) {
   let socketRoom;
   rooms.forEach(room => {
-    if (room.users.indexOf(socket.id) > -1) {
+    // if (room.users.indexOf(socket.id) > -1) {
+    //   socketRoom = room;
+    // };
+    const user = room.users.filter(function(user){ 
+      return user.id === socket.id;
+    });
+
+    if (user) {
       socketRoom = room;
-    };
+    }
   });
 
   return socketRoom;

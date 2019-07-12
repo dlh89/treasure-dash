@@ -31,7 +31,11 @@ io.on('connection', function(socket) {
     });
 
     if (allUsersHaveSelectedStartPos) {
-      io.in(socketRoom.name).emit('gameLive');
+      // // randomly choose player to go first
+      const playerTurn = socketRoom.users[Math.floor(Math.random() * Math.floor(playersPerGame))];
+      socketRoom.playerTurn = playerTurn.id;
+      
+      io.in(socketRoom.name).emit('gameStart');
       io.in(socketRoom.name).emit('msg', 'The game is now live!');
     }
   });

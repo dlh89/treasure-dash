@@ -27,7 +27,7 @@ io.on('connection', function(socket) {
 
     // TODO emit gameLive if both users have starting positions
     const allUsersHaveSelectedStartPos = socketRoom.users.every((user) => {
-      user['startPos'] != false
+      return user['startPos'] != null;
     });
 
     if (allUsersHaveSelectedStartPos) {

@@ -35,7 +35,10 @@ io.on('connection', function(socket) {
       socketRoom.playerTurn = playerTurn.id;
       
       io.in(socketRoom.name).emit('gameStart');
-      io.in(socketRoom.name).emit('msg', 'The game is now live!');
+      io.in(socketRoom.name).emit('logMsg', 'The game is now live!');
+
+      io.to(socketRoom.playerTurn).emit('msg', 'You have been chosen to go first!');
+      socket.broadcast.emit('msg', 'Your opponent has been chosen to go first.');
     } else {
       socket.emit('msg', 'Waiting for your opponent to pick a starting position.')
     }

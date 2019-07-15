@@ -31,7 +31,8 @@ io.on('connection', function(socket) {
 
     if (allUsersHaveSelectedStartPos) {
       // randomly choose player to go first
-      const playerTurn = socketRoom.users[Math.floor(Math.random() * Math.floor(playersPerGame))];
+      const randomIndex = generateRandomNumber(playersPerGame);
+      const playerTurn = socketRoom.users[randomIndex];
       socketRoom.playerTurn = playerTurn.id;
       
       io.in(socketRoom.name).emit('gameStart');
@@ -128,14 +129,6 @@ function joinRoom(socket, room) {
     setTreasureCoordinates(room);
 
     io.in(room.name).emit('msg', 'Select a starting position.');
-    // TODO wait for both players to pick starting point then emit gameStart
-
-    // // randomly choose player to go first
-    // const playerTurn = room.users[Math.floor(Math.random() * Math.floor(playersPerGame))];
-    // room.playerTurn = playerTurn;
-
-    // io.to(playerTurn).emit('msg', 'You have been chosen to go first!');
-    // socket.broadcast.emit('msg', 'Your opponent has been chosen to go first.');
   } else {
     socket.emit('msg', 'Waiting for an opponent...');
   }
@@ -163,8 +156,8 @@ function setTreasureCoordinates(room) {
   const rowCount = 10;
   const colCount = 10;
 
-  const treasureRow = Math.floor(Math.random() * Math.floor(rowCount) + 1);
-  const treasureCol = Math.floor(Math.random() * Math.floor(colCount) + 1);
+  const treasureRow = generateRandomNumber(rowCount + 1);
+  const treasureCol = generateRandomNumber(colCount + 1);
 
   room.treasureCoordinates = {'row': treasureRow, 'col': treasureCol};
   console.log('treasureCoordinates: ', room.treasureCoordinates);
@@ -202,6 +195,11 @@ function updateTurnText(socket, socketRoom) {
     socket.emit('msg', 'It\'s your opponent\'s turn.');
     socket.broadcast.emit('msg', 'It\'s your turn!');    
   }
+}
+
+function generateRandomNumber(range) {
+  const random = Math.floor(Math.random() * Math.floor(range));
+  return random;
 }
 
 http.listen(3000, function() {

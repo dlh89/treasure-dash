@@ -25,18 +25,19 @@ io.on('connection', function(socket) {
 
     socketRoomUser[0].startPos = coordinates;
 
-    // TODO emit gameLive if both users have starting positions
     const allUsersHaveSelectedStartPos = socketRoom.users.every((user) => {
       return user['startPos'] != null;
     });
 
     if (allUsersHaveSelectedStartPos) {
-      // // randomly choose player to go first
+      // randomly choose player to go first
       const playerTurn = socketRoom.users[Math.floor(Math.random() * Math.floor(playersPerGame))];
       socketRoom.playerTurn = playerTurn.id;
       
       io.in(socketRoom.name).emit('gameStart');
       io.in(socketRoom.name).emit('msg', 'The game is now live!');
+    } else {
+      socket.emit('msg', 'Waiting for your opponent to pick a starting position.')
     }
   });
 
@@ -57,8 +58,11 @@ io.on('connection', function(socket) {
       socket.emit('closenessMsg', {'closeness': closeness});
 
       // switch turn to other player
-      const currentPlayerIndex = socketRoom.users.indexOf(socketRoom.playerTurn);
-      socketRoom.playerTurn = socketRoom.users[(currentPlayerIndex + 1) % socketRoom.users.length];
+      const currentPlayerIndex = socketRoom.users.findIndex(function(user) {
+        return user.id === socketRoom.playerTurn
+      })
+      const playerTurn = socketRoom.users[(currentPlayerIndex + 1) % socketRoom.users.length];
+      socketRoom.playerTurn = playerTurn.id;
 
       updateTurnText(socket, socketRoom);
     } else {

@@ -23,10 +23,10 @@ io.on('connection', function(socket) {
       return user.id === socket.id;
     });
 
-    socketRoomUser[0].startPos = coordinates;
+    socketRoomUser[0].pos = coordinates;
 
     const allUsersHaveSelectedStartPos = socketRoom.users.every((user) => {
-      return user['startPos'] != null;
+      return user['pos'] != null;
     });
 
     if (allUsersHaveSelectedStartPos) {
@@ -50,6 +50,7 @@ io.on('connection', function(socket) {
 
     // check if it's their turn
     if (socketRoom.playerTurn === socket.id) {
+
       const closeness = getCloseness(socketRoom, coordinates); 
 
       if (closeness === 'success') {
@@ -61,13 +62,7 @@ io.on('connection', function(socket) {
       // only send closeness to the player
       socket.emit('closenessMsg', {'closeness': closeness});
 
-      // switch turn to other player
-      const currentPlayerIndex = socketRoom.users.findIndex(function(user) {
-        return user.id === socketRoom.playerTurn
-      })
-      const playerTurn = socketRoom.users[(currentPlayerIndex + 1) % socketRoom.users.length];
-      socketRoom.playerTurn = playerTurn.id;
-
+      switchPlayerTurn(socketRoom);
       updateTurnText(socket, socketRoom);
     } else {
       if (socketRoom.users.length == playersPerGame) {
@@ -113,7 +108,7 @@ function findRoom(socket) {
 function joinRoom(socket, room) {
   const newUser = {
     id: socket.id,
-    startPos: null
+    pos: null
   }
   room.users.push(newUser); // add user to that room
   socket.join(room.name);
@@ -137,9 +132,6 @@ function joinRoom(socket, room) {
 function getSocketRoom(socket) {
   let socketRoom;
   rooms.forEach(room => {
-    // if (room.users.indexOf(socket.id) > -1) {
-    //   socketRoom = room;
-    // };
     const user = room.users.filter(function(user){ 
       return user.id === socket.id;
     });
@@ -185,6 +177,14 @@ function inRange(value, min, max) {
   }
 
   return false;
+}
+
+function switchPlayerTurn(socketRoom) {
+  const currentPlayerIndex = socketRoom.users.findIndex(function(user) {
+    return user.id === socketRoom.playerTurn
+  })
+  const playerTurn = socketRoom.users[(currentPlayerIndex + 1) % socketRoom.users.length];
+  socketRoom.playerTurn = playerTurn.id;
 }
 
 function updateTurnText(socket, socketRoom) {

@@ -19,9 +19,7 @@ io.on('connection', function(socket) {
   socket.on('startPos', function(coordinates) {
     const socketRoom = getSocketRoom(socket);
 
-    const socketRoomUser = socketRoom.users.filter(function(user) {
-      return user.id === socket.id;
-    });
+    const socketRoomUser = getSocketRoomUser(socketRoom, socket);
 
     socketRoomUser[0].pos = coordinates;
 
@@ -50,6 +48,8 @@ io.on('connection', function(socket) {
 
     // check if it's their turn
     if (socketRoom.playerTurn === socket.id) {
+      // update their position
+      socketRoom.users
 
       const closeness = getCloseness(socketRoom, coordinates); 
 
@@ -200,6 +200,14 @@ function updateTurnText(socket, socketRoom) {
 function generateRandomNumber(range) {
   const random = Math.floor(Math.random() * Math.floor(range));
   return random;
+}
+
+function getSocketRoomUser(socketRoom, socket) {
+  const socketRoomUser = socketRoom.users.filter(function(user) {
+    return user.id === socket.id;
+  });
+
+  return socketRoomUser;
 }
 
 http.listen(3000, function() {

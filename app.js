@@ -4,7 +4,8 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
 const rooms = [];
-const playersPerGame = 2;
+const PLAYERS_PER_GAME = 2;
+const MAX_ROLL = 6;
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/views/index.html');
@@ -19,7 +20,7 @@ io.on('connection', function(socket) {
   socket.on('startPos', function(coordinates) {
     const socketRoom = getSocketRoom(socket);
 
-    const socketRoomUser = getSocketRoomUser(socketRoom, socket);
+    const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
 
     socketRoomUser.pos = coordinates;
 
@@ -27,11 +28,13 @@ io.on('connection', function(socket) {
       return user['pos'] != null;
     });
 
-    if (allUsersHaveSelectedStartPos) {
+    if (socketRoom.users.length == PLAYERS_PER_GAME && allUsersHaveSelectedStartPos) {
       // randomly choose player to go first
-      const randomIndex = generateRandomNumber(playersPerGame);
+      const randomIndex = generateRandomNumber(PLAYERS_PER_GAME);
       const playerTurn = socketRoom.users[randomIndex];
       socketRoom.playerTurn = playerTurn.id;
+
+      rollDice(socketRoom, socket);
       
       io.in(socketRoom.name).emit('gameStart');
       io.in(socketRoom.name).emit('logMsg', 'The game is now live!');
@@ -49,10 +52,12 @@ io.on('connection', function(socket) {
     // check if it's their turn
     if (socketRoom.playerTurn === socket.id) {
       // update their position
-      const socketRoomUser = getSocketRoomUser(socketRoom, socket);
+      const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
       socketRoomUser.pos = coordinates;
 
       const closeness = getCloseness(socketRoom, coordinates); 
+
+      // TODO check move is in range
 
       if (closeness === 'success') {
         io.to(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
@@ -65,8 +70,9 @@ io.on('connection', function(socket) {
 
       switchPlayerTurn(socketRoom);
       updateTurnText(socket, socketRoom);
+      rollDice(socketRoom, socket);
     } else {
-      if (socketRoom.users.length == playersPerGame) {
+      if (socketRoom.users.length == PLAYERS_PER_GAME) {
         socket.emit('msg', 'Wait for your turn!');
       }
     }
@@ -121,7 +127,7 @@ function joinRoom(socket, room) {
   // send message to the room
   io.in(room.name).emit('logMsg', 'Player ' + socket.id + ' has joined the room.');
 
-  if (room.users.length === playersPerGame) {
+  if (room.users.length === PLAYERS_PER_GAME) {
     setTreasureCoordinates(room);
 
     io.in(room.name).emit('msg', 'Select a starting position.');
@@ -203,12 +209,21 @@ function generateRandomNumber(range) {
   return random;
 }
 
-function getSocketRoomUser(socketRoom, socket) {
+function getSocketRoomUser(socketRoom, socketID) {
   const socketRoomUser = socketRoom.users.filter(function(user) {
-    return user.id === socket.id;
+    return user.id === socketID;
   });
 
   return socketRoomUser[0];
+}
+
+function rollDice(socketRoom, socket) {
+  const roll = generateRandomNumber(MAX_ROLL);
+  const socketRoomUser = getSocketRoomUser(socketRoom, socket.id)
+  socketRoomUser.roll = roll + 1;
+
+  socket.emit('logMsg', 'You rolled a ' + socketRoomUser.roll);
+  socket.broadcast.emit('logMsg', 'Your opponent rolled a ' + socketRoomUser.roll)
 }
 
 http.listen(3000, function() {

@@ -40,6 +40,7 @@ io.on('connection', function(socket) {
       io.in(socketRoom.name).emit('logMsg', 'The game is now live!');
 
       io.to(socketRoom.playerTurn).emit('msg', 'You have been chosen to go first!');
+      // TODO: wrong emit - change to io.to non-playerTurn player
       socket.broadcast.emit('msg', 'Your opponent has been chosen to go first.');
     } else {
       socket.emit('msg', 'Waiting for your opponent to pick a starting position.')
@@ -48,29 +49,37 @@ io.on('connection', function(socket) {
 
   socket.on('clientDig', function(coordinates) {
     const socketRoom = getSocketRoom(socket);
-
+    
     // check if it's their turn
     if (socketRoom.playerTurn === socket.id) {
-      // update their position
       const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
-      socketRoomUser.pos = coordinates;
 
-      const closeness = getCloseness(socketRoom, coordinates); 
-
-      // TODO check move is in range
-
-      if (closeness === 'success') {
-        io.to(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
+      // check move is in range
+      const isValidMove = getIsValidMove(socketRoomUser.pos, coordinates, socketRoomUser.roll)
+      if (isValidMove) {
+        // update their position
+        socketRoomUser.pos = coordinates;
+  
+        const closeness = getCloseness(socketRoom, coordinates); 
+  
+        if (closeness === 'success') {
+          io.to(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
+        } else {
+          io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
+        }
+        
+        // only send closeness to the player
+        socket.emit('closenessMsg', {'closeness': closeness});
+  
+        switchPlayerTurn(socketRoom);
+        updateTurnText(socket, socketRoom);
+        rollDice(socketRoom, socket);
       } else {
-        io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
+        // invalid move
+        const msgText = 'Invalid move! You only rolled a ' + socketRoomUser.roll + '.';
+        socket.emit('msg', msgText);
       }
-      
-      // only send closeness to the player
-      socket.emit('closenessMsg', {'closeness': closeness});
 
-      switchPlayerTurn(socketRoom);
-      updateTurnText(socket, socketRoom);
-      rollDice(socketRoom, socket);
     } else {
       if (socketRoom.users.length == PLAYERS_PER_GAME) {
         socket.emit('msg', 'Wait for your turn!');
@@ -224,6 +233,24 @@ function rollDice(socketRoom, socket) {
 
   socket.emit('logMsg', 'You rolled a ' + socketRoomUser.roll);
   socket.broadcast.emit('logMsg', 'Your opponent rolled a ' + socketRoomUser.roll)
+}
+
+function getIsValidMove(currentPos, newPos, roll) {
+  if (currentPos.col > newPos.col + roll) {
+    return false;
+  }
+  if (currentPos.col < newPos.col - roll) {
+    return false;
+  }
+  if (currentPos.row > newPos.row + roll) {
+    return false;
+  }
+  if (currentPos.row < newPos.row - roll) {
+    return false;
+  }
+
+  // if we got this far then move is valid
+  return true;
 }
 
 http.listen(3000, function() {

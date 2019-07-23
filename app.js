@@ -34,10 +34,10 @@ io.on('connection', function(socket) {
       const playerTurn = socketRoom.users[randomIndex];
       socketRoom.playerTurn = playerTurn.id;
 
-      rollDice(socketRoom, socket);
-      
       io.in(socketRoom.name).emit('gameStart');
       io.in(socketRoom.name).emit('logMsg', 'The game is now live!');
+      
+      rollDice(socketRoom, socket);
 
       io.to(socketRoom.playerTurn).emit('msg', 'You have been chosen to go first!');
       // TODO: wrong emit - change to io.to non-playerTurn player
@@ -196,11 +196,21 @@ function inRange(value, min, max) {
 }
 
 function switchPlayerTurn(socketRoom) {
+  const playerTurn = getOtherPlayer(socketRoom);
+  socketRoom.playerTurn = playerTurn.id;
+}
+
+/**
+ * Get the player who's turn it isn't
+ * @param {*} socketRoom 
+ */
+function getOtherPlayer(socketRoom) {
   const currentPlayerIndex = socketRoom.users.findIndex(function(user) {
     return user.id === socketRoom.playerTurn
   })
-  const playerTurn = socketRoom.users[(currentPlayerIndex + 1) % socketRoom.users.length];
-  socketRoom.playerTurn = playerTurn.id;
+  const otherPlayer = socketRoom.users[(currentPlayerIndex + 1) % socketRoom.users.length];
+
+  return otherPlayer;
 }
 
 function updateTurnText(socket, socketRoom) {
@@ -227,12 +237,22 @@ function getSocketRoomUser(socketRoom, socketID) {
 }
 
 function rollDice(socketRoom, socket) {
+  const activePlayerID = socketRoom.playerTurn;
   const roll = generateRandomNumber(MAX_ROLL);
-  const socketRoomUser = getSocketRoomUser(socketRoom, socket.id)
+  const socketRoomUser = getSocketRoomUser(socketRoom, activePlayerID)
   socketRoomUser.roll = roll + 1;
 
+  // TODO emitting to wrong players
+  // TODO use getSocketFromId function
   socket.emit('logMsg', 'You rolled a ' + socketRoomUser.roll);
   socket.broadcast.emit('logMsg', 'Your opponent rolled a ' + socketRoomUser.roll)
+}
+
+// TODO make helper function to get socket from socket id
+function getSocketFromID(socketID)
+{
+  const socket = '';
+  return socket;
 }
 
 function getIsValidMove(currentPos, newPos, roll) {

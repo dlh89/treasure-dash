@@ -38,10 +38,11 @@ io.on('connection', function(socket) {
       io.in(socketRoom.name).emit('logMsg', 'The game is now live!');
       
       rollDice(socketRoom, socket);
+      const activePlayerSocket = getSocketFromID(socketRoom.playerTurn);    
 
-      io.to(socketRoom.playerTurn).emit('msg', 'You have been chosen to go first!');
-      // TODO: wrong emit - change to io.to non-playerTurn player
-      socket.broadcast.emit('msg', 'Your opponent has been chosen to go first.');
+      // TODO: messages going to wrong players
+      activePlayerSocket.emit('msg', 'You have been chosen to go first!');
+      activePlayerSocket.broadcast.emit('msg', 'Your opponent has been chosen to go first.');
     } else {
       socket.emit('msg', 'Waiting for your opponent to pick a starting position.')
     }
@@ -196,7 +197,7 @@ function inRange(value, min, max) {
 }
 
 function switchPlayerTurn(socketRoom) {
-  const playerTurn = getOtherPlayer(socketRoom);
+  const playerTurn = getInactivePlayer(socketRoom);
   socketRoom.playerTurn = playerTurn.id;
 }
 
@@ -204,13 +205,13 @@ function switchPlayerTurn(socketRoom) {
  * Get the player who's turn it isn't
  * @param {*} socketRoom 
  */
-function getOtherPlayer(socketRoom) {
+function getInactivePlayer(socketRoom) {
   const currentPlayerIndex = socketRoom.users.findIndex(function(user) {
     return user.id === socketRoom.playerTurn
   })
-  const otherPlayer = socketRoom.users[(currentPlayerIndex + 1) % socketRoom.users.length];
+  const otherPlayerID = socketRoom.users[(currentPlayerIndex + 1) % socketRoom.users.length];
 
-  return otherPlayer;
+  return otherPlayerID;
 }
 
 function updateTurnText(socket, socketRoom) {
@@ -242,16 +243,15 @@ function rollDice(socketRoom, socket) {
   const socketRoomUser = getSocketRoomUser(socketRoom, activePlayerID)
   socketRoomUser.roll = roll + 1;
 
-  // TODO emitting to wrong players
-  // TODO use getSocketFromId function
-  socket.emit('logMsg', 'You rolled a ' + socketRoomUser.roll);
-  socket.broadcast.emit('logMsg', 'Your opponent rolled a ' + socketRoomUser.roll)
+  activePlayerSocket = getSocketFromID(activePlayerID);
+  activePlayerSocket.emit('logMsg', 'You rolled a ' + socketRoomUser.roll);
+  activePlayerSocket.broadcast.emit('logMsg', 'Your opponent rolled a ' + socketRoomUser.roll)
 }
 
 // TODO make helper function to get socket from socket id
 function getSocketFromID(socketID)
 {
-  const socket = '';
+  const socket = io.sockets.sockets[socketID];
   return socket;
 }
 

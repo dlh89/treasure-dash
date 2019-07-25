@@ -40,10 +40,9 @@ io.on('connection', function(socket) {
       rollDice(socketRoom, socket);
       const activePlayerSocket = getSocketFromID(socketRoom.playerTurn);    
 
-      // TODO: messages going to wrong players
       activePlayerSocket.emit('msg', 'You have been chosen to go first!');
       activePlayerSocket.broadcast.emit('msg', 'Your opponent has been chosen to go first.');
-    } else {
+    } else if (socketRoom.users.length == PLAYERS_PER_GAME) {
       socket.emit('msg', 'Waiting for your opponent to pick a starting position.')
     }
   });
@@ -248,7 +247,6 @@ function rollDice(socketRoom, socket) {
   activePlayerSocket.broadcast.emit('logMsg', 'Your opponent rolled a ' + socketRoomUser.roll)
 }
 
-// TODO make helper function to get socket from socket id
 function getSocketFromID(socketID)
 {
   const socket = io.sockets.sockets[socketID];

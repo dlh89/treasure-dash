@@ -31,7 +31,7 @@ socket.on('logMsg', function(msg) {
   console.log('logMsg: ', msg);
   var sidebarText = jQuery('.sidebar__text');
   var sidebarHistory = jQuery('.sidebar__text--history');
-  sidebarHistory.prepend(sidebarText.text()); 
+  sidebarHistory.prepend(sidebarText.html()); 
   sidebarText.html('<p>' + msg + '<p>'); 
 });
 

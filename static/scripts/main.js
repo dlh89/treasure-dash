@@ -73,6 +73,14 @@ socket.on('closenessMsg', function(data) {
   splashMsg(data.closeness, infoResult);
 });
 
+socket.on('updatePlayerPosition', function(data) {
+  updatePlayerPosition(data.coordinates.row, data.coordinates.col);
+});
+
+socket.on('updateOpponentPosition', function(data) {
+  updateOpponentPosition(data.coordinates.row, data.coordinates.col);
+});
+
 function splashMsg(closeness, msg) {
   var infoText = jQuery('.info__text');
   var infoTextModifierClass = 'info__text info__text--' + closeness;
@@ -96,4 +104,17 @@ function renderDig(row, col, success = false) {
   }
 
   digCell.addClass(gridClass);
+}
+
+function updatePlayerPosition(row, col) {
+  debugger;
+  var currentCell = jQuery('[data-row=' + row + '][data-col=' + col + ']');
+  var gridClass = 'grid__cell--current';
+  currentCell.addClass(gridClass);
+}
+
+function updateOpponentPosition(row, col) {
+  var currentCell = jQuery('[data-row=' + row + '][data-col=' + col + ']');
+  var gridClass = 'grid__cell--opponent-current';
+  currentCell.addClass(gridClass);
 }

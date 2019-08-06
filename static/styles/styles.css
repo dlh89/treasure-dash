@@ -80,6 +80,14 @@ body {
   filter: brightness(0.75);
 }
 
+.grid__cell--current {
+  border: 2px solid #ffffff;
+}
+
+.grid__cell--opponent-current {
+  border: 2px solid red;
+}
+
 .grid__cell--dug {
   background: linear-gradient(to bottom right, #b98b0e, #6d5207);
 }

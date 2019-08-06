@@ -65,7 +65,10 @@ io.on('connection', function(socket) {
         if (closeness === 'success') {
           io.to(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
         } else {
+          const activeSocket = getSocketFromID(socketRoomUser.id);
           io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
+          activeSocket.emit('updatePlayerPosition', {'coordinates' : coordinates});
+          activeSocket.broadcast('updateOpponentPosition', {'coordinates' : coordinates});
         }
         
         // only send closeness to the player

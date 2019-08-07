@@ -107,13 +107,20 @@ function renderDig(row, col, success = false) {
 }
 
 function updatePlayerPosition(row, col) {
-  debugger;
+  var currentCell = jQuery('.grid__cell--current');
+  if (currentCell.length) {
+    currentCell.removeClass('grid__cell--current');
+  }
   var currentCell = jQuery('[data-row=' + row + '][data-col=' + col + ']');
   var gridClass = 'grid__cell--current';
   currentCell.addClass(gridClass);
 }
 
 function updateOpponentPosition(row, col) {
+  var currentCell = jQuery('.grid__cell--opponent-current');
+  if (currentCell.length) {
+    currentCell.removeClass('grid__cell--opponent-current');
+  }
   var currentCell = jQuery('[data-row=' + row + '][data-col=' + col + ']');
   var gridClass = 'grid__cell--opponent-current';
   currentCell.addClass(gridClass);

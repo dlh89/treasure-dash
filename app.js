@@ -23,6 +23,7 @@ io.on('connection', function(socket) {
     const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
 
     socketRoomUser.pos = coordinates;
+    emitPositionUpdates(socketRoomUser, coordinates);
 
     const allUsersHaveSelectedStartPos = socketRoom.users.every((user) => {
       return user['pos'] != null;
@@ -65,11 +66,9 @@ io.on('connection', function(socket) {
         if (closeness === 'success') {
           io.to(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
         } else {
-          const activeSocket = getSocketFromID(socketRoomUser.id);
           io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
-          activeSocket.emit('updatePlayerPosition', {'coordinates' : coordinates});
-          activeSocket.broadcast('updateOpponentPosition', {'coordinates' : coordinates});
         }
+        emitPositionUpdates(socketRoomUser, coordinates);
         
         // only send closeness to the player
         socket.emit('closenessMsg', {'closeness': closeness});
@@ -272,6 +271,12 @@ function getIsValidMove(currentPos, newPos, roll) {
 
   // if we got this far then move is valid
   return true;
+}
+
+function emitPositionUpdates(socketRoomUser, coordinates) {
+  const activeSocket = getSocketFromID(socketRoomUser.id);
+  activeSocket.emit('updatePlayerPosition', {'coordinates' : coordinates});
+  activeSocket.broadcast.emit('updateOpponentPosition', {'coordinates' : coordinates});
 }
 
 http.listen(3000, function() {

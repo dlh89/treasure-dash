@@ -275,8 +275,8 @@ function getIsValidMove(currentPos, newPos, roll) {
 
 function emitPositionUpdates(socketRoomUser, coordinates) {
   const activeSocket = getSocketFromID(socketRoomUser.id);
-  activeSocket.emit('updatePlayerPosition', {'coordinates' : coordinates});
-  activeSocket.broadcast.emit('updateOpponentPosition', {'coordinates' : coordinates});
+  activeSocket.emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': false});
+  activeSocket.broadcast.emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': true});
 }
 
 http.listen(3000, function() {

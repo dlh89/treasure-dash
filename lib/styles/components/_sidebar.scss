@@ -2,6 +2,8 @@
     background-color: rgba(0,0,0,.5);
     height: 100%;
     padding: $standard-padding;
+    max-height: 589px;
+    overflow: auto;
 }
 
 .sidebar__heading {

@@ -78,7 +78,7 @@ io.on('connection', function(socket) {
         rollDice(socketRoom, socket);
       } else {
         // invalid move
-        const msgText = 'Invalid move! You only rolled a ' + socketRoomUser.roll + '.';
+        const msgText = `Invalid move! You only rolled a ${socketRoomUser.roll}.`;
         socket.emit('msg', msgText);
       }
 
@@ -97,7 +97,7 @@ io.on('connection', function(socket) {
     socketRoom.users.splice(socketIndex, 1);
   
     // emit msg to that room to notify other player
-    socket.broadcast.to(socketRoom.name).emit('msg', 'Player ' + socket.id + ' has left the room.');
+    socket.broadcast.to(socketRoom.name).emit('msg', `Player ${socket.id} has left the room.`);
   });
 });
 
@@ -132,11 +132,11 @@ function joinRoom(socket, room) {
   socket.join(room.name);
 
   // send message to the client
-  socket.emit('logMsg', 'You have joined '  + room.name);
-  socket.emit('logMsg', 'Your ID is '  + socket.id);
+  socket.emit('logMsg', `You have joined '${room.name}`);
+  socket.emit('logMsg', `Your ID is ${socket.id}`);
 
   // send message to the room
-  io.in(room.name).emit('logMsg', 'Player ' + socket.id + ' has joined the room.');
+  io.in(room.name).emit('logMsg', `Player ${socket.id} has joined the room.`);
 
   if (room.users.length === PLAYERS_PER_GAME) {
     setTreasureCoordinates(room);
@@ -245,8 +245,8 @@ function rollDice(socketRoom, socket) {
   socketRoomUser.roll = roll + 1;
 
   activePlayerSocket = getSocketFromID(activePlayerID);
-  activePlayerSocket.emit('logMsg', 'You rolled a ' + socketRoomUser.roll);
-  activePlayerSocket.broadcast.emit('logMsg', 'Your opponent rolled a ' + socketRoomUser.roll)
+  activePlayerSocket.emit('logMsg', `You rolled a ${socketRoomUser.roll}`);
+  activePlayerSocket.broadcast.emit('logMsg', `Your opponent rolled a ${socketRoomUser.roll}`)
 }
 
 function getSocketFromID(socketID)

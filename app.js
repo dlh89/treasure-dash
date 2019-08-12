@@ -166,8 +166,10 @@ function setTreasureCoordinates(room) {
   const rowCount = 10;
   const colCount = 10;
 
-  const treasureRow = generateRandomNumber(rowCount + 1);
-  const treasureCol = generateRandomNumber(colCount + 1);
+  let treasureRow = generateRandomNumber(rowCount);
+  treasureRow++;
+  let treasureCol = generateRandomNumber(colCount);
+  treasureCol++;
 
   room.treasureCoordinates = {'row': treasureRow, 'col': treasureCol};
   console.log('treasureCoordinates: ', room.treasureCoordinates);
@@ -256,10 +258,6 @@ function getSocketFromID(socketID)
 }
 
 function getIsValidMove(currentPos, newPos, roll) {
-  // TODO: only allow two directions
-  // if col != currentPos.col
-  // row must == currentPos.row
-
   if (newPos.col === currentPos.col) {
     if (newPos.row <= (currentPos.row + roll) 
     && newPos.row >= (currentPos.row - roll)) {
@@ -273,22 +271,6 @@ function getIsValidMove(currentPos, newPos, roll) {
       return true;
     }
   }
-
-  // if (currentPos.col > newPos.col + roll) {
-  //   return false;
-  // }
-  // if (currentPos.col < newPos.col - roll) {
-  //   return false;
-  // }
-  // if (currentPos.row > newPos.row + roll) {
-  //   return false;
-  // }
-  // if (currentPos.row < newPos.row - roll) {
-  //   return false;
-  // }
-
-  // // if we got this far then move is valid
-  // return true;
 
   return false;
 }

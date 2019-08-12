@@ -256,21 +256,41 @@ function getSocketFromID(socketID)
 }
 
 function getIsValidMove(currentPos, newPos, roll) {
-  if (currentPos.col > newPos.col + roll) {
-    return false;
-  }
-  if (currentPos.col < newPos.col - roll) {
-    return false;
-  }
-  if (currentPos.row > newPos.row + roll) {
-    return false;
-  }
-  if (currentPos.row < newPos.row - roll) {
-    return false;
+  // TODO: only allow two directions
+  // if col != currentPos.col
+  // row must == currentPos.row
+
+  if (newPos.col === currentPos.col) {
+    if (newPos.row <= (currentPos.row + roll) 
+    && newPos.row >= (currentPos.row - roll)) {
+      return true;
+    }
   }
 
-  // if we got this far then move is valid
-  return true;
+  if (newPos.row === currentPos.row) {
+    if (newPos.col <= (currentPos.col + roll)
+    && newPos.col >= (currentPos.col - roll)) {
+      return true;
+    }
+  }
+
+  // if (currentPos.col > newPos.col + roll) {
+  //   return false;
+  // }
+  // if (currentPos.col < newPos.col - roll) {
+  //   return false;
+  // }
+  // if (currentPos.row > newPos.row + roll) {
+  //   return false;
+  // }
+  // if (currentPos.row < newPos.row - roll) {
+  //   return false;
+  // }
+
+  // // if we got this far then move is valid
+  // return true;
+
+  return false;
 }
 
 function emitPositionUpdates(socketRoomUser, coordinates) {

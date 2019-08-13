@@ -27,6 +27,12 @@
   border: 2px solid red;
 }
 
+.grid__cell--active {
+  animation-duration: 2s;
+  animation-name: pulseHue;
+  animation-iteration-count: infinite;
+}
+
 .grid__cell--dug {
   background: linear-gradient(to bottom right, #b98b0e, #6d5207);
 

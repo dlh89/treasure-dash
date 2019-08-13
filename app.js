@@ -43,6 +43,7 @@ io.on('connection', function(socket) {
 
       activePlayerSocket.emit('msg', 'You have been chosen to go first!');
       activePlayerSocket.broadcast.emit('msg', 'Your opponent has been chosen to go first.');
+      activePlayerSocket.emit('activePlayer');
     } else if (socketRoom.users.length == PLAYERS_PER_GAME) {
       socket.emit('msg', 'Waiting for your opponent to pick a starting position.')
     }
@@ -202,6 +203,12 @@ function inRange(value, min, max) {
 function switchPlayerTurn(socketRoom) {
   const playerTurn = getInactivePlayer(socketRoom);
   socketRoom.playerTurn = playerTurn.id;
+
+  // TODO
+  const activePlayerSocket = getSocketFromID(playerTurn.id);
+  const inactivePlayer = getInactivePlayer(socketRoom);
+  const inactivePlayerSocket = getSocketFromID(inactivePlayer.id);
+  activePlayerSocket.emit('activePlayer');
 }
 
 /**

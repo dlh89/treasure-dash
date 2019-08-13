@@ -77,6 +77,11 @@ socket.on('updatePlayerPosition', function(data) {
   updatePlayerPosition(data.coordinates.row, data.coordinates.col, data.isOpponentMove);
 });
 
+socket.on('activePlayer', function() {
+  var currentCell = jQuery('.grid__cell--current');
+  currentCell.addClass('grid__cell--active');
+});
+
 function splashMsg(closeness, msg) {
   var infoText = jQuery('.info__text');
   var infoTextModifierClass = 'info__text info__text--' + closeness;

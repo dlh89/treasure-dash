@@ -4,6 +4,17 @@
   clear: both;
 }
 
+@keyframes pulseHue {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(45deg);
+  }
+  100% {
+    filter: hue-rotate(0deg);
+  }
+}
 *,
 *::after,
 *::before {
@@ -86,6 +97,12 @@ body {
 
 .grid__cell--opponent-current {
   border: 2px solid red;
+}
+
+.grid__cell--active {
+  animation-duration: 2s;
+  animation-name: pulseHue;
+  animation-iteration-count: infinite;
 }
 
 .grid__cell--dug {

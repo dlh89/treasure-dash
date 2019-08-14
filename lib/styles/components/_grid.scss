@@ -20,16 +20,22 @@
 }
 
 .grid__cell--current {
-  border: 2px solid #ffffff;
+  border: 4px solid $color-green;
 }
 
 .grid__cell--opponent-current {
-  border: 2px solid red;
+  border: 4px solid $color-red;
 }
 
 .grid__cell--active {
   animation-duration: 2s;
-  animation-name: pulseHue;
+  animation-name: pulseGreen;
+  animation-iteration-count: infinite;
+}
+
+.grid__cell--opponent-active {
+  animation-duration: 2s;
+  animation-name: pulseRed;
   animation-iteration-count: infinite;
 }
 

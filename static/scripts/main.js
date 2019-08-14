@@ -78,8 +78,15 @@ socket.on('updatePlayerPosition', function(data) {
 });
 
 socket.on('activePlayer', function() {
+  removeActiveClasses();
   var currentCell = jQuery('.grid__cell--current');
   currentCell.addClass('grid__cell--active');
+});
+
+socket.on('activeOpponent', function() {
+  removeActiveClasses();
+  var currentCell = jQuery('.grid__cell--opponent-current');
+  currentCell.addClass('grid__cell--opponent-active');
 });
 
 function splashMsg(closeness, msg) {
@@ -118,4 +125,11 @@ function updatePlayerPosition(row, col, isOpponentMove = false) {
   }
   var currentCell = jQuery('[data-row=' + row + '][data-col=' + col + ']');
   currentCell.addClass(gridClass);
+}
+
+function removeActiveClasses() {
+  var previouslyActivePlayer = jQuery('.grid__cell--active');
+  var previouslyActiveOpponent = jQuery('.grid__cell--opponent-active');
+  previouslyActivePlayer.removeClass('grid__cell--active');
+  previouslyActiveOpponent.removeClass('grid__cell--opponent-active--active');
 }

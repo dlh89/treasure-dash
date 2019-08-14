@@ -1,13 +1,27 @@
-@keyframes pulseHue {
+@keyframes pulseGreen {
     0% {
-      filter: hue-rotate(0deg);
+      border-color:v
     }
   
     50% {
-      filter: hue-rotate(45deg);
+      border-color: lighten($color-green, 40%);
     }
 
     100% {
-        filter: hue-rotate(0deg);
+        border-color: $color-green;
+    }
+  }
+
+  @keyframes pulseRed {
+    0% {
+      border-color: $color-red;
+    }
+  
+    50% {
+      border-color: darken($color-red, 40%);
+    }
+
+    100% {
+        border-color: $color-red;
     }
   }

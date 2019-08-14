@@ -23,7 +23,7 @@ socket.on('gameStart', function() {
 
 socket.on('msg', function(msg) {
   console.log('msg: ', msg);
-  var msgBoxText = jQuery('.msg-box__text');
+  var msgBoxText = jQuery('.js-msg-box-text');
   msgBoxText.text(msg);
 });
 
@@ -36,7 +36,7 @@ socket.on('logMsg', function(msg) {
 });
 
 socket.on('clearMsg', function(msg) {
-  var msgBoxText = jQuery('.msg-box__text');
+  var msgBoxText = jQuery('.js-msg-box-text');
   msgBoxText.text('');
 });
 
@@ -87,6 +87,21 @@ socket.on('activeOpponent', function() {
   removeActiveClasses();
   var currentCell = jQuery('.grid__cell--opponent-current');
   currentCell.addClass('grid__cell--opponent-active');
+});
+
+socket.on('roll', function(data) {
+  // TODO update GUI with roll
+  // TODO add reachable class to tiles within roll
+  var roll = data.roll;
+  var isOpponentRoll = data.isOpponentRoll;
+
+  var diceBox = jQuery('.js-dice-box-text')
+
+  if (isOpponentRoll) {
+
+  } else {
+    
+  }
 });
 
 function splashMsg(closeness, msg) {

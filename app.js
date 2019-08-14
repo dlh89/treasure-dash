@@ -205,10 +205,7 @@ function switchPlayerTurn(socketRoom) {
   const playerTurn = getInactivePlayer(socketRoom);
   socketRoom.playerTurn = playerTurn.id;
 
-  // TODO
   const activePlayerSocket = getSocketFromID(playerTurn.id);
-  const inactivePlayer = getInactivePlayer(socketRoom);
-  const inactivePlayerSocket = getSocketFromID(inactivePlayer.id);
   activePlayerSocket.emit('activePlayer');
   activePlayerSocket.broadcast.emit('activeOpponent');
 }
@@ -258,6 +255,8 @@ function rollDice(socketRoom, socket) {
   activePlayerSocket = getSocketFromID(activePlayerID);
   activePlayerSocket.emit('logMsg', `You rolled a ${socketRoomUser.roll}`);
   activePlayerSocket.broadcast.emit('logMsg', `Your opponent rolled a ${socketRoomUser.roll}`)
+  activePlayerSocket.emit('roll', {roll: socketRoomUser.roll, isOpponentRoll: false});
+  activePlayerSocket.broadcast.emit('roll', {roll: socketRoomUser.roll, isOpponentRoll: true});
 }
 
 function getSocketFromID(socketID)

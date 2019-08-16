@@ -90,18 +90,28 @@ socket.on('activeOpponent', function() {
 });
 
 socket.on('roll', function(data) {
-  // TODO update GUI with roll
-  // TODO add reachable class to tiles within roll
   var roll = data.roll;
   var isOpponentRoll = data.isOpponentRoll;
-
+  
   var diceBox = jQuery('.js-dice-box-text')
-
+  
   if (isOpponentRoll) {
     diceBox.text(`Your opponent rolled a ${roll}`);
   } else {
     diceBox.text(`You rolled a ${roll}`);    
   }
+
+  // TODO add reachable class to tiles within roll
+  // TODO get current row and col
+  var currentCell = jQuery('grid__cell--current');
+  var currentRow = currentCell.data('row');
+  var currentCol = currentCell.data('col');
+  for (var i = 0; i < roll; i++) {
+    var cell = jQuery('[data-row=' + currentRow + '][data-col=' + currentCol + (i + 1) + ']');
+    cell.addClass('--reachable'); // TODO make the class
+  }
+  // TODO do for row
+  // TODO do for opponent in some cases
 });
 
 function splashMsg(closeness, msg) {

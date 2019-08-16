@@ -98,9 +98,9 @@ socket.on('roll', function(data) {
   var diceBox = jQuery('.js-dice-box-text')
 
   if (isOpponentRoll) {
-
+    diceBox.text(`Your opponent rolled a ${roll}`);
   } else {
-    
+    diceBox.text(`You rolled a ${roll}`);    
   }
 });
 
@@ -146,5 +146,5 @@ function removeActiveClasses() {
   var previouslyActivePlayer = jQuery('.grid__cell--active');
   var previouslyActiveOpponent = jQuery('.grid__cell--opponent-active');
   previouslyActivePlayer.removeClass('grid__cell--active');
-  previouslyActiveOpponent.removeClass('grid__cell--opponent-active--active');
+  previouslyActiveOpponent.removeClass('grid__cell--opponent-active');
 }

@@ -97,22 +97,39 @@ socket.on('roll', function(data) {
   
   if (isOpponentRoll) {
     diceBox.text(`Your opponent rolled a ${roll}`);
-  } else {
-    diceBox.text(`You rolled a ${roll}`);    
-  }
 
-  // TODO add reachable class to tiles within roll
-  // TODO get current row and col
-  var currentCell = jQuery('grid__cell--current');
+    // remove any reachable classes
+    var reachableCells = jQuery('.grid-cell--reachable');
+    reachableCells.removeClass('grid-cell--reachable');
+  } else {
+    diceBox.text(`You rolled a ${roll}`);
+    addReachableClasses(roll);
+  }
+});
+
+// TODO add reachable class to tiles within roll
+function addReachableClasses(roll) {
+  var currentCell = jQuery('.grid__cell--current');
   var currentRow = currentCell.data('row');
   var currentCol = currentCell.data('col');
+  // TODO refactor
   for (var i = 0; i < roll; i++) {
-    var cell = jQuery('[data-row=' + currentRow + '][data-col=' + currentCol + (i + 1) + ']');
-    cell.addClass('--reachable'); // TODO make the class
+    var cell = jQuery('[data-row=' + currentRow + '][data-col=' + (currentCol + (i + 1)) + ']');
+    cell.addClass('grid-cell--reachable');
   }
-  // TODO do for row
-  // TODO do for opponent in some cases
-});
+  for (var i = 0; i < roll; i++) {
+    var cell = jQuery('[data-col=' + currentCol + '][data-row=' + (currentRow + (i + 1)) + ']');
+    cell.addClass('grid-cell--reachable');
+  }
+  for (var i = 0; i < roll; i++) {
+    var cell = jQuery('[data-row=' + currentRow + '][data-col=' + (currentCol + (i + 1) * -1) + ']');
+    cell.addClass('grid-cell--reachable');
+  }
+  for (var i = 0; i < roll; i++) {
+    var cell = jQuery('[data-col=' + currentCol + '][data-row=' + (currentRow + (i + 1) * -1) + ']');
+    cell.addClass('grid-cell--reachable');
+  }
+}
 
 function splashMsg(closeness, msg) {
   var infoText = jQuery('.info__text');

@@ -164,7 +164,8 @@ body {
 }
 
 .msg-box {
-  display: inline-block;
+  float: left;
+  min-height: 67px;
   padding: 20px 25px;
   margin-bottom: 20px;
   background-color: rgba(0, 0, 0, 0.5);

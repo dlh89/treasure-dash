@@ -6,6 +6,7 @@ const io = require('socket.io')(http);
 const rooms = [];
 const PLAYERS_PER_GAME = 2;
 const MAX_ROLL = 6;
+const WARM_DISTANCE = 1;
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/views/index.html');
@@ -181,8 +182,8 @@ function getCloseness(room, coordinates) {
   const treasureRow = room.treasureCoordinates.row;
   const treasureCol = room.treasureCoordinates.col;
 
-  const rowClose = inRange(coordinates.row, treasureRow - 1, treasureRow + 1);
-  const colClose = inRange(coordinates.col, treasureCol - 1, treasureCol + 1);
+  const rowClose = inRange(coordinates.row, treasureRow - WARM_DISTANCE, treasureRow + WARM_DISTANCE);
+  const colClose = inRange(coordinates.col, treasureCol - WARM_DISTANCE, treasureCol + WARM_DISTANCE);
 
   if (coordinates.row == treasureRow && coordinates.col == treasureCol) {
     return 'success';

@@ -39,6 +39,10 @@
   animation-iteration-count: infinite;
 }
 
+.grid-cell--reachable {
+  opacity: 0.8;
+}
+
 .grid__cell--dug {
   background: linear-gradient(to bottom right, #b98b0e, #6d5207);
 

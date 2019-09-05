@@ -6,6 +6,7 @@ const io = require('socket.io')(http);
 const rooms = [];
 const PLAYERS_PER_GAME = 2;
 const MAX_ROLL = 6;
+const WARM_DISTANCE = 1;
 
 const CLOSE_RANGE = 8;
 

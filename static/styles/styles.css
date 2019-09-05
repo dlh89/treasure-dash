@@ -122,6 +122,10 @@ body {
   animation-iteration-count: infinite;
 }
 
+.grid-cell--reachable {
+  opacity: 0.8;
+}
+
 .grid__cell--dug {
   background: linear-gradient(to bottom right, #b98b0e, #6d5207);
 }
@@ -160,7 +164,8 @@ body {
 }
 
 .msg-box {
-  display: inline-block;
+  float: left;
+  min-height: 67px;
   padding: 20px 25px;
   margin-bottom: 20px;
   background-color: rgba(0, 0, 0, 0.5);

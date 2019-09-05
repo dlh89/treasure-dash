@@ -7,6 +7,8 @@ const rooms = [];
 const PLAYERS_PER_GAME = 2;
 const MAX_ROLL = 6;
 
+const CLOSE_RANGE = 8;
+
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
@@ -181,16 +183,32 @@ function getCloseness(room, coordinates) {
   const treasureRow = room.treasureCoordinates.row;
   const treasureCol = room.treasureCoordinates.col;
 
-  const rowClose = inRange(coordinates.row, treasureRow - 1, treasureRow + 1);
-  const colClose = inRange(coordinates.col, treasureCol - 1, treasureCol + 1);
+  const rowDistance = getDistance(treasureRow, coordinates.row);
+  const colDistance = getDistance(treasureCol, coordinates.col);
 
-  if (coordinates.row == treasureRow && coordinates.col == treasureCol) {
-    return 'success';
-  } else if (rowClose && colClose) {
+  const totalDistance = rowDistance + colDistance;
+
+  if (totalDistance <= CLOSE_RANGE) {
     return 'warm';
   } else {
     return 'cold';
   }
+}
+
+/**
+ * Always return positive number
+ * @param {*} cellA 
+ * @param {*} cellB 
+ */
+function getDistance(cellA, cellB) {
+  let distance;
+  if (treasureRow > coordinates.row) {
+    distance = coordinates.row - treasureRow;
+  } else {
+    distance = coordinates.row + treasureRow;
+  }
+
+  return distance;
 }
 
 function inRange(value, min, max) {
@@ -288,6 +306,8 @@ function emitPositionUpdates(socketRoomUser, coordinates) {
   activeSocket.emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': false});
   activeSocket.broadcast.emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': true});
 }
+
+function 
 
 http.listen(3000, function() {
   console.log('listening on *:3000');

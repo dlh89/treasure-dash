@@ -6,7 +6,6 @@ const io = require('socket.io')(http);
 const rooms = [];
 const PLAYERS_PER_GAME = 2;
 const MAX_ROLL = 6;
-const WARM_DISTANCE = 1;
 
 const CLOSE_RANGE = 8;
 
@@ -27,6 +26,10 @@ io.on('connection', function(socket) {
 
     socketRoomUser.pos = coordinates;
     emitPositionUpdates(socketRoomUser, coordinates);
+
+    // TODO emit a closeness msg
+    const closeness = getCloseness(socketRoom, coordinates);
+    io.to(socketRoom.name).emit('closenessMsg', closeness);
 
     const allUsersHaveSelectedStartPos = socketRoom.users.every((user) => {
       return user['pos'] != null;
@@ -66,13 +69,14 @@ io.on('connection', function(socket) {
         // update their position
         socketRoomUser.pos = coordinates;
   
-        const closeness = getCloseness(socketRoom, coordinates); 
-  
-        if (closeness === 'success') {
-          io.to(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
-        } else {
-          io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
-        }
+        // const closeness = getCloseness(socketRoom, coordinates); 
+        io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
+        
+        // if (closeness === 'success') {
+        //   io.to(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
+        // }
+
+        // TODO: determine if warmer or colder and emit 
         emitPositionUpdates(socketRoomUser, coordinates);
         
         // only send closeness to the player

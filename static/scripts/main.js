@@ -55,18 +55,11 @@ socket.on('closenessMsg', function(data) {
   var infoResult = '';
 
   switch (data.closeness) {
-    case 'success':
-      infoResult = 'Congratulations!';
-      gridClass = 'grid__cell--treasure';
-      break;
     case 'cold':
       infoResult = 'Ice cold.';
       break;
     case 'warm':
       infoResult = 'Getting warm.';
-      break;
-    case 'hot':
-      infoResult = 'Red hot!';
       break;
   }
 

@@ -203,11 +203,12 @@ function getCloseness(room, coordinates) {
  */
 function getDistance(cellA, cellB) {
   let distance;
-  if (treasureRow > coordinates.row) {
-    distance = coordinates.row - treasureRow;
+  if (cellA > cellB) {
+    distance = cellA - cellB;
   } else {
-    distance = coordinates.row + treasureRow;
+    distance = cellB - cellA;
   }
+  console.log('Distance: ', distance);
 
   return distance;
 }
@@ -307,8 +308,6 @@ function emitPositionUpdates(socketRoomUser, coordinates) {
   activeSocket.emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': false});
   activeSocket.broadcast.emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': true});
 }
-
-function 
 
 http.listen(3000, function() {
   console.log('listening on *:3000');

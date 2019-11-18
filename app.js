@@ -7,7 +7,7 @@ const rooms = [];
 const PLAYERS_PER_GAME = 2;
 const MAX_ROLL = 6;
 
-const CLOSE_RANGE = 8;
+const CLOSE_RANGE = 2;
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/views/index.html');
@@ -27,9 +27,8 @@ io.on('connection', function(socket) {
     socketRoomUser.pos = coordinates;
     emitPositionUpdates(socketRoomUser, coordinates);
 
-    // TODO emit a closeness msg
     const closeness = getCloseness(socketRoom, coordinates);
-    io.to(socketRoom.name).emit('closenessMsg', closeness);
+    socket.emit('closenessMsg', {'closeness': closeness});
 
     const allUsersHaveSelectedStartPos = socketRoom.users.every((user) => {
       return user['pos'] != null;
@@ -69,7 +68,7 @@ io.on('connection', function(socket) {
         // update their position
         socketRoomUser.pos = coordinates;
   
-        // const closeness = getCloseness(socketRoom, coordinates); 
+        const closeness = getCloseness(socketRoom, coordinates); 
         io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
         
         // if (closeness === 'success') {

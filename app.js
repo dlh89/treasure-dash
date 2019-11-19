@@ -71,19 +71,19 @@ io.on('connection', function(socket) {
         const closeness = getCloseness(socketRoom, coordinates); 
         io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
         
-        // if (closeness === 'success') {
-        //   io.to(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
-        // }
-
-        // TODO: determine if warmer or colder and emit 
-        emitPositionUpdates(socketRoomUser, coordinates);
-        
-        // only send closeness to the player
-        socket.emit('closenessMsg', {'closeness': closeness});
-  
-        switchPlayerTurn(socketRoom);
-        updateTurnText(socket, socketRoom);
-        rollDice(socketRoom, socket);
+        if (closeness === 'success') {
+          io.to(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
+        } else {
+          // TODO: determine if warmer or colder and emit 
+          emitPositionUpdates(socketRoomUser, coordinates);
+          
+          // only send closeness to the player
+          socket.emit('closenessMsg', {'closeness': closeness});
+    
+          switchPlayerTurn(socketRoom);
+          updateTurnText(socket, socketRoom);
+          rollDice(socketRoom, socket);
+        }
       } else {
         // invalid move
         const msgText = `Invalid move! You only rolled a ${socketRoomUser.roll}.`;
@@ -186,6 +186,10 @@ function setTreasureCoordinates(room) {
 function getCloseness(room, coordinates) {
   const treasureRow = room.treasureCoordinates.row;
   const treasureCol = room.treasureCoordinates.col;
+
+  if (coordinates.row === treasureRow && coordinates.col == treasureCol) {
+    return 'success';
+  }
 
   const rowDistance = getDistance(treasureRow, coordinates.row);
   const colDistance = getDistance(treasureCol, coordinates.col);

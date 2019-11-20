@@ -1,5 +1,6 @@
 global = {
-  gameLive: false
+  gameLive: false,
+  preGame: false // the time when players pick starting positions
 }
 
 var socket = io();
@@ -10,14 +11,15 @@ $(cells).on('click', cellClick);
 function cellClick(e) {
   var row = jQuery(e.target).data('row');
   var col = jQuery(e.target).data('col');
-  if (global.gameLive === true) {
+  if (global.gameLive) {
     socket.emit('clientDig', {'row': row, 'col': col});
-  } else {
+  } else if (global.preGame) {
     socket.emit('startPos', {'row': row, 'col': col});
   }
 }
 
 socket.on('gameStart', function() {
+  global.preGame = false; 
   global.gameLive = true;
 });
 
@@ -49,6 +51,8 @@ socket.on('playerWin', function(data) {
   splashMsg('success', successMsg);
 
   renderDig(data.coordinates.row, data.coordinates.col, true);
+  global.gameLive = false; // TODO somehow this doesn't prevent further moves
+  // TODO remove any dig hover active states
 });
 
 socket.on('closenessMsg', function(data) {

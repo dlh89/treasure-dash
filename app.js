@@ -19,6 +19,11 @@ io.on('connection', function(socket) {
   console.log('user connected:' + socket.id);
   findRoom(socket);
 
+  if (socketRoom.users.length === PLAYERS_PER_GAME) {
+    // TODO emit event to set global.preGame to true in main
+    
+  }
+
   socket.on('startPos', function(coordinates) {
     const socketRoom = getSocketRoom(socket);
 

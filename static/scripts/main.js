@@ -104,6 +104,10 @@ socket.on('roll', function(data) {
   }
 });
 
+socket.on('preGame', function() {
+  global.preGame = true;
+});
+
 /**
  * add reachable class to tiles within roll
  * @param {*} roll 

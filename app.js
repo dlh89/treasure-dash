@@ -80,7 +80,6 @@ io.on('connection', function(socket) {
           // emit to everyone
           io.in(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
         } else {
-          // TODO: determine if warmer or colder and emit 
           emitPositionUpdates(socketRoomUser, coordinates);
           
           // only send closeness to the player

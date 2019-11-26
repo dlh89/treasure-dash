@@ -51,8 +51,9 @@ socket.on('playerWin', function(data) {
   splashMsg('success', successMsg);
 
   renderDig(data.coordinates.row, data.coordinates.col, true);
-  global.gameLive = false; // TODO somehow this doesn't prevent further moves
-  // TODO remove any dig hover active states
+  global.gameLive = false;
+  jQuery('.grid-cell--reachable').removeClass('grid-cell--reachable')
+  // TODO remove class from grid to disable hover effects
 });
 
 socket.on('closenessMsg', function(data) {
@@ -106,6 +107,9 @@ socket.on('roll', function(data) {
 
 socket.on('preGame', function() {
   global.preGame = true;
+
+  // TODO add class to grid which enables hover effects
+  jQuery('.grid').addClass('');
 });
 
 /**

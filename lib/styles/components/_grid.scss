@@ -12,11 +12,12 @@
   background: #ffbc00;
   background: linear-gradient(to bottom right, #fdf137, #ffbc00);
   border: 1px solid #c89b1c;
+}
 
-  &:hover {
-    transition: ease-out .5s;
-    filter: brightness(.75);
-  }
+.game-active .grid__cell:hover
+{
+  transition: ease-out .5s;
+  filter: brightness(.75);
 }
 
 .grid__cell--current {
@@ -50,6 +51,7 @@
     filter: brightness(1);
   }
 }
+
 
 .grid__cell--treasure {
   background: linear-gradient(to bottom right, #ffff15, #fffdcf);

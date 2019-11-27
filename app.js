@@ -69,18 +69,21 @@ io.on('connection', function(socket) {
 
       // check move is in range
       const isValidMove = getIsValidMove(socketRoomUser.pos, coordinates, socketRoomUser.roll)
-      if (isValidMove) {
+      if (!isValidMove) { 
+        const msgText = `Invalid move! You only rolled a ${socketRoomUser.roll}.`;
+        socket.emit('msg', msgText);
+      } else {
         // update their position
         socketRoomUser.pos = coordinates;
-  
+    
         const closeness = getCloseness(socketRoom, coordinates); 
         io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
+        emitPositionUpdates(socketRoomUser, coordinates);
         
         if (closeness === 'success') {
           // emit to everyone
           io.in(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
         } else {
-          emitPositionUpdates(socketRoomUser, coordinates);
           
           // only send closeness to the player
           socket.emit('closenessMsg', {'closeness': closeness});
@@ -89,11 +92,8 @@ io.on('connection', function(socket) {
           updateTurnText(socket, socketRoom);
           rollDice(socketRoom, socket);
         }
-      } else {
-        // invalid move
-        const msgText = `Invalid move! You only rolled a ${socketRoomUser.roll}.`;
-        socket.emit('msg', msgText);
       }
+
 
     } else {
       if (socketRoom.users.length == PLAYERS_PER_GAME) {

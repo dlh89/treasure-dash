@@ -18,6 +18,11 @@ function cellClick(e) {
   }
 }
 
+socket.on('preGame', function() {
+  global.preGame = true;
+  jQuery('.grid').addClass('game-active');
+});
+
 socket.on('gameStart', function() {
   global.preGame = false; 
   global.gameLive = true;
@@ -44,16 +49,6 @@ socket.on('clearMsg', function(msg) {
 
 socket.on('serverDig', function(data) {
   renderDig(data.coordinates.row, data.coordinates.col);
-});
-
-socket.on('playerWin', function(data) {
-  var successMsg = 'Player ' + data.winner + ' has won the game!';
-  splashMsg('success', successMsg);
-
-  renderDig(data.coordinates.row, data.coordinates.col, true);
-  global.gameLive = false;
-  jQuery('.grid-cell--reachable').removeClass('grid-cell--reachable')
-  // TODO remove class from grid to disable hover effects
 });
 
 socket.on('closenessMsg', function(data) {
@@ -105,11 +100,15 @@ socket.on('roll', function(data) {
   }
 });
 
-socket.on('preGame', function() {
-  global.preGame = true;
+socket.on('playerWin', function(data) {
+  var successMsg = 'Player ' + data.winner + ' has won the game!';
+  splashMsg('success', successMsg);
 
-  // TODO add class to grid which enables hover effects
-  jQuery('.grid').addClass('');
+  renderDig(data.coordinates.row, data.coordinates.col, true);
+  global.gameLive = false;
+  removeActiveClasses();
+  jQuery('.grid-cell--reachable').removeClass('grid-cell--reachable')
+  jQuery('.grid').removeClass('game-active');
 });
 
 /**

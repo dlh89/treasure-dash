@@ -90,7 +90,6 @@ io.on('connection', function(socket) {
     
           switchPlayerTurn(socketRoom);
           updateTurnText(socket, socketRoom);
-          rollDice(socketRoom, socket);
         }
       }
 
@@ -111,6 +110,11 @@ io.on('connection', function(socket) {
   
     // emit msg to that room to notify other player
     socket.broadcast.to(socketRoom.name).emit('msg', `Player ${socket.id} has left the room.`);
+  });
+
+  socket.on('chooseRoll', function() {
+    // TODO get socketRoom?
+    rollDice(socketRoom, socket);
   });
 });
 

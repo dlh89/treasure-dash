@@ -6,7 +6,7 @@ global = {
 var socket = io();
 
 var cells = $('.grid__cell');
-$(cells).on('click', cellClick);
+jQuery(cells).on('click', cellClick);
 
 function cellClick(e) {
   var row = jQuery(e.target).data('row');
@@ -26,6 +26,8 @@ socket.on('preGame', function() {
 socket.on('gameStart', function() {
   global.preGame = false; 
   global.gameLive = true;
+
+  initHandleTurnChoice();
 });
 
 socket.on('msg', function(msg) {
@@ -74,6 +76,8 @@ socket.on('activePlayer', function() {
   removeActiveClasses();
   var currentCell = jQuery('.grid__cell--current');
   currentCell.addClass('grid__cell--active');
+
+  jQuery('.turn-choice').addClass('turn-choice--active');
 });
 
 socket.on('activeOpponent', function() {
@@ -110,6 +114,17 @@ socket.on('playerWin', function(data) {
   jQuery('.grid-cell--reachable').removeClass('grid-cell--reachable')
   jQuery('.grid').removeClass('game-active');
 });
+
+function initHandleTurnChoice() {
+  jQuery('.js-choose-roll').on('click', function() {
+    socket.emit('chooseRoll');
+    jQuery('.turn-choice').removeClass('turn-choice--active');
+  });
+  jQuery('.js-choose-dig').on('click', function() {
+    // TODO allow client dig
+    jQuery('.turn-choice').removeClass('turn-choice--active');
+  });
+}
 
 /**
  * add reachable class to tiles within roll

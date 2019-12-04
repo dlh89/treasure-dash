@@ -203,4 +203,12 @@ body {
   opacity: 0.5;
 }
 
+.turn-choice {
+  display: none;
+}
+
+.turn-choice--active {
+  display: block;
+}
+
 /*# sourceMappingURL=styles.css.map */

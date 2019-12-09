@@ -60,9 +60,9 @@ io.on('connection', function(socket) {
     }
   });
 
-  socket.on('clientDig', function(coordinates) {
+  socket.on('clientMove', function(coordinates) {
     const socketRoom = getSocketRoom(socket);
-    
+
     // check if it's their turn
     if (socketRoom.playerTurn === socket.id) {
       const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
@@ -77,9 +77,9 @@ io.on('connection', function(socket) {
         socketRoomUser.pos = coordinates;
     
         const closeness = getCloseness(socketRoom, coordinates); 
-        io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
         emitPositionUpdates(socketRoomUser, coordinates);
         
+        // TODO don't show a success message unless dig
         if (closeness === 'success') {
           // emit to everyone
           io.in(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
@@ -113,8 +113,15 @@ io.on('connection', function(socket) {
   });
 
   socket.on('chooseRoll', function() {
-    // TODO get socketRoom?
+    const socketRoom = getSocketRoom(socket);
     rollDice(socketRoom, socket);
+  });
+
+  socket.on('chooseDig', function() {
+    const socketRoom = getSocketRoom(socket);
+    const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
+    io.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos});
+    switchPlayerTurn(socketRoom);
   });
 });
 

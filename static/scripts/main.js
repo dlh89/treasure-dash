@@ -5,14 +5,14 @@ global = {
 
 var socket = io();
 
-var cells = $('.grid__cell');
+var cells = jQuery('.grid__cell');
 jQuery(cells).on('click', cellClick);
 
 function cellClick(e) {
   var row = jQuery(e.target).data('row');
   var col = jQuery(e.target).data('col');
   if (global.gameLive) {
-    socket.emit('clientDig', {'row': row, 'col': col});
+    socket.emit('clientMove', {'row': row, 'col': col});
   } else if (global.preGame) {
     socket.emit('startPos', {'row': row, 'col': col});
   }
@@ -121,7 +121,7 @@ function initHandleTurnChoice() {
     jQuery('.turn-choice').removeClass('turn-choice--active');
   });
   jQuery('.js-choose-dig').on('click', function() {
-    // TODO allow client dig
+    socket.emit('chooseDig');
     jQuery('.turn-choice').removeClass('turn-choice--active');
   });
 }

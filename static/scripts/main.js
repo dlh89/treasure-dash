@@ -94,10 +94,6 @@ socket.on('roll', function(data) {
   
   if (isOpponentRoll) {
     diceBox.text(`Your opponent rolled a ${roll}`);
-
-    // remove any reachable classes
-    var reachableCells = jQuery('.grid-cell--reachable');
-    reachableCells.removeClass('grid-cell--reachable');
   } else {
     diceBox.text(`You rolled a ${roll}`);
     addReachableClasses(roll);
@@ -118,11 +114,9 @@ socket.on('playerWin', function(data) {
 function initHandleTurnChoice() {
   jQuery('.js-choose-roll').on('click', function() {
     socket.emit('chooseRoll');
-    jQuery('.turn-choice').removeClass('turn-choice--active');
   });
   jQuery('.js-choose-dig').on('click', function() {
     socket.emit('chooseDig');
-    jQuery('.turn-choice').removeClass('turn-choice--active');
   });
 }
 
@@ -191,4 +185,8 @@ function removeActiveClasses() {
   var previouslyActiveOpponent = jQuery('.grid__cell--opponent-active');
   previouslyActivePlayer.removeClass('grid__cell--active');
   previouslyActiveOpponent.removeClass('grid__cell--opponent-active');
+
+  // remove any reachable classes
+  var reachableCells = jQuery('.grid-cell--reachable');
+  reachableCells.removeClass('grid-cell--reachable');
 }

@@ -48,7 +48,6 @@ io.on('connection', function(socket) {
       io.in(socketRoom.name).emit('gameStart');
       io.in(socketRoom.name).emit('logMsg', 'The game is now live!');
       
-      rollDice(socketRoom, socket);
       const activePlayerSocket = getSocketFromID(socketRoom.playerTurn);    
 
       activePlayerSocket.emit('msg', 'You have been chosen to go first!');
@@ -122,6 +121,7 @@ io.on('connection', function(socket) {
     const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
     io.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos});
     switchPlayerTurn(socketRoom);
+    updateTurnText(socket, socketRoom);
   });
 });
 

@@ -6,6 +6,6 @@
     background-color: rgba(0,0,0,.5);
 }
 
-.msg-box--dice {
-    margin-left: 8px;
+.msg-box:not(:last-child) {
+    margin-right: 8px;
 }

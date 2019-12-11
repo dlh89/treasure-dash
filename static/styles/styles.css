@@ -172,8 +172,8 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.msg-box--dice {
-  margin-left: 8px;
+.msg-box:not(:last-child) {
+  margin-right: 8px;
 }
 
 .two-columns__main {
@@ -209,6 +209,12 @@ body {
 
 .turn-choice--active {
   display: block;
+}
+
+.turn-choice__btn {
+  padding: 10px 14px;
+  border: none;
+  background-color: #ffbc00;
 }
 
 /*# sourceMappingURL=styles.css.map */

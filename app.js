@@ -78,21 +78,12 @@ io.on('connection', function(socket) {
         const closeness = getCloseness(socketRoom, coordinates); 
         emitPositionUpdates(socketRoomUser, coordinates);
         
-        // TODO don't show a success message unless dig
-        if (closeness === 'success') {
-          // emit to everyone
-          io.in(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
-        } else {
-          
-          // only send closeness to the player
-          socket.emit('closenessMsg', {'closeness': closeness});
-    
-          switchPlayerTurn(socketRoom);
-          updateTurnText(socket, socketRoom);
-        }
+        // only send closeness to the player
+        socket.emit('closenessMsg', {'closeness': closeness});
+  
+        switchPlayerTurn(socketRoom);
+        updateTurnText(socket, socketRoom);
       }
-
-
     } else {
       if (socketRoom.users.length == PLAYERS_PER_GAME) {
         socket.emit('msg', 'Wait for your turn!');
@@ -119,9 +110,14 @@ io.on('connection', function(socket) {
   socket.on('chooseDig', function() {
     const socketRoom = getSocketRoom(socket);
     const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
-    io.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos});
-    switchPlayerTurn(socketRoom);
-    updateTurnText(socket, socketRoom);
+    if (socketRoomUser.pos.row == socketRoom.treasureCoordinates.row &&
+      socketRoomUser.pos.col == socketRoom.treasureCoordinates.col) {
+      io.in(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : socketRoomUser.pos});
+    } else {
+      io.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos});
+      switchPlayerTurn(socketRoom);
+      updateTurnText(socket, socketRoom);
+    }
   });
 });
 
@@ -202,10 +198,6 @@ function setTreasureCoordinates(room) {
 function getCloseness(room, coordinates) {
   const treasureRow = room.treasureCoordinates.row;
   const treasureCol = room.treasureCoordinates.col;
-
-  if (coordinates.row === treasureRow && coordinates.col == treasureCol) {
-    return 'success';
-  }
 
   const rowDistance = getDistance(treasureRow, coordinates.row);
   const colDistance = getDistance(treasureCol, coordinates.col);

@@ -1,0 +1,22 @@
+.action-box {
+    position: relative;
+    width: 500px; // same as grid
+    min-height: 67px;
+}
+
+.action-box__msg-box {
+    float: left;
+    position: relative;
+    height: 100%;
+    width: calc(33.3333% - (8px * 2));
+    padding: $standard-padding;
+    margin-bottom: 20px;
+    background-color: rgba(0,0,0,.5);
+}
+.action-box__msg-box--no-padding {
+    padding: 0;
+}
+
+.action-box__msg-box:not(:last-child) {
+    margin-right: 8px;
+}

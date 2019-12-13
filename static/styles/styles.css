@@ -164,18 +164,6 @@ body {
   color: #f12d1f;
 }
 
-.msg-box {
-  float: left;
-  min-height: 67px;
-  padding: 20px 25px;
-  margin-bottom: 20px;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.msg-box:not(:last-child) {
-  margin-right: 8px;
-}
-
 .two-columns__main {
   float: left;
   width: 68%;
@@ -212,9 +200,35 @@ body {
 }
 
 .turn-choice__btn {
+  float: left;
+  width: 50%;
   padding: 10px 14px;
   border: none;
   background-color: #ffbc00;
+}
+
+.action-box {
+  position: relative;
+  width: 500px;
+  min-height: 67px;
+}
+
+.action-box__msg-box {
+  float: left;
+  position: relative;
+  height: 100%;
+  width: calc(33.3333% - (8px * 2));
+  padding: 20px 25px;
+  margin-bottom: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.action-box__msg-box--no-padding {
+  padding: 0;
+}
+
+.action-box__msg-box:not(:last-child) {
+  margin-right: 8px;
 }
 
 /*# sourceMappingURL=styles.css.map */

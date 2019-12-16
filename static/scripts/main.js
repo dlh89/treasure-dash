@@ -76,7 +76,9 @@ socket.on('activePlayer', function() {
   removeActiveClasses();
   var currentCell = jQuery('.grid__cell--current');
   currentCell.addClass('grid__cell--active');
-  jQuery('.turn-choice').addClass('turn-choice--active');
+  // jQuery('.turn-choice').addClass('turn-choice--active');
+  jQuery('.turn-choice').attr('disabled', false);
+
 });
 
 socket.on('activeOpponent', function() {
@@ -112,11 +114,13 @@ socket.on('playerWin', function(data) {
 
 function initHandleTurnChoice() {
   jQuery('.js-choose-roll').on('click', function() {
-    jQuery('.turn-choice').removeClass('turn-choice--active');
+    // jQuery('.turn-choice').removeClass('turn-choice--active');
+    jQuery('.turn-choice').attr('disabled', true);
     socket.emit('chooseRoll');
   });
   jQuery('.js-choose-dig').on('click', function() {
-    jQuery('.turn-choice').removeClass('turn-choice--active');
+    // jQuery('.turn-choice').removeClass('turn-choice--active');
+    jQuery('.turn-choice').attr('disabled', true);
     socket.emit('chooseDig');
   });
 }

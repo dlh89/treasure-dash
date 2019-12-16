@@ -1,16 +1,35 @@
 .turn-choice {
-    display: none;
-}
-
-.turn-choice--active {
-    display: block;
+    border: none;
 }
 
 .turn-choice__btn
 {
     float: left;
-    width: 50%;
+    font-family: inherit;
+    font-size: 20px;
+    height: 114px;
+    width: calc(50% - 1px);
     padding: 10px 14px;
     border: none;
     background-color: #ffbc00;
+}
+
+.turn-choice__btn:not(:last-child)
+{
+    margin-right: 2px;
+}
+
+.turn-choice__btn:hover
+{
+    cursor: pointer;
+}
+
+.turn-choice:disabled .turn-choice__btn
+{
+    opacity: 0.25;
+}
+
+.turn-choice:disabled .turn-choice__btn:hover
+{
+    cursor: default;
 }

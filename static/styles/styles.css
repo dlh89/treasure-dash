@@ -98,7 +98,7 @@ body {
   border: 1px solid #c89b1c;
 }
 
-.game-active .grid__cell:hover {
+.turn-active .grid__cell:hover {
   transition: ease-out 0.5s;
   filter: brightness(0.75);
 }
@@ -216,6 +216,7 @@ body {
 
 .turn-choice:disabled .turn-choice__btn {
   opacity: 0.25;
+  color: #000000;
 }
 
 .turn-choice:disabled .turn-choice__btn:hover {
@@ -241,6 +242,7 @@ body {
 .action-box__msg-box--buttons {
   padding: 0;
   width: calc(20% - ((8px * 2) / 3));
+  background-color: transparent;
 }
 
 .action-box__msg-box:not(:last-child) {

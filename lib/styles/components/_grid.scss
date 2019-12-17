@@ -14,7 +14,7 @@
   border: 1px solid #c89b1c;
 }
 
-.game-active .grid__cell:hover
+.turn-active .grid__cell:hover
 {
   transition: ease-out .5s;
   filter: brightness(.75);

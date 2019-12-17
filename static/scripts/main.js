@@ -20,7 +20,7 @@ function cellClick(e) {
 
 socket.on('preGame', function() {
   global.preGame = true;
-  jQuery('.grid').addClass('game-active');
+  jQuery('.grid').addClass('turn-active');
 });
 
 socket.on('gameStart', function() {
@@ -78,7 +78,6 @@ socket.on('activePlayer', function() {
   currentCell.addClass('grid__cell--active');
   // jQuery('.turn-choice').addClass('turn-choice--active');
   jQuery('.turn-choice').attr('disabled', false);
-
 });
 
 socket.on('activeOpponent', function() {
@@ -109,7 +108,6 @@ socket.on('playerWin', function(data) {
   global.gameLive = false;
   removeActiveClasses();
   jQuery('.grid-cell--reachable').removeClass('grid-cell--reachable')
-  jQuery('.grid').removeClass('game-active');
 });
 
 function initHandleTurnChoice() {
@@ -130,6 +128,7 @@ function initHandleTurnChoice() {
  * @param {*} roll 
  */
 function addReachableClasses(roll) {
+  jQuery('.grid').addClass('turn-active');
   var currentCell = jQuery('.grid__cell--current');
   var currentRow = currentCell.data('row');
   var currentCol = currentCell.data('col');
@@ -173,9 +172,12 @@ function renderDig(row, col, success = false) {
 }
 
 function updatePlayerPosition(row, col, isOpponentMove = false) {
+  
   var gridClass = 'grid__cell--current';
   if (isOpponentMove) {
     var gridClass = 'grid__cell--opponent-current';
+  } else {
+    jQuery('.grid').removeClass('turn-active');
   }
   var currentCell = jQuery('.' + gridClass);
   if (currentCell.length) {

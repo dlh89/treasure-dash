@@ -16,6 +16,7 @@
 .action-box__msg-box--buttons {
     padding: 0;
     width: calc(20% - ((8px * 2) / 3));
+    background-color: transparent;
 }
 
 .action-box__msg-box:not(:last-child) {

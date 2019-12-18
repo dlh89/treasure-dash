@@ -50,6 +50,14 @@ socket.on('clearMsg', function(msg) {
 });
 
 socket.on('serverDig', function(data) {
+  var isOpponentDig = data.isOpponentDig;  
+  var actionBox = jQuery('.js-action-box-text');
+  
+  if (isOpponentDig) {
+    actionBox.text(`Your opponent dug but foud nothing!`);
+  } else {
+    actionBox.text(`You dug but foud nothing!`);
+  }
   renderDig(data.coordinates.row, data.coordinates.col);
 });
 
@@ -90,12 +98,12 @@ socket.on('roll', function(data) {
   var roll = data.roll;
   var isOpponentRoll = data.isOpponentRoll;
   
-  var diceBox = jQuery('.js-dice-box-text')
+  var actionBox = jQuery('.js-action-box-text');
   
   if (isOpponentRoll) {
-    diceBox.text(`Your opponent rolled a ${roll}`);
+    actionBox.text(`Your opponent rolled a ${roll}`);
   } else {
-    diceBox.text(`You rolled a ${roll}`);
+    actionBox.text(`You rolled a ${roll}`);
     addReachableClasses(roll);
   }
 });
@@ -158,16 +166,9 @@ function splashMsg(closeness, msg) {
                   .fadeOut(1000);
 }
 
-function renderDig(row, col, success = false) {
+function renderDig(row, col) {
   var digCell = jQuery('[data-row=' + row + '][data-col=' + col + ']');
-
   var gridClass = 'grid__cell--dug';
-
-  if (success)
-  {
-    gridClass = 'grid__cell--treasure';
-  }
-
   digCell.addClass(gridClass);
 }
 

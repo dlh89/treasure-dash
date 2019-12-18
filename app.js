@@ -114,7 +114,8 @@ io.on('connection', function(socket) {
       socketRoomUser.pos.col == socketRoom.treasureCoordinates.col) {
       io.in(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : socketRoomUser.pos});
     } else {
-      io.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos});
+      socket.emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: false});
+      socket.broadcast.emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: true})
       switchPlayerTurn(socketRoom);
       updateTurnText(socket, socketRoom);
     }

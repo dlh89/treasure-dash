@@ -51,12 +51,11 @@ socket.on('clearMsg', function(msg) {
 
 socket.on('serverDig', function(data) {
   var isOpponentDig = data.isOpponentDig;  
-  var actionBox = jQuery('.js-action-box-text');
   
   if (isOpponentDig) {
-    actionBox.text(`Your opponent dug but foud nothing!`);
+    splashMsg('cold', 'Your opponent dug but found nothing!');
   } else {
-    actionBox.text(`You dug but foud nothing!`);
+    splashMsg('cold', 'You dug but found nothing!');
   }
   renderDig(data.coordinates.row, data.coordinates.col);
 });

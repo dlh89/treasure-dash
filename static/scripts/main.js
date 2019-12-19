@@ -154,12 +154,12 @@ function addReachableClasses(roll) {
 }
 
 function splashMsg(closeness, msg) {
-  var infoText = jQuery('.info__text');
-  var infoTextModifierClass = 'info__text info__text--' + closeness;
-  jQuery(infoText).text(msg)
+  var splashText = jQuery('.splash-msg__text');
+  var splashTextModifierClass = 'splash-msg__text splash-msg__text--' + closeness;
+  jQuery(splashText).text(msg)
                   .finish()
                   .removeClass()
-                  .addClass(infoTextModifierClass)
+                  .addClass(splashTextModifierClass)
                   .fadeIn(1000)
                   .delay(2000)
                   .fadeOut(1000);

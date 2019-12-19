@@ -141,7 +141,7 @@ body {
   filter: brightness(1);
 }
 
-.info {
+.splash-msg {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -149,20 +149,21 @@ body {
   text-align: center;
 }
 
-.info__text {
+.splash-msg__text {
   display: none;
   font-size: 5.1rem;
+  line-height: 1.3;
   color: #333333;
   margin: 0 24px;
   text-shadow: 5px 3px #ffffff;
 }
-.info__text--cold {
+.splash-msg__text--cold {
   color: #0c0cb7;
 }
-.info__text--warm {
+.splash-msg__text--warm {
   color: #ffb326;
 }
-.info__text--hot {
+.splash-msg__text--hot {
   color: #f12d1f;
 }
 

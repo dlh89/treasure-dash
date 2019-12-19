@@ -1,8 +1,9 @@
 .info {
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateY(-50%);
+  width: 100%;
+  text-align: center;
 }
 
 .info__text
@@ -10,6 +11,7 @@
   display: none;
   font-size: 5.1rem;
   color: $color-dark-grey;
+  margin: 0 24px;
   text-shadow: 5px 3px #ffffff;
 
   &--cold {

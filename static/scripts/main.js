@@ -165,9 +165,13 @@ function splashMsg(closeness, msg) {
                   .fadeOut(1000);
 }
 
-function renderDig(row, col) {
+function renderDig(row, col, success = false) {
   var digCell = jQuery('[data-row=' + row + '][data-col=' + col + ']');
-  var gridClass = 'grid__cell--dug';
+  if (success) {
+    var gridClass = 'grid__cell--treasure';
+  } else {
+    var gridClass = 'grid__cell--dug';
+  }
   digCell.addClass(gridClass);
 }
 

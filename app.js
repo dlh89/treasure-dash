@@ -16,17 +16,21 @@ app.get('/', function(req, res) {
 app.use(express.static('static'));
 
 io.on('connection', function(socket) {
+  socket.emit('connection');
   console.log('user connected:' + socket.id);
-  findRoom(socket);
 
-  const socketRoom = getSocketRoom(socket);
+  socket.on('findRoom', function(playerName) {
+    findRoom(socket, playerName);
 
-  if (socketRoom.users.length === PLAYERS_PER_GAME) {
-    io.in(socketRoom.name).emit('preGame')
-  }
+    const socketRoom = getSocketRoom(socket);
+
+    if (socketRoom.users.length === PLAYERS_PER_GAME) {
+      io.in(socketRoom.name).emit('preGame')
+    }
+  });
 
   socket.on('startPos', function(coordinates) {
-
+    const socketRoom = getSocketRoom(socket);
     const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
 
     socketRoomUser.pos = coordinates;
@@ -51,9 +55,9 @@ io.on('connection', function(socket) {
       const activePlayerSocket = getSocketFromID(socketRoom.playerTurn);    
 
       activePlayerSocket.emit('msg', 'You have been chosen to go first!');
-      activePlayerSocket.broadcast.emit('msg', 'Your opponent has been chosen to go first.');
+      activePlayerSocket.to(socketRoom.name).emit('msg', 'Your opponent has been chosen to go first.');
       activePlayerSocket.emit('activePlayer');
-      activePlayerSocket.broadcast.emit('activeOpponent');
+      activePlayerSocket.to(socketRoom.name).emit('activeOpponent');
     } else if (socketRoom.users.length == PLAYERS_PER_GAME) {
       socket.emit('msg', 'Waiting for your opponent to pick a starting position.')
     }
@@ -94,12 +98,15 @@ io.on('connection', function(socket) {
   socket.on('disconnect', function() {
     // remove player from room users
     const socketRoom = getSocketRoom(socket);
-    const socketIndex = socketRoom.users.indexOf(socketRoom);
-  
-    socketRoom.users.splice(socketIndex, 1);
-  
-    // emit msg to that room to notify other player
-    socket.broadcast.to(socketRoom.name).emit('msg', `Player ${socket.id} has left the room.`);
+
+    if (socketRoom) {
+      const socketIndex = socketRoom.users.indexOf(socketRoom);
+    
+      const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
+      // emit msg to that room to notify other player
+      socket.to(socketRoom.name).emit('msg', `${socketRoomUser.name} has left the room.`);
+      socketRoom.users.splice(socketIndex, 1);
+    }
   });
 
   socket.on('chooseRoll', function() {
@@ -112,25 +119,26 @@ io.on('connection', function(socket) {
     const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
     if (socketRoomUser.pos.row == socketRoom.treasureCoordinates.row &&
       socketRoomUser.pos.col == socketRoom.treasureCoordinates.col) {
-      io.in(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : socketRoomUser.pos});
+      io.in(socketRoom.name).emit('playerWin', {'winner' : socketRoomUser.name, 'coordinates' : socketRoomUser.pos});
     } else {
       socket.emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: false});
-      socket.broadcast.emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: true})
+      socket.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: true})
       switchPlayerTurn(socketRoom);
       updateTurnText(socket, socketRoom);
     }
   });
 });
 
-function findRoom(socket) {
+function findRoom(socket, playerName) {
   let roomFound = false;
   // loop through the rooms looking for a slot
-  rooms.forEach(room => {
+  for (let room of rooms) {
     if (room.users.length < 2) {
-      joinRoom(socket, room);
+      joinRoom(socket, room, playerName);
       roomFound = true;
+      break;
     }
-  });
+  }
 
   if (!roomFound) {
     // create a new room
@@ -140,13 +148,14 @@ function findRoom(socket) {
       'users': []
     });
 
-    joinRoom(socket, rooms[rooms.length - 1]);
+    joinRoom(socket, rooms[rooms.length - 1], playerName);
   }
 }
 
-function joinRoom(socket, room) {
+function joinRoom(socket, room, playerName) {
   const newUser = {
     id: socket.id,
+    name: playerName,
     pos: null
   }
   room.users.push(newUser); // add user to that room
@@ -154,10 +163,10 @@ function joinRoom(socket, room) {
 
   // send message to the client
   socket.emit('logMsg', `You have joined '${room.name}`);
-  socket.emit('logMsg', `Your ID is ${socket.id}`);
+  socket.emit('logMsg', `Your player name is ${playerName}`);
 
   // send message to the room
-  io.in(room.name).emit('logMsg', `Player ${socket.id} has joined the room.`);
+  io.in(room.name).emit('logMsg', `${playerName} has joined the room.`);
 
   if (room.users.length === PLAYERS_PER_GAME) {
     setTreasureCoordinates(room);
@@ -175,7 +184,7 @@ function getSocketRoom(socket) {
       return user.id === socket.id;
     });
 
-    if (user) {
+    if (user.length) {
       socketRoom = room;
     }
   });
@@ -243,7 +252,7 @@ function switchPlayerTurn(socketRoom) {
 
   const activePlayerSocket = getSocketFromID(playerTurn.id);
   activePlayerSocket.emit('activePlayer');
-  activePlayerSocket.broadcast.emit('activeOpponent');
+  activePlayerSocket.to(socketRoom.name).emit('activeOpponent');
 }
 
 /**
@@ -262,10 +271,10 @@ function getInactivePlayer(socketRoom) {
 function updateTurnText(socket, socketRoom) {
   if (socketRoom.playerTurn === socket.id) {
     socket.emit('msg', 'It\'s your turn!');    
-    socket.broadcast.emit('msg', 'It\'s your opponent\'s turn.');    
+    socket.to(socketRoom.name).emit('msg', 'It\'s your opponent\'s turn.');    
   } else {
     socket.emit('msg', 'It\'s your opponent\'s turn.');
-    socket.broadcast.emit('msg', 'It\'s your turn!');    
+    socket.to(socketRoom.name).emit('msg', 'It\'s your turn!');    
   }
 }
 
@@ -290,9 +299,9 @@ function rollDice(socketRoom, socket) {
 
   activePlayerSocket = getSocketFromID(activePlayerID);
   activePlayerSocket.emit('logMsg', `You rolled a ${socketRoomUser.roll}`);
-  activePlayerSocket.broadcast.emit('logMsg', `Your opponent rolled a ${socketRoomUser.roll}`)
+  activePlayerSocket.to(socketRoom.name).emit('logMsg', `Your opponent rolled a ${socketRoomUser.roll}`)
   activePlayerSocket.emit('roll', {roll: socketRoomUser.roll, isOpponentRoll: false});
-  activePlayerSocket.broadcast.emit('roll', {roll: socketRoomUser.roll, isOpponentRoll: true});
+  activePlayerSocket.to(socketRoom.name).emit('roll', {roll: socketRoomUser.roll, isOpponentRoll: true});
 }
 
 function getSocketFromID(socketID)
@@ -321,8 +330,9 @@ function getIsValidMove(currentPos, newPos, roll) {
 
 function emitPositionUpdates(socketRoomUser, coordinates) {
   const activeSocket = getSocketFromID(socketRoomUser.id);
+  const socketRoom = getSocketRoom(socketRoomUser);
   activeSocket.emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': false});
-  activeSocket.broadcast.emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': true});
+  activeSocket.to(socketRoom.name).emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': true});
 }
 
 http.listen(3000, function() {

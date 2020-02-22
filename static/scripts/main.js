@@ -18,6 +18,20 @@ function cellClick(e) {
   }
 }
 
+socket.on('connection', function() {
+  nameInput = jQuery('.enter-name__input');
+  nameForm = jQuery('.enter-name__form');
+  nameForm.on('submit', function(e) {
+    e.preventDefault();
+    playerName = nameInput.val();
+    socket.emit('findRoom', playerName);
+    enterNameBox = jQuery('.enter-name');
+    enterNameBox.hide();
+    var enterNameOverlay = jQuery('.enter-name__overlay');
+    enterNameOverlay.hide();
+  });
+});
+
 socket.on('preGame', function() {
   global.preGame = true;
   jQuery('.grid').addClass('turn-active');
@@ -108,7 +122,7 @@ socket.on('roll', function(data) {
 });
 
 socket.on('playerWin', function(data) {
-  var successMsg = 'Player ' + data.winner + ' has won the game!';
+  var successMsg = data.winner + ' has won the game!';
   splashMsg('success', successMsg);
 
   renderDig(data.coordinates.row, data.coordinates.col, true);

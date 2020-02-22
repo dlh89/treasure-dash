@@ -11,7 +11,7 @@
     width: calc(50% - 1px);
     padding: 10px 14px;
     border: none;
-    background-color: #ffbc00;
+    background-color: $color-orange;
 }
 
 .turn-choice__btn:not(:last-child)

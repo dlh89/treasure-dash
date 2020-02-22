@@ -1,3 +1,4 @@
+@import './third-party/normalize';
 @import './abstracts/mixins';
 @import './abstracts/variables';
 @import './abstracts/clearfix';
@@ -11,3 +12,4 @@
 @import './components/sidebar';
 @import './components/turn-choice';
 @import './components/action-box';
+@import './components/enter-name';

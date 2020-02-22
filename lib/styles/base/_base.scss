@@ -28,3 +28,12 @@ h3 {
   font-size: 2.2rem;
   font-weight: 300;
 }
+
+input[type="text"]
+{
+  font-family: $font-standard;
+}
+
+fieldset {
+  padding: 0;
+}

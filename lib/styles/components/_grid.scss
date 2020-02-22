@@ -29,13 +29,13 @@
 }
 
 .grid__cell--active {
-  animation-duration: 2s;
+  animation-duration: 1.5s;
   animation-name: pulseGreen;
   animation-iteration-count: infinite;
 }
 
 .grid__cell--opponent-active {
-  animation-duration: 2s;
+  animation-duration: 1.5s;
   animation-name: pulseRed;
   animation-iteration-count: infinite;
 }

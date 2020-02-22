@@ -7,4 +7,9 @@
     margin: 0 3.2rem;
     max-width: none;
   }
+
+  @include respond(mobile) {
+    margin: 0 $mobile-margin;
+    max-width: none;
+  }
 }

@@ -60,3 +60,15 @@
     filter: brightness(1);
   }
 }
+
+
+@include respond(mobile) {
+  .grid {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .grid__cell {
+      width: calc((100vw - (#{$mobile-margin} * 2)) / 10);
+      height: calc((100vw - (#{$mobile-margin} * 2)) / 10);
+  }
+}

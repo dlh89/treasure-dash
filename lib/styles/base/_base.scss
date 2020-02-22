@@ -37,3 +37,10 @@ input[type="text"]
 fieldset {
   padding: 0;
 }
+
+
+@include respond(mobile) {
+  h1 {
+    margin: 10px 0;
+  }
+}

@@ -34,3 +34,9 @@
 {
     cursor: default;
 }
+
+@include respond(mobile) {
+    .turn-choice__btn {
+        height: 60px;
+    }
+}

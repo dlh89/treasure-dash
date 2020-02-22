@@ -3,7 +3,7 @@
 }
 
 .two-columns__main {
-    float: left;
+    float: right;
     width: 68%;
 }
 
@@ -13,3 +13,12 @@
     width: calc(32% - 20px);
     margin-right: $med-margin;
 }
+
+@include respond(tab-port) {
+    .two-columns__sidebar,
+    .two-columns__main
+    {
+        width: 100%;
+    }
+}
+  

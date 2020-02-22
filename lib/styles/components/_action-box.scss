@@ -23,3 +23,20 @@
 .action-box__msg-box:not(:last-child) {
     margin-right: 8px;
 }
+
+@include respond(mobile) {
+    .action-box {
+        width: 100%;
+    }
+
+    .action-box__msg-box {
+        width: 100%;
+        min-height: auto;
+        margin-bottom: 10px;
+    }
+
+    .action-box__msg-box:not(:last-child)
+    {
+        margin-right: 0;
+    }
+}

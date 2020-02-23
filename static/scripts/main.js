@@ -19,16 +19,16 @@ function cellClick(e) {
 }
 
 socket.on('connection', function() {
-  nameInput = jQuery('.enter-name__input');
-  nameForm = jQuery('.enter-name__form');
+  nameInput = jQuery('.js-name-input');
+  nameForm = jQuery('.js-enter-name-form');
   nameForm.on('submit', function(e) {
     e.preventDefault();
     playerName = nameInput.val();
     socket.emit('findRoom', playerName);
-    enterNameBox = jQuery('.enter-name');
+    enterNameBox = jQuery('.js-enter-name-modal');
     enterNameBox.hide();
-    var enterNameOverlay = jQuery('.enter-name__overlay');
-    enterNameOverlay.hide();
+    var modalOverlay = jQuery('.modal__overlay');
+    modalOverlay.hide();
   });
 });
 

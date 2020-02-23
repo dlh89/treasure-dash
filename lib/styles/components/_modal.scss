@@ -1,4 +1,4 @@
-.enter-name {
+.modal {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -8,7 +8,11 @@
   z-index: 100;
 }
 
-.enter-name__input {
+.modal--rules {
+  display: none;
+}
+
+.modal__input {
   color: #ffffff;
   background-color: $color-dark-blue;
   display: inline-block;
@@ -19,7 +23,7 @@
   border: 1px solid transparent;
 }
 
-.enter-name__submit {
+.modal__submit {
   background-color: $color-orange;
   // font-family: $font-headings;
   display: inline-block;
@@ -30,11 +34,11 @@
   border: 1px solid transparent;
 }
 
-.enter-name__submit:hover {
+.modal__submit:hover {
   cursor: pointer;
 }
 
-.enter-name__overlay {
+.modal__overlay {
   position: fixed;
   top: 0;
   left: 0;

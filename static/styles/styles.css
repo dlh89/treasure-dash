@@ -546,7 +546,7 @@ body {
 
   .action-box__msg-box:not(:last-child) {
     margin-right: 0; } }
-.enter-name {
+.modal {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -555,7 +555,10 @@ body {
   padding: 100px;
   z-index: 100; }
 
-.enter-name__input {
+.modal--rules {
+  display: none; }
+
+.modal__input {
   color: #ffffff;
   background-color: #002642;
   display: inline-block;
@@ -565,7 +568,7 @@ body {
   -webkit-appearance: none;
   border: 1px solid transparent; }
 
-.enter-name__submit {
+.modal__submit {
   background-color: #ffbc00;
   display: inline-block;
   padding: 10px 15px;
@@ -574,10 +577,10 @@ body {
   -webkit-appearance: none;
   border: 1px solid transparent; }
 
-.enter-name__submit:hover {
+.modal__submit:hover {
   cursor: pointer; }
 
-.enter-name__overlay {
+.modal__overlay {
   position: fixed;
   top: 0;
   left: 0;

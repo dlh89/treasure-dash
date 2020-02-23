@@ -33,11 +33,15 @@ io.on('connection', function(socket) {
     const socketRoom = getSocketRoom(socket);
     const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
 
-    socketRoomUser.pos = coordinates;
-    emitPositionUpdates(socketRoomUser, coordinates);
-
-    const closeness = getCloseness(socketRoom, coordinates);
-    socket.emit('closenessMsg', {'closeness': closeness});
+    if (!socketRoomUser.hasStartPos)
+    {
+      socketRoomUser.hasStartPos = true;
+      socketRoomUser.pos = coordinates;
+      emitPositionUpdates(socketRoomUser, coordinates);
+  
+      const closeness = getCloseness(socketRoom, coordinates);
+      socket.emit('closenessMsg', {'closeness': closeness});
+    }
 
     const allUsersHaveSelectedStartPos = socketRoom.users.every((user) => {
       return user['pos'] != null;

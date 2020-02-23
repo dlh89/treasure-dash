@@ -74,26 +74,29 @@ io.on('connection', function(socket) {
     if (socketRoom.playerTurn === socket.id) {
       const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
 
-      // check move is in range
-      const isValidMove = getIsValidMove(socketRoomUser.pos, coordinates, socketRoomUser.roll)
-      if (!isValidMove) { 
-        const msgText = `Invalid move! You only rolled a ${socketRoomUser.roll}.`;
-        socket.emit('msg', msgText);
-      } else {
-        // update their position
-        socketRoomUser.pos = coordinates;
+      if (socketRoomUser.roll)
+      {
+        // check move is in range
+        const isValidMove = getIsValidMove(socketRoomUser.pos, coordinates, socketRoomUser.roll)
+        if (!isValidMove) { 
+          const msgText = `Invalid move! You only rolled a ${socketRoomUser.roll}.`;
+          socket.emit('msg', msgText);
+        } else {
+          // update their position
+          socketRoomUser.pos = coordinates;
+      
+          const closeness = getCloseness(socketRoom, coordinates); 
+          emitPositionUpdates(socketRoomUser, coordinates);
+          
+          // only send closeness to the player
+          socket.emit('closenessMsg', {'closeness': closeness});
     
-        const closeness = getCloseness(socketRoom, coordinates); 
-        emitPositionUpdates(socketRoomUser, coordinates);
-        
-        // only send closeness to the player
-        socket.emit('closenessMsg', {'closeness': closeness});
-  
-        switchPlayerTurn(socketRoom);
-        updateTurnText(socket, socketRoom);
+          switchPlayerTurn(socketRoom);
+          updateTurnText(socket, socketRoom);
+        }
       }
     } else {
-      if (socketRoom.users.length == PLAYERS_PER_GAME) {
+      if (!isPlayersTurn(socketRoom, socket.id)) {
         socket.emit('msg', 'Wait for your turn!');
       }
     }
@@ -337,6 +340,11 @@ function emitPositionUpdates(socketRoomUser, coordinates) {
   const socketRoom = getSocketRoom(socketRoomUser);
   activeSocket.emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': false});
   activeSocket.to(socketRoom.name).emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': true});
+}
+
+function isPlayersTurn(socketRoom, playerId)
+{
+  return socketRoom.playerTurn === playerId;
 }
 
 http.listen(3000, function() {

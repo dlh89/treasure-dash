@@ -589,4 +589,26 @@ body {
   z-index: 50;
   background: rgba(0, 0, 0, 0.6); }
 
+@media (max-width: 56.25em) {
+  .modal--rules {
+    width: 100%;
+    padding: 50px; } }
+.rules__btn {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  padding: 12px 18px;
+  z-index: 100;
+  background: #071E22;
+  color: #ffffff;
+  border: none;
+  cursor: pointer; }
+
+.rules__btn--close {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  bottom: auto;
+  left: auto; }
+
 /*# sourceMappingURL=styles.css.map */

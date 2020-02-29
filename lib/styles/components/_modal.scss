@@ -48,3 +48,10 @@
   
   background: rgba(0, 0, 0, 0.6);
 }
+
+@include respond(tab-port) {
+  .modal--rules {
+    width: 100%;
+    padding: 50px;
+  }
+}

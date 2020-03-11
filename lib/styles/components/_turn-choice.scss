@@ -1,0 +1,42 @@
+.turn-choice {
+    border: none;
+}
+
+.turn-choice__btn
+{
+    float: left;
+    font-family: inherit;
+    font-size: 20px;
+    height: 114px;
+    width: calc(50% - 1px);
+    padding: 10px 14px;
+    border: none;
+    background-color: $color-orange;
+}
+
+.turn-choice__btn:not(:last-child)
+{
+    margin-right: 2px;
+}
+
+.turn-choice__btn:hover
+{
+    cursor: pointer;
+}
+
+.turn-choice:disabled .turn-choice__btn
+{
+    opacity: 0.25;
+    color: #000000;
+}
+
+.turn-choice:disabled .turn-choice__btn:hover
+{
+    cursor: default;
+}
+
+@include respond(mobile) {
+    .turn-choice__btn {
+        height: 60px;
+    }
+}

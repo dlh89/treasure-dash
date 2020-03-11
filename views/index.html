@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="styles/styles.css">
-    <link href="https://fonts.googleapis.com/css?family=Pirata+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lacquer|Pirata+One&display=swap" rel="stylesheet">
   </head>
   <body>
     <!--[if lt IE 7]>
@@ -21,24 +21,25 @@
         <h1 class="heading-primary">Treasure Dash</h1>
       </div>
       <div class="two-columns">
-        <div class="two-columns__sidebar">
-          <div class="sidebar">
-            <h3 class="sidebar__heading">Game log</h3>
-            <div class="sidebar__text"></div>
-            <div class="sidebar__text--history"></div>
-          </div>
-        </div>
         <div class="two-columns__main">
-          <div class="msg-box">
-            <p class="js-msg-box-text"></p>
-          </div>
-          <div class="msg-box msg-box--dice">
-            <p class="js-dice-box-text"></p>
+          <div class="action-box clearfix">
+            <div class="action-box__msg-box">
+              <p class="js-msg-box-text"></p>
+            </div>
+            <div class="action-box__msg-box action-box__msg-box--buttons">
+              <fieldset class="turn-choice" disabled="true">
+                <button class="turn-choice__btn js-choose-roll">Roll</button>
+                <button class="turn-choice__btn js-choose-dig">Dig</button>
+              </fieldset>
+            </div>
+            <div class="action-box__msg-box">
+              <p class="js-action-box-text"></p>
+            </div>
           </div>
           <div class="clearfix">
             <div class="grid">
-              <div class="info">
-                <p class="info__text"></p>
+              <div class="splash-msg">
+                <p class="splash-msg__text"></p>
               </div>
               <div class="grid__cell" data-row="1" data-col="1"></div>
               <div class="grid__cell" data-row="1" data-col="2"></div>
@@ -144,8 +145,33 @@
           </div>
         </div>
       </div>
+      <div class="two-columns__sidebar">
+        <div class="sidebar">
+          <h3 class="sidebar__heading">Game log</h3>
+          <div class="sidebar__text"></div>
+          <div class="sidebar__text--history"></div>
+        </div>
+      </div>
     </div>
-    <script src="scripts/third-party/jquery-3.4.1.min.js"></script>
+    <div class="modal js-enter-name-modal">
+      <form action="#" class="js-enter-name-form">
+        <p>Please enter your name:</p>
+        <input class="modal__input js-name-input" type="text" required>
+        <input type="submit" class="modal__submit" value="Find a game">
+      </form>
+    </div>
+    <button class="rules__btn js-rules-btn">Rules</button>
+    <div class="modal modal--rules js-rules-modal">
+      <button class="rules__btn rules__btn--close js-close-rules-btn ">Close</button>
+      <h2>Rules</h2>
+      <p>Treasure Dash is a turn-based game in which the first player to dig up the treasure wins. Once you have found an opponent, you must both pick a starting position. One of you will then be picked at random to go first. When it's your turn, you can choose to either roll or dig. Each time you move, you will find out whether you are close to the treasure. If you are within 2 squares of the treasure in any direction then you will see "Getting warm". You won't find out if you're on top of the treasure unless you dig.</p>
+    </div>
+    <div class="modal__overlay"></div>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous">
+    </script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="scripts/main.js" async defer></script>
   </body>

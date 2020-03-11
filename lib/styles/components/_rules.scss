@@ -1,0 +1,20 @@
+.rules__btn {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  padding: 12px 18px;
+  z-index: 100;
+  background: $color-dark-grey;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+}
+
+.rules__btn--close
+{
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  bottom: auto;
+  left: auto;
+}

@@ -9,14 +9,15 @@
   box-sizing: border-box;
   width: 50px;
   height: 50px;
-  background: #ffbc00;
-  background: linear-gradient(to bottom right, #fdf137, #ffbc00);
+  background: $color-orange;
+  background: linear-gradient(to bottom right, #fdf137, $color-orange);
   border: 1px solid #c89b1c;
+}
 
-  &:hover {
-    transition: ease-out .5s;
-    filter: brightness(.75);
-  }
+.turn-active .grid__cell:hover
+{
+  transition: ease-out .5s;
+  filter: brightness(.75);
 }
 
 .grid__cell--current {
@@ -28,13 +29,13 @@
 }
 
 .grid__cell--active {
-  animation-duration: 2s;
+  animation-duration: 1.5s;
   animation-name: pulseGreen;
   animation-iteration-count: infinite;
 }
 
 .grid__cell--opponent-active {
-  animation-duration: 2s;
+  animation-duration: 1.5s;
   animation-name: pulseRed;
   animation-iteration-count: infinite;
 }
@@ -51,10 +52,23 @@
   }
 }
 
+
 .grid__cell--treasure {
   background: linear-gradient(to bottom right, #ffff15, #fffdcf);
 
   &:hover {
     filter: brightness(1);
+  }
+}
+
+
+@include respond(mobile) {
+  .grid {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .grid__cell {
+      width: calc((100vw - (#{$mobile-margin} * 2)) / 10);
+      height: calc((100vw - (#{$mobile-margin} * 2)) / 10);
   }
 }

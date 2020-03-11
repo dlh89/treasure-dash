@@ -8,7 +8,7 @@
 
 html {
   font-size: 62.5%;
-  background: #202d5d;
+  background: $color-dark-blue;
 
   @include respond(tab-land) {
     font-size: 56.25%;
@@ -27,4 +27,20 @@ h2 {
 h3 {
   font-size: 2.2rem;
   font-weight: 300;
+}
+
+input[type="text"]
+{
+  font-family: $font-standard;
+}
+
+fieldset {
+  padding: 0;
+}
+
+
+@include respond(mobile) {
+  h1 {
+    margin: 10px 0;
+  }
 }

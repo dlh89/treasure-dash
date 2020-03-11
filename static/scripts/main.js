@@ -1,24 +1,50 @@
 global = {
-  gameLive: false
+  gameLive: false,
+  preGame: false // the time when players pick starting positions
 }
 
 var socket = io();
 
-var cells = $('.grid__cell');
-$(cells).on('click', cellClick);
+var cells = jQuery('.grid__cell');
+jQuery(cells).on('click', cellClick);
+
+jQuery('.js-rules-btn').on('click', openRules);
+jQuery('.js-close-rules-btn').on('click', closeRules);
 
 function cellClick(e) {
   var row = jQuery(e.target).data('row');
   var col = jQuery(e.target).data('col');
-  if (global.gameLive === true) {
-    socket.emit('clientDig', {'row': row, 'col': col});
-  } else {
+  if (global.gameLive) {
+    socket.emit('clientMove', {'row': row, 'col': col});
+  } else if (global.preGame) {
     socket.emit('startPos', {'row': row, 'col': col});
   }
 }
 
+socket.on('connection', function() {
+  nameInput = jQuery('.js-name-input');
+  nameForm = jQuery('.js-enter-name-form');
+  nameForm.on('submit', function(e) {
+    e.preventDefault();
+    playerName = nameInput.val();
+    socket.emit('findRoom', playerName);
+    enterNameBox = jQuery('.js-enter-name-modal');
+    enterNameBox.hide();
+    var modalOverlay = jQuery('.modal__overlay');
+    modalOverlay.hide();
+  });
+});
+
+socket.on('preGame', function() {
+  global.preGame = true;
+  jQuery('.grid').addClass('turn-active');
+});
+
 socket.on('gameStart', function() {
+  global.preGame = false; 
   global.gameLive = true;
+
+  initHandleTurnChoice();
 });
 
 socket.on('msg', function(msg) {
@@ -41,32 +67,25 @@ socket.on('clearMsg', function(msg) {
 });
 
 socket.on('serverDig', function(data) {
+  var isOpponentDig = data.isOpponentDig;  
+  
+  if (isOpponentDig) {
+    splashMsg('cold', 'Your opponent dug but found nothing!');
+  } else {
+    splashMsg('cold', 'You dug but found nothing!');
+  }
   renderDig(data.coordinates.row, data.coordinates.col);
-});
-
-socket.on('playerWin', function(data) {
-  var successMsg = 'Player ' + data.winner + ' has won the game!';
-  splashMsg('success', successMsg);
-
-  renderDig(data.coordinates.row, data.coordinates.col, true);
 });
 
 socket.on('closenessMsg', function(data) {
   var infoResult = '';
 
   switch (data.closeness) {
-    case 'success':
-      infoResult = 'Congratulations!';
-      gridClass = 'grid__cell--treasure';
-      break;
     case 'cold':
       infoResult = 'Ice cold.';
       break;
     case 'warm':
       infoResult = 'Getting warm.';
-      break;
-    case 'hot':
-      infoResult = 'Red hot!';
       break;
   }
 
@@ -81,6 +100,8 @@ socket.on('activePlayer', function() {
   removeActiveClasses();
   var currentCell = jQuery('.grid__cell--current');
   currentCell.addClass('grid__cell--active');
+  // jQuery('.turn-choice').addClass('turn-choice--active');
+  jQuery('.turn-choice').attr('disabled', false);
 });
 
 socket.on('activeOpponent', function() {
@@ -93,25 +114,64 @@ socket.on('roll', function(data) {
   var roll = data.roll;
   var isOpponentRoll = data.isOpponentRoll;
   
-  var diceBox = jQuery('.js-dice-box-text')
+  var actionBox = jQuery('.js-action-box-text');
   
   if (isOpponentRoll) {
-    diceBox.text(`Your opponent rolled a ${roll}`);
-
-    // remove any reachable classes
-    var reachableCells = jQuery('.grid-cell--reachable');
-    reachableCells.removeClass('grid-cell--reachable');
+    actionBox.text(`Your opponent rolled a ${roll}`);
   } else {
-    diceBox.text(`You rolled a ${roll}`);
+    actionBox.text(`You rolled a ${roll}`);
     addReachableClasses(roll);
   }
 });
+
+socket.on('playerWin', function(data) {
+  var successMsg = data.winner + ' has won the game!';
+  splashMsg('success', successMsg);
+
+  renderDig(data.coordinates.row, data.coordinates.col, true);
+  global.gameLive = false;
+  removeActiveClasses();
+  jQuery('.grid-cell--reachable').removeClass('grid-cell--reachable')
+});
+
+function openRules() {
+  var rulesModal = jQuery('.js-rules-modal');
+  var modalOverlay = jQuery('.modal__overlay');
+  modalOverlay.show();
+  rulesModal.show();
+}
+
+function closeRules() {
+  var rulesModal = jQuery('.js-rules-modal');
+  var modalOverlay = jQuery('.modal__overlay');
+  var enterNameModal = jQuery('.js-enter-name-modal');
+  rulesModal.hide();
+  var enterNameModalDisplay = enterNameModal.css('display');
+  if (enterNameModalDisplay === 'none')
+  {
+    modalOverlay.hide();
+  }
+}
+
+function initHandleTurnChoice() {
+  jQuery('.js-choose-roll').on('click', function() {
+    // jQuery('.turn-choice').removeClass('turn-choice--active');
+    jQuery('.turn-choice').attr('disabled', true);
+    socket.emit('chooseRoll');
+  });
+  jQuery('.js-choose-dig').on('click', function() {
+    // jQuery('.turn-choice').removeClass('turn-choice--active');
+    jQuery('.turn-choice').attr('disabled', true);
+    socket.emit('chooseDig');
+  });
+}
 
 /**
  * add reachable class to tiles within roll
  * @param {*} roll 
  */
 function addReachableClasses(roll) {
+  jQuery('.grid').addClass('turn-active');
   var currentCell = jQuery('.grid__cell--current');
   var currentRow = currentCell.data('row');
   var currentCol = currentCell.data('col');
@@ -130,12 +190,12 @@ function addReachableClasses(roll) {
 }
 
 function splashMsg(closeness, msg) {
-  var infoText = jQuery('.info__text');
-  var infoTextModifierClass = 'info__text info__text--' + closeness;
-  jQuery(infoText).text(msg)
+  var splashText = jQuery('.splash-msg__text');
+  var splashTextModifierClass = 'splash-msg__text splash-msg__text--' + closeness;
+  jQuery(splashText).text(msg)
                   .finish()
                   .removeClass()
-                  .addClass(infoTextModifierClass)
+                  .addClass(splashTextModifierClass)
                   .fadeIn(1000)
                   .delay(2000)
                   .fadeOut(1000);
@@ -143,21 +203,21 @@ function splashMsg(closeness, msg) {
 
 function renderDig(row, col, success = false) {
   var digCell = jQuery('[data-row=' + row + '][data-col=' + col + ']');
-
-  var gridClass = 'grid__cell--dug';
-
-  if (success)
-  {
-    gridClass = 'grid__cell--treasure';
+  if (success) {
+    var gridClass = 'grid__cell--treasure';
+  } else {
+    var gridClass = 'grid__cell--dug';
   }
-
   digCell.addClass(gridClass);
 }
 
 function updatePlayerPosition(row, col, isOpponentMove = false) {
+  
   var gridClass = 'grid__cell--current';
   if (isOpponentMove) {
     var gridClass = 'grid__cell--opponent-current';
+  } else {
+    jQuery('.grid').removeClass('turn-active');
   }
   var currentCell = jQuery('.' + gridClass);
   if (currentCell.length) {
@@ -172,4 +232,8 @@ function removeActiveClasses() {
   var previouslyActiveOpponent = jQuery('.grid__cell--opponent-active');
   previouslyActivePlayer.removeClass('grid__cell--active');
   previouslyActiveOpponent.removeClass('grid__cell--opponent-active');
+
+  // remove any reachable classes
+  var reachableCells = jQuery('.grid-cell--reachable');
+  reachableCells.removeClass('grid-cell--reachable');
 }

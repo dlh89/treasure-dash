@@ -6,7 +6,8 @@ const io = require('socket.io')(http);
 const rooms = [];
 const PLAYERS_PER_GAME = 2;
 const MAX_ROLL = 6;
-const WARM_DISTANCE = 1;
+
+const CLOSE_RANGE = 2;
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/views/index.html');
@@ -15,16 +16,32 @@ app.get('/', function(req, res) {
 app.use(express.static('static'));
 
 io.on('connection', function(socket) {
+  socket.emit('connection');
   console.log('user connected:' + socket.id);
-  findRoom(socket);
+
+  socket.on('findRoom', function(playerName) {
+    findRoom(socket, playerName);
+
+    const socketRoom = getSocketRoom(socket);
+
+    if (socketRoom.users.length === PLAYERS_PER_GAME) {
+      io.in(socketRoom.name).emit('preGame')
+    }
+  });
 
   socket.on('startPos', function(coordinates) {
     const socketRoom = getSocketRoom(socket);
-
     const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
 
-    socketRoomUser.pos = coordinates;
-    emitPositionUpdates(socketRoomUser, coordinates);
+    if (!socketRoomUser.hasStartPos)
+    {
+      socketRoomUser.hasStartPos = true;
+      socketRoomUser.pos = coordinates;
+      emitPositionUpdates(socketRoomUser, coordinates);
+  
+      const closeness = getCloseness(socketRoom, coordinates);
+      socket.emit('closenessMsg', {'closeness': closeness});
+    }
 
     const allUsersHaveSelectedStartPos = socketRoom.users.every((user) => {
       return user['pos'] != null;
@@ -39,54 +56,47 @@ io.on('connection', function(socket) {
       io.in(socketRoom.name).emit('gameStart');
       io.in(socketRoom.name).emit('logMsg', 'The game is now live!');
       
-      rollDice(socketRoom, socket);
       const activePlayerSocket = getSocketFromID(socketRoom.playerTurn);    
 
       activePlayerSocket.emit('msg', 'You have been chosen to go first!');
-      activePlayerSocket.broadcast.emit('msg', 'Your opponent has been chosen to go first.');
+      activePlayerSocket.to(socketRoom.name).emit('msg', 'Your opponent has been chosen to go first.');
       activePlayerSocket.emit('activePlayer');
-      activePlayerSocket.broadcast.emit('activeOpponent');
+      activePlayerSocket.to(socketRoom.name).emit('activeOpponent');
     } else if (socketRoom.users.length == PLAYERS_PER_GAME) {
       socket.emit('msg', 'Waiting for your opponent to pick a starting position.')
     }
   });
 
-  socket.on('clientDig', function(coordinates) {
+  socket.on('clientMove', function(coordinates) {
     const socketRoom = getSocketRoom(socket);
-    
+
     // check if it's their turn
     if (socketRoom.playerTurn === socket.id) {
       const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
 
-      // check move is in range
-      const isValidMove = getIsValidMove(socketRoomUser.pos, coordinates, socketRoomUser.roll)
-      if (isValidMove) {
-        // update their position
-        socketRoomUser.pos = coordinates;
-  
-        const closeness = getCloseness(socketRoom, coordinates); 
-  
-        if (closeness === 'success') {
-          io.to(socketRoom.name).emit('playerWin', {'winner' : socket.id, 'coordinates' : coordinates, 'closeness': closeness});
+      if (socketRoomUser.roll)
+      {
+        // check move is in range
+        const isValidMove = getIsValidMove(socketRoomUser.pos, coordinates, socketRoomUser.roll)
+        if (!isValidMove) { 
+          const msgText = `Invalid move! You only rolled a ${socketRoomUser.roll}.`;
+          socket.emit('msg', msgText);
         } else {
-          io.to(socketRoom.name).emit('serverDig', {'coordinates' : coordinates, 'closeness': closeness});
+          // update their position
+          socketRoomUser.pos = coordinates;
+      
+          const closeness = getCloseness(socketRoom, coordinates); 
+          emitPositionUpdates(socketRoomUser, coordinates);
+          
+          // only send closeness to the player
+          socket.emit('closenessMsg', {'closeness': closeness});
+    
+          switchPlayerTurn(socketRoom);
+          updateTurnText(socket, socketRoom);
         }
-        emitPositionUpdates(socketRoomUser, coordinates);
-        
-        // only send closeness to the player
-        socket.emit('closenessMsg', {'closeness': closeness});
-  
-        switchPlayerTurn(socketRoom);
-        updateTurnText(socket, socketRoom);
-        rollDice(socketRoom, socket);
-      } else {
-        // invalid move
-        const msgText = `Invalid move! You only rolled a ${socketRoomUser.roll}.`;
-        socket.emit('msg', msgText);
       }
-
     } else {
-      if (socketRoom.users.length == PLAYERS_PER_GAME) {
+      if (!isPlayersTurn(socketRoom, socket.id)) {
         socket.emit('msg', 'Wait for your turn!');
       }
     }
@@ -95,24 +105,47 @@ io.on('connection', function(socket) {
   socket.on('disconnect', function() {
     // remove player from room users
     const socketRoom = getSocketRoom(socket);
-    const socketIndex = socketRoom.users.indexOf(socketRoom);
-  
-    socketRoom.users.splice(socketIndex, 1);
-  
-    // emit msg to that room to notify other player
-    socket.broadcast.to(socketRoom.name).emit('msg', `Player ${socket.id} has left the room.`);
+
+    if (socketRoom) {
+      const socketIndex = socketRoom.users.indexOf(socketRoom);
+    
+      const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
+      // emit msg to that room to notify other player
+      socket.to(socketRoom.name).emit('msg', `${socketRoomUser.name} has left the room.`);
+      socketRoom.users.splice(socketIndex, 1);
+    }
+  });
+
+  socket.on('chooseRoll', function() {
+    const socketRoom = getSocketRoom(socket);
+    rollDice(socketRoom, socket);
+  });
+
+  socket.on('chooseDig', function() {
+    const socketRoom = getSocketRoom(socket);
+    const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
+    if (socketRoomUser.pos.row == socketRoom.treasureCoordinates.row &&
+      socketRoomUser.pos.col == socketRoom.treasureCoordinates.col) {
+      io.in(socketRoom.name).emit('playerWin', {'winner' : socketRoomUser.name, 'coordinates' : socketRoomUser.pos});
+    } else {
+      socket.emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: false});
+      socket.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: true})
+      switchPlayerTurn(socketRoom);
+      updateTurnText(socket, socketRoom);
+    }
   });
 });
 
-function findRoom(socket) {
+function findRoom(socket, playerName) {
   let roomFound = false;
   // loop through the rooms looking for a slot
-  rooms.forEach(room => {
+  for (let room of rooms) {
     if (room.users.length < 2) {
-      joinRoom(socket, room);
+      joinRoom(socket, room, playerName);
       roomFound = true;
+      break;
     }
-  });
+  }
 
   if (!roomFound) {
     // create a new room
@@ -122,13 +155,14 @@ function findRoom(socket) {
       'users': []
     });
 
-    joinRoom(socket, rooms[rooms.length - 1]);
+    joinRoom(socket, rooms[rooms.length - 1], playerName);
   }
 }
 
-function joinRoom(socket, room) {
+function joinRoom(socket, room, playerName) {
   const newUser = {
     id: socket.id,
+    name: playerName,
     pos: null
   }
   room.users.push(newUser); // add user to that room
@@ -136,10 +170,10 @@ function joinRoom(socket, room) {
 
   // send message to the client
   socket.emit('logMsg', `You have joined '${room.name}`);
-  socket.emit('logMsg', `Your ID is ${socket.id}`);
+  socket.emit('logMsg', `Your player name is ${playerName}`);
 
   // send message to the room
-  io.in(room.name).emit('logMsg', `Player ${socket.id} has joined the room.`);
+  io.in(room.name).emit('logMsg', `${playerName} has joined the room.`);
 
   if (room.users.length === PLAYERS_PER_GAME) {
     setTreasureCoordinates(room);
@@ -157,7 +191,7 @@ function getSocketRoom(socket) {
       return user.id === socket.id;
     });
 
-    if (user) {
+    if (user.length) {
       socketRoom = room;
     }
   });
@@ -182,16 +216,33 @@ function getCloseness(room, coordinates) {
   const treasureRow = room.treasureCoordinates.row;
   const treasureCol = room.treasureCoordinates.col;
 
-  const rowClose = inRange(coordinates.row, treasureRow - WARM_DISTANCE, treasureRow + WARM_DISTANCE);
-  const colClose = inRange(coordinates.col, treasureCol - WARM_DISTANCE, treasureCol + WARM_DISTANCE);
+  const rowDistance = getDistance(treasureRow, coordinates.row);
+  const colDistance = getDistance(treasureCol, coordinates.col);
 
-  if (coordinates.row == treasureRow && coordinates.col == treasureCol) {
-    return 'success';
-  } else if (rowClose && colClose) {
+  const totalDistance = rowDistance + colDistance;
+
+  if (totalDistance <= CLOSE_RANGE) {
     return 'warm';
   } else {
     return 'cold';
   }
+}
+
+/**
+ * Always return positive number
+ * @param {*} cellA 
+ * @param {*} cellB 
+ */
+function getDistance(cellA, cellB) {
+  let distance;
+  if (cellA > cellB) {
+    distance = cellA - cellB;
+  } else {
+    distance = cellB - cellA;
+  }
+  console.log('Distance: ', distance);
+
+  return distance;
 }
 
 function inRange(value, min, max) {
@@ -208,7 +259,7 @@ function switchPlayerTurn(socketRoom) {
 
   const activePlayerSocket = getSocketFromID(playerTurn.id);
   activePlayerSocket.emit('activePlayer');
-  activePlayerSocket.broadcast.emit('activeOpponent');
+  activePlayerSocket.to(socketRoom.name).emit('activeOpponent');
 }
 
 /**
@@ -227,10 +278,10 @@ function getInactivePlayer(socketRoom) {
 function updateTurnText(socket, socketRoom) {
   if (socketRoom.playerTurn === socket.id) {
     socket.emit('msg', 'It\'s your turn!');    
-    socket.broadcast.emit('msg', 'It\'s your opponent\'s turn.');    
+    socket.to(socketRoom.name).emit('msg', 'It\'s your opponent\'s turn.');    
   } else {
     socket.emit('msg', 'It\'s your opponent\'s turn.');
-    socket.broadcast.emit('msg', 'It\'s your turn!');    
+    socket.to(socketRoom.name).emit('msg', 'It\'s your turn!');    
   }
 }
 
@@ -255,9 +306,9 @@ function rollDice(socketRoom, socket) {
 
   activePlayerSocket = getSocketFromID(activePlayerID);
   activePlayerSocket.emit('logMsg', `You rolled a ${socketRoomUser.roll}`);
-  activePlayerSocket.broadcast.emit('logMsg', `Your opponent rolled a ${socketRoomUser.roll}`)
+  activePlayerSocket.to(socketRoom.name).emit('logMsg', `Your opponent rolled a ${socketRoomUser.roll}`)
   activePlayerSocket.emit('roll', {roll: socketRoomUser.roll, isOpponentRoll: false});
-  activePlayerSocket.broadcast.emit('roll', {roll: socketRoomUser.roll, isOpponentRoll: true});
+  activePlayerSocket.to(socketRoom.name).emit('roll', {roll: socketRoomUser.roll, isOpponentRoll: true});
 }
 
 function getSocketFromID(socketID)
@@ -286,8 +337,14 @@ function getIsValidMove(currentPos, newPos, roll) {
 
 function emitPositionUpdates(socketRoomUser, coordinates) {
   const activeSocket = getSocketFromID(socketRoomUser.id);
+  const socketRoom = getSocketRoom(socketRoomUser);
   activeSocket.emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': false});
-  activeSocket.broadcast.emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': true});
+  activeSocket.to(socketRoom.name).emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': true});
+}
+
+function isPlayersTurn(socketRoom, playerId)
+{
+  return socketRoom.playerTurn === playerId;
 }
 
 http.listen(3000, function() {

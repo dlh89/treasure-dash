@@ -8,14 +8,20 @@ const PLAYERS_PER_GAME = 2;
 const MAX_ROLL = 6;
 
 const CLOSE_RANGE = 2;
+const GAME_NS = io.of('/game');
+const FIND_ROOM_NS = io.of('find-room');
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+app.get('/find-room', function(req, res) {
+  res.sendFile(__dirname + '/views/find-room.html');
+});
+
 app.use(express.static('static'));
 
-io.on('connection', function(socket) {
+GAME_NS.on('connection', function(socket) {
   socket.emit('connection');
   console.log('user connected:' + socket.id);
 
@@ -25,7 +31,7 @@ io.on('connection', function(socket) {
     const socketRoom = getSocketRoom(socket);
 
     if (socketRoom.users.length === PLAYERS_PER_GAME) {
-      io.in(socketRoom.name).emit('preGame')
+      GAME_NS.in(socketRoom.name).emit('preGame')
     }
   });
 
@@ -53,8 +59,8 @@ io.on('connection', function(socket) {
       const playerTurn = socketRoom.users[randomIndex];
       socketRoom.playerTurn = playerTurn.id;
 
-      io.in(socketRoom.name).emit('gameStart');
-      io.in(socketRoom.name).emit('logMsg', 'The game is now live!');
+      GAME_NS.in(socketRoom.name).emit('gameStart');
+      GAME_NS.in(socketRoom.name).emit('logMsg', 'The game is now live!');
       
       const activePlayerSocket = getSocketFromID(socketRoom.playerTurn);    
 
@@ -126,7 +132,7 @@ io.on('connection', function(socket) {
     const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
     if (socketRoomUser.pos.row == socketRoom.treasureCoordinates.row &&
       socketRoomUser.pos.col == socketRoom.treasureCoordinates.col) {
-      io.in(socketRoom.name).emit('playerWin', {'winner' : socketRoomUser.name, 'coordinates' : socketRoomUser.pos});
+      GAME_NS.in(socketRoom.name).emit('playerWin', {'winner' : socketRoomUser.name, 'coordinates' : socketRoomUser.pos});
     } else {
       socket.emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: false});
       socket.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: true})
@@ -173,12 +179,12 @@ function joinRoom(socket, room, playerName) {
   socket.emit('logMsg', `Your player name is ${playerName}`);
 
   // send message to the room
-  io.in(room.name).emit('logMsg', `${playerName} has joined the room.`);
+  GAME_NS.in(room.name).emit('logMsg', `Player '${playerName}' has joined the room.`);
 
   if (room.users.length === PLAYERS_PER_GAME) {
     setTreasureCoordinates(room);
 
-    io.in(room.name).emit('msg', 'Select a starting position.');
+    GAME_NS.in(room.name).emit('msg', 'Select a starting position.');
   } else {
     socket.emit('msg', 'Waiting for an opponent...');
   }
@@ -313,7 +319,7 @@ function rollDice(socketRoom, socket) {
 
 function getSocketFromID(socketID)
 {
-  const socket = io.sockets.sockets[socketID];
+  const socket = GAME_NS.sockets[socketID];
   return socket;
 }
 

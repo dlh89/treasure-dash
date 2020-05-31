@@ -9,7 +9,7 @@ const MAX_ROLL = 6;
 
 const CLOSE_RANGE = 2;
 const GAME_NS = io.of('/game');
-const FIND_ROOM_NS = io.of('find-room');
+const FIND_ROOM_NS = io.of('/find-room');
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/views/index.html');
@@ -20,6 +20,10 @@ app.get('/find-room', function(req, res) {
 });
 
 app.use(express.static('static'));
+
+FIND_ROOM_NS.on('connection', function(socket) {
+  socket.emit('connection', GAME_NS.rooms);
+});
 
 GAME_NS.on('connection', function(socket) {
   socket.emit('connection');

@@ -20,6 +20,16 @@
       <div>
         <h1 class="heading-primary">Treasure Dash</h1>
       </div>
+      <div class="modal">
+        <h2>Rooms</h2>
+        <div class="js-rooms-list">
+          <% rooms.forEach(function(room) { %>
+            <li data-room-name="<%= room.name %>">
+              <a href="/game?room=<%= room.name %>"><%= room.name %></a>
+            </li>
+          <% }); %>
+        </div>
+      </div>
     </div>
     <button class="rules__btn js-rules-btn">Rules</button>
     <div class="modal modal--rules js-rules-modal">

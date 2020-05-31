@@ -11,18 +11,22 @@ const CLOSE_RANGE = 2;
 const GAME_NS = io.of('/game');
 const FIND_ROOM_NS = io.of('/find-room');
 
+// set the view engine to ejs
+app.set('view engine', 'ejs');
+
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
 app.get('/find-room', function(req, res) {
-  res.sendFile(__dirname + '/views/find-room.html');
+  res.render(__dirname + '/views/find-room', {rooms: rooms});
 });
 
 app.use(express.static('static'));
 
 FIND_ROOM_NS.on('connection', function(socket) {
-  socket.emit('connection', GAME_NS.rooms);
+  console.log('GAME_NS: ', GAME_NS);
+  socket.emit('connection', rooms);
 });
 
 GAME_NS.on('connection', function(socket) {

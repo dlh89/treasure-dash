@@ -149,7 +149,7 @@ function findRoom(socket, playerName) {
 
   if (!roomFound) {
     // create a new room
-    const roomName = 'room' + (rooms.length + 1);
+    const roomName = 'room ' + (rooms.length + 1);
     rooms.push({
       'name': roomName,
       'users': []
@@ -169,7 +169,7 @@ function joinRoom(socket, room, playerName) {
   socket.join(room.name);
 
   // send message to the client
-  socket.emit('logMsg', `You have joined '${room.name}`);
+  socket.emit('logMsg', `You have joined '${room.name}'`);
   socket.emit('logMsg', `Your player name is ${playerName}`);
 
   // send message to the room

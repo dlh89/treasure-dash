@@ -379,6 +379,14 @@ body {
       margin: 0 2rem;
       max-width: none; } }
 
+.block {
+  background-color: #071E22;
+  padding: 30px 40px;
+  margin-bottom: 20px; }
+
+.block--hidden {
+  display: none; }
+
 .grid {
   position: relative;
   float: left;
@@ -588,6 +596,9 @@ body {
   height: 100%;
   z-index: 50;
   background: rgba(0, 0, 0, 0.6); }
+
+.modal__overlay--hidden {
+  display: none; }
 
 @media (max-width: 56.25em) {
   .modal--rules {

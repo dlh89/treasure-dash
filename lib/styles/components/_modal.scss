@@ -49,6 +49,11 @@
   background: rgba(0, 0, 0, 0.6);
 }
 
+.modal__overlay--hidden
+{
+  display: none;
+}
+
 @include respond(tab-port) {
   .modal--rules {
     width: 100%;

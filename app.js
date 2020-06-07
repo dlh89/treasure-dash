@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+var localStorage = require('local-storage');
 
 const rooms = [];
 const PLAYERS_PER_GAME = 2;
@@ -11,15 +12,17 @@ const CLOSE_RANGE = 2;
 const GAME_NS = io.of('/game');
 const FIND_ROOM_NS = io.of('/find-room');
 
+createRoom('Test'); // create a test room
+
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 
 app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/views/index.html');
+  res.render(__dirname + '/views/find-room', {rooms: rooms});
 });
 
-app.get('/find-room', function(req, res) {
-  res.render(__dirname + '/views/find-room', {rooms: rooms});
+app.get('/game/:room', function(req, res) {
+  res.render(__dirname + '/views/game', {room_name: req.params.room});
 });
 
 app.use(express.static('static'));
@@ -27,20 +30,24 @@ app.use(express.static('static'));
 FIND_ROOM_NS.on('connection', function(socket) {
   console.log('GAME_NS: ', GAME_NS);
   socket.emit('connection', rooms);
+
+  socket.on('saveName', function(playerName) {
+    localStorage.set('playerName', playerName);
+  });
 });
 
 GAME_NS.on('connection', function(socket) {
   socket.emit('connection');
   console.log('user connected:' + socket.id);
 
-  socket.on('findRoom', function(playerName) {
-    findRoom(socket, playerName);
+  var playerName = localStorage.get('playerName');
 
-    const socketRoom = getSocketRoom(socket);
-
-    if (socketRoom.users.length === PLAYERS_PER_GAME) {
-      GAME_NS.in(socketRoom.name).emit('preGame')
+  socket.on('joinRoom', function(roomName) {
+    var room = getRoomByName(roomName);
+    if (room) {
+      joinRoom(socket, room, playerName);
     }
+    // TODO display something in html if no room exists? 404?
   });
 
   socket.on('startPos', function(coordinates) {
@@ -164,13 +171,18 @@ function findRoom(socket, playerName) {
   if (!roomFound) {
     // create a new room
     const roomName = 'room' + (rooms.length + 1);
-    rooms.push({
-      'name': roomName,
-      'users': []
-    });
+    createRoom(roomName);
 
     joinRoom(socket, rooms[rooms.length - 1], playerName);
   }
+}
+
+function createRoom(roomName) {
+  // room isn't actually created in socket io until a socket connects
+  rooms.push({
+    'name': roomName,
+    'users': []
+  });
 }
 
 function joinRoom(socket, room, playerName) {
@@ -191,7 +203,7 @@ function joinRoom(socket, room, playerName) {
 
   if (room.users.length === PLAYERS_PER_GAME) {
     setTreasureCoordinates(room);
-
+    GAME_NS.in(room.name).emit('preGame')
     GAME_NS.in(room.name).emit('msg', 'Select a starting position.');
   } else {
     socket.emit('msg', 'Waiting for an opponent...');
@@ -359,6 +371,13 @@ function emitPositionUpdates(socketRoomUser, coordinates) {
 function isPlayersTurn(socketRoom, playerId)
 {
   return socketRoom.playerTurn === playerId;
+}
+
+function getRoomByName(roomName)
+{
+  room = rooms.filter(room => room.name === roomName);
+
+  return room[0];
 }
 
 http.listen(3000, function() {

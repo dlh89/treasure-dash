@@ -29,7 +29,8 @@ app.use(express.static('static'));
 
 FIND_ROOM_NS.on('connection', function(socket) {
   console.log('GAME_NS: ', GAME_NS);
-  socket.emit('connection', rooms);
+  var playerName = localStorage.get('playerName');
+  socket.emit('connection', rooms, playerName);
 
   socket.on('saveName', function(playerName) {
     localStorage.set('playerName', playerName);

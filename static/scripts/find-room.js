@@ -7,6 +7,8 @@ socket.on('connection', function(rooms) {
     });
 
     var nameForm = jQuery('.js-enter-name-form');
+    var nameInput = jQuery('.js-name-input');
+    nameInput.val(playerName);
     nameForm.on('submit', function (e) {
         e.preventDefault();
         var nameInput = jQuery('.js-name-input');

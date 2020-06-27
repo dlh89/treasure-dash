@@ -8,9 +8,6 @@ var socket = io('/game');
 var cells = jQuery('.grid__cell');
 jQuery(cells).on('click', cellClick);
 
-jQuery('.js-rules-btn').on('click', openRules);
-jQuery('.js-close-rules-btn').on('click', closeRules);
-
 function cellClick(e) {
   var row = jQuery(e.target).data('row');
   var col = jQuery(e.target).data('col');
@@ -126,25 +123,6 @@ socket.on('playerWin', function(data) {
   removeActiveClasses();
   jQuery('.grid-cell--reachable').removeClass('grid-cell--reachable')
 });
-
-function openRules() {
-  var rulesModal = jQuery('.js-rules-modal');
-  var modalOverlay = jQuery('.modal__overlay');
-  modalOverlay.show();
-  rulesModal.show();
-}
-
-function closeRules() {
-  var rulesModal = jQuery('.js-rules-modal');
-  var modalOverlay = jQuery('.modal__overlay');
-  var enterNameModal = jQuery('.js-enter-name-modal');
-  rulesModal.hide();
-  var enterNameModalDisplay = enterNameModal.css('display');
-  if (enterNameModalDisplay === 'none')
-  {
-    modalOverlay.hide();
-  }
-}
 
 function initHandleTurnChoice() {
   jQuery('.js-choose-roll').on('click', function() {

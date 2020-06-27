@@ -196,7 +196,9 @@ function findRoom(socket, playerName) {
 }
 
 function createRoom(roomName) {
-  const roomNameAlreadyExists = rooms.some(room => room.name == roomName); // TODO fix this to work for object
+  const roomNameAlreadyExists = rooms.some(
+    room => room.name.toLowerCase() == roomName.toLowerCase()
+  );
   
   if (!roomNameAlreadyExists) {
     // room isn't actually created in socket io until a socket connects
@@ -401,7 +403,9 @@ function isPlayersTurn(socketRoom, playerId)
 
 function getRoomByName(roomName)
 {
-  room = rooms.filter(room => room.name === roomName);
+  room = rooms.filter(
+    room => room.name.toLowerCase() === roomName.toLowerCase()
+  );
 
   return room[0];
 }

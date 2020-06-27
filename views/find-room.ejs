@@ -40,7 +40,7 @@
             <tbody>
               <% rooms.forEach(function(room) { %>
               <tr>
-                <td><a href="/game/<%= room.name %>"><%= room.name %></a></td>
+                <td><a href="/game/<%= room.name.toLowerCase() %>"><%= room.name %></a></td>
                 <td><%= room.users.length %></td>
               </tr>
               <% }); %>

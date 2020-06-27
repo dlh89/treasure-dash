@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-var localStorage = require('local-storage');
+const localStorage = require('local-storage');
+const bodyParser = require('body-parser');
 
 const rooms = [];
 const PLAYERS_PER_GAME = 2;
@@ -16,6 +17,7 @@ createRoom('Test'); // create a test room
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', function(req, res) {
   res.render(__dirname + '/views/find-room', {rooms: rooms});
@@ -23,6 +25,20 @@ app.get('/', function(req, res) {
 
 app.get('/game/:room', function(req, res) {
   res.render(__dirname + '/views/game', {room_name: req.params.room});
+});
+
+app.post('/create-room', function(req, res) {
+  const newRoom = createRoom(req.body.roomName);
+  data = {
+    status: 'success',
+    errorMessage: ''
+  };
+
+  if (!newRoom) {
+    data.status = 'error';
+    data.errorMessage = 'A room with that name already exists. Please try again with another name.';
+  }
+  res.send(data);
 });
 
 app.use(express.static('static'));
@@ -35,6 +51,7 @@ FIND_ROOM_NS.on('connection', function(socket) {
   socket.on('saveName', function(playerName) {
     localStorage.set('playerName', playerName);
   });
+
 });
 
 GAME_NS.on('connection', function(socket) {
@@ -179,11 +196,19 @@ function findRoom(socket, playerName) {
 }
 
 function createRoom(roomName) {
-  // room isn't actually created in socket io until a socket connects
-  rooms.push({
-    'name': roomName,
-    'users': []
-  });
+  const roomNameAlreadyExists = rooms.some(room => room.name == roomName); // TODO fix this to work for object
+  
+  if (!roomNameAlreadyExists) {
+    // room isn't actually created in socket io until a socket connects
+    rooms.push({
+      'name': roomName,
+      'users': []
+    });
+
+    return true;
+  }
+
+  return false;
 }
 
 function joinRoom(socket, room, playerName) {

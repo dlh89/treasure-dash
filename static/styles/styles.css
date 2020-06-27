@@ -555,6 +555,7 @@ body {
   .action-box__msg-box:not(:last-child) {
     margin-right: 0; } }
 .modal {
+  display: none;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -562,9 +563,6 @@ body {
   background: #071E22;
   padding: 100px;
   z-index: 100; }
-
-.modal--rules {
-  display: none; }
 
 .modal__input {
   color: #ffffff;
@@ -575,18 +573,6 @@ body {
   border-radius: 0;
   -webkit-appearance: none;
   border: 1px solid transparent; }
-
-.modal__submit {
-  background-color: #ffbc00;
-  display: inline-block;
-  padding: 10px 15px;
-  font-size: 20px;
-  border-radius: 0;
-  -webkit-appearance: none;
-  border: 1px solid transparent; }
-
-.modal__submit:hover {
-  cursor: pointer; }
 
 .modal__overlay {
   position: fixed;
@@ -621,5 +607,43 @@ body {
   right: 30px;
   bottom: auto;
   left: auto; }
+
+.button {
+  background-color: #ffbc00;
+  display: inline-block;
+  padding: 10px 15px;
+  font-size: 20px;
+  border-radius: 0;
+  -webkit-appearance: none;
+  border: 1px solid transparent; }
+
+.button:hover {
+  cursor: pointer; }
+
+.notice {
+  margin-top: 15px;
+  padding: 20px 30px;
+  border: 1px solid #e8d600;
+  background: #1a1400; }
+
+.notice--error {
+  border: 1px solid #e80000;
+  background: #1a0000; }
+
+.room-list {
+  margin-top: 20px;
+  margin-bottom: 20px; }
+
+.room-list table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse; }
+
+.room-list thead {
+  border-bottom: 1px solid #ffffff; }
+
+.room-list a {
+  color: #ffffff;
+  text-decoration: none; }
 
 /*# sourceMappingURL=styles.css.map */

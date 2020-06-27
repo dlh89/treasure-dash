@@ -24,19 +24,40 @@
         <form action="#" class="js-enter-name-form">
           <p>Please enter your name:</p>
           <input class="modal__input js-name-input" type="text" required>
-          <input type="submit" class="modal__submit" value="Find a game">
+          <input type="submit" class="button" value="Find a game">
         </form>
       </div>
       <div class="block block--hidden js-rooms-list-block">
         <h2>Rooms</h2>
-        <div class="js-rooms-list">
-          <% rooms.forEach(function(room) { %>
-            <li data-room-name="<%= room.name %>">
-              <a href="/game/<%= room.name %>"><%= room.name %></a>
-            </li>
-          <% }); %>
+        <div class="room-list js-rooms-list">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Players</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% rooms.forEach(function(room) { %>
+              <tr>
+                <td><a href="/game/<%= room.name %>"><%= room.name %></a></td>
+                <td><%= room.users.length %></td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
         </div>
+        <button class="js-create-room button">Create room</button>
       </div>
+    </div>
+    <div class="modal js-create-room-modal">
+      <h2>Create Room</h2>
+      <form action="#" class="js-create-room-form">
+        <p>Enter your room name:</p>
+        <input class="modal__input js-room-name-input" name="room-name" type="text" required>
+        <input type="submit" class="button" value="Create">
+        <div class='notice notice--error js-error-notice' style="display: none"></div>
+      </form>
     </div>
     <button class="rules__btn js-rules-btn">Rules</button>
     <div class="modal modal--rules js-rules-modal">
@@ -44,7 +65,7 @@
       <h2>Rules</h2>
       <p>Treasure Dash is a turn-based game in which the first player to dig up the treasure wins. Once you have found an opponent, you must both pick a starting position. One of you will then be picked at random to go first. When it's your turn, you can choose to either roll or dig. Each time you move, you will find out whether you are close to the treasure. If you are within 2 squares of the treasure in any direction then you will see "Getting warm". You won't find out if you're on top of the treasure unless you dig.</p>
     </div>
-    <div class="modal__overlay modal__overlay--hidden"></div>
+    <div class="modal__overlay modal__overlay--hidden js-modal-overlay"></div>
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -52,5 +73,6 @@
     </script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="scripts/find-room.js" async defer></script>
+    <script src="../scripts/handle-modals.js" async defer></script>
   </body>
 </html>

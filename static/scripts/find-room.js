@@ -51,6 +51,7 @@ function refreshRoomsList() {
     .done(function(rooms) {
         var roomsListElem = jQuery('.js-rooms-list tbody');
         roomsListElem.empty();
+        var rooms = rooms.sort((a, b) => a.name.localeCompare(b.name)); // sort alphabetically by name
         jQuery(rooms).each(function(index, room) {
             roomsListElem.append(`
                 <tr>

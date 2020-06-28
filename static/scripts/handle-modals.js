@@ -1,42 +1,55 @@
+/**
+ * Each modal open and close button should have a data-modal-class attribute
+ * Multiple modals can be opened at once
+ */
+
 globals = {
-  modalOpen: false,
-  rulesModal: jQuery('.js-rules-modal'),
   modalOverlay: jQuery('.modal__overlay'),
-  escKeyCode: 27
+  escKeyCode: 27,
+  openModals: []
 }
 
-// TODO pass modal name to open/close functions
-// TODO include other modals
-
 // set up listeners
-jQuery('.js-rules-btn').on('click', openRules);
-jQuery('.js-close-rules-btn').on('click', closeRules);
+jQuery('.js-open-modal-btn').on('click', function() {
+  var modalElem = jQuery(this).attr('data-modal-class');
+  openModal(modalElem);
+});
+jQuery('.js-close-modal-btn').on('click', function() { 
+  var modalElem = jQuery(this).attr('data-modal-class');
+  closeModal(modalElem);
+});
 jQuery(document).on('keyup', handleKeyUp);
 jQuery('.js-modal-overlay').on('click', handleOverlayClick);
 
 function handleKeyUp(e)
 {
-  if (globals.modalOpen && (e.keyCode == globals.escKeyCode)) {
-    closeRules();
+  if (globals.openModals.length && (e.keyCode == globals.escKeyCode)) {
+    // close the last modal that was opened
+    closeModal(globals.openModals[globals.openModals.length - 1]);
   }
 }
 
 function handleOverlayClick() {
-  if (globals.modalOpen) {
-    closeRules();
+  if (globals.openModals.length) {
+    // close the last modal that was opened
+    closeModal(globals.openModals[globals.openModals.length - 1]);
   }
 }
 
-function openRules() {
-  globals.modalOpen = true;
-  globals.modalOverlay.show();
-  globals.rulesModal.show();
+function openModal(modalElem) {
+  // check modal isn't already open
+  if (globals.openModals.indexOf(modalElem) == -1)
+  {
+    jQuery(modalElem).show();
+    globals.modalOverlay.show();
+    globals.openModals.push(modalElem);
+  }
 }
 
-function closeRules() {
-  globals.modalOpen = false;
-  globals.rulesModal.hide();
-  globals.modalOverlay.hide();
+function closeModal(modalElem) {
+  jQuery(modalElem).hide();
+  globals.openModals.splice(globals.openModals.indexOf(modalElem), 1);
+  if (!globals.openModals.length) {
+    globals.modalOverlay.hide();
+  }
 }
-
-// TODO handle esc/click outside modal to close

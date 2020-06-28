@@ -16,7 +16,6 @@ socket.on('connection', function(rooms, playerName) {
 
     var createRoomForm = jQuery('.js-create-room-form');
     createRoomForm.on('submit', function(e) {
-        console.log('submit');
         e.preventDefault();
         var roomName = jQuery('.js-room-name-input').val();
         var postData = {
@@ -27,8 +26,10 @@ socket.on('connection', function(rooms, playerName) {
         jQuery.post("/create-room", postData)
             .done(function(data) {
                 if (data.status == 'success') {
-                    errorNotice.html('');
+                    errorNotice.empty();
                     errorNotice.hide();
+                    refreshRoomsList();
+                    closeModal('.js-create-room-modal');
                 } else {
                     errorNotice.html(data.errorMessage);
                     errorNotice.show();
@@ -36,5 +37,28 @@ socket.on('connection', function(rooms, playerName) {
             });
 
     });
+
+    var refreshBtn = jQuery('.js-refresh-rooms-btn').on('click', refreshRoomsList);
 });
+
+
+/**
+ * Make an AJAX request to get the current rooms
+ * Update the contents of the rooms list table to display current rooms
+ */
+function refreshRoomsList() {
+    jQuery.get("/room-list")
+    .done(function(rooms) {
+        var roomsListElem = jQuery('.js-rooms-list tbody');
+        roomsListElem.empty();
+        jQuery(rooms).each(function(index, room) {
+            roomsListElem.append(`
+                <tr>
+                    <td><a href="/game/${room.name.toLowerCase()}">${room.name}</a></td>
+                    <td>${room.users.length}</td>
+                </tr>
+            `);
+        });
+    })       
+}
 

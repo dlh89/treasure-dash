@@ -27,9 +27,13 @@ app.get('/game/:room', function(req, res) {
   res.render(__dirname + '/views/game', {room_name: req.params.room});
 });
 
+app.get('/room-list', function(req, res) {
+  res.send(rooms);
+});
+
 app.post('/create-room', function(req, res) {
   const newRoom = createRoom(req.body.roomName);
-  data = {
+  var data = {
     status: 'success',
     errorMessage: ''
   };

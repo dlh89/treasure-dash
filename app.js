@@ -24,7 +24,12 @@ app.get('/', function(req, res) {
 });
 
 app.get('/game/:room', function(req, res) {
-  res.render(__dirname + '/views/game', {room_name: req.params.room});
+  const room = getRoomByName(req.params.room);
+  if (room && room.users.length < PLAYERS_PER_GAME) {
+    res.render(__dirname + '/views/game', {room_name: req.params.room});
+  } else {
+    // TODO redirect with param, use param to display message on '/'?
+  }
 });
 
 app.get('/room-list', function(req, res) {

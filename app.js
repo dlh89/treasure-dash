@@ -20,7 +20,8 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', function(req, res) {
-  res.render(__dirname + '/views/find-room', {rooms: rooms});
+  const notice = req.query.notice;
+  res.render(__dirname + '/views/find-room', {rooms: rooms, notice: notice});
 });
 
 app.get('/game/:room', function(req, res) {
@@ -28,7 +29,8 @@ app.get('/game/:room', function(req, res) {
   if (room && room.users.length < PLAYERS_PER_GAME) {
     res.render(__dirname + '/views/game', {room_name: req.params.room});
   } else {
-    // TODO redirect with param, use param to display message on '/'?
+    const notice = encodeURIComponent('Room either doesn\'t exist or is full.');
+    res.redirect('/?notice=' + notice);
   }
 });
 
@@ -71,10 +73,11 @@ GAME_NS.on('connection', function(socket) {
 
   socket.on('joinRoom', function(roomName) {
     var room = getRoomByName(roomName);
-    if (room) {
+    if (room && room.users.length < PLAYERS_PER_GAME) {
       joinRoom(socket, room, playerName);
+    } else {
+      // TODO display something in html if no room exists? 404?
     }
-    // TODO display something in html if no room exists? 404?
   });
 
   socket.on('startPos', function(coordinates) {

@@ -2,7 +2,7 @@
   "name": "treasure-dash",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "build": "babel --presets es2015 -d lib/ static"
   },

@@ -20,6 +20,9 @@
       <div>
         <h1 class="heading-primary">Treasure Dash</h1>
       </div>
+      <% if (notice) { %>
+          <div class="notice notice--error"><%= notice %></div>
+      <% } %>
       <div class="block js-enter-name">
         <form action="#" class="js-enter-name-form">
           <p>Please enter your name:</p>
@@ -56,11 +59,11 @@
     <div class="modal js-create-room-modal">
       <button class="rules__btn rules__btn--close js-close-modal-btn" data-modal-class=".js-create-room-modal">Close</button>
       <h2>Create Room</h2>
+      <div class='notice notice--error js-error-notice' style="display: none"></div>
       <form action="#" class="js-create-room-form">
         <p>Enter your room name:</p>
         <input class="modal__input js-room-name-input" name="room-name" type="text" required>
         <input type="submit" class="button" value="Create">
-        <div class='notice notice--error js-error-notice' style="display: none"></div>
       </form>
     </div>
     <button class="rules__btn js-open-modal-btn" data-modal-class=".js-rules-modal">Rules</button>

@@ -84,9 +84,8 @@ GAME_NS.on('connection', function(socket) {
     const socketRoom = getSocketRoom(socket);
     const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
 
-    if (!socketRoomUser.hasStartPos)
+    if (!socketRoomUser.pos)
     {
-      socketRoomUser.hasStartPos = true;
       socketRoomUser.pos = coordinates;
       emitPositionUpdates(socketRoomUser, coordinates);
   
@@ -122,7 +121,7 @@ GAME_NS.on('connection', function(socket) {
     const socketRoom = getSocketRoom(socket);
 
     // check if it's their turn
-    if (socketRoom.playerTurn === socket.id) {
+    if (isPlayersTurn(socketRoom, socket.id)) {
       const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
 
       if (socketRoomUser.roll)
@@ -147,9 +146,7 @@ GAME_NS.on('connection', function(socket) {
         }
       }
     } else {
-      if (!isPlayersTurn(socketRoom, socket.id)) {
-        socket.emit('msg', 'Wait for your turn!');
-      }
+      socket.emit('msg', 'Wait for your turn!');
     }
   });
 
@@ -164,25 +161,44 @@ GAME_NS.on('connection', function(socket) {
       // emit msg to that room to notify other player
       socket.to(socketRoom.name).emit('msg', `${socketRoomUser.name} has left the room.`);
       socketRoom.users.splice(socketIndex, 1);
+
+      resetGame(socketRoom);
     }
   });
 
   socket.on('chooseRoll', function() {
     const socketRoom = getSocketRoom(socket);
-    rollDice(socketRoom, socket);
+    if (isPlayersTurn(socketRoom, socket.id)) {
+      rollDice(socketRoom, socket);
+    }
   });
 
   socket.on('chooseDig', function() {
     const socketRoom = getSocketRoom(socket);
+    if (isPlayersTurn(socketRoom, socket.id)) {
+      const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
+      if (socketRoomUser.pos.row == socketRoom.treasureCoordinates.row &&
+        socketRoomUser.pos.col == socketRoom.treasureCoordinates.col) {
+        GAME_NS.in(socketRoom.name).emit('playerWin', {'winner' : socketRoomUser.name, 'coordinates' : socketRoomUser.pos});
+        resetGame(socketRoom);
+      } else {
+        socket.emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: false});
+        socket.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: true})
+        switchPlayerTurn(socketRoom);
+        updateTurnText(socket, socketRoom);
+      }
+    }
+  });
+
+  socket.on('playAgain', function() {
+    const socketRoom = getSocketRoom(socket);
     const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
-    if (socketRoomUser.pos.row == socketRoom.treasureCoordinates.row &&
-      socketRoomUser.pos.col == socketRoom.treasureCoordinates.col) {
-      GAME_NS.in(socketRoom.name).emit('playerWin', {'winner' : socketRoomUser.name, 'coordinates' : socketRoomUser.pos});
-    } else {
-      socket.emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: false});
-      socket.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: true})
-      switchPlayerTurn(socketRoom);
-      updateTurnText(socket, socketRoom);
+    socketRoomUser.readyToPlayAgain = true;
+    const allUsersReadyToPlayAgain = socketRoom.users.every((user) => {
+      return user['readyToPlayAgain'] === true;
+    });
+    if (allUsersReadyToPlayAgain) {
+      initGame(socket, socketRoom);
     }
   });
 });
@@ -241,7 +257,14 @@ function joinRoom(socket, room, playerName) {
   // send message to the room
   GAME_NS.in(room.name).emit('logMsg', `Player '${playerName}' has joined the room.`);
 
+  initGame(socket, room);
+}
+
+function initGame(socket, room) {
   if (room.users.length === PLAYERS_PER_GAME) {
+    room.users.forEach(user => {
+      user.readyToPlayAgain = false;
+    });
     setTreasureCoordinates(room);
     GAME_NS.in(room.name).emit('preGame')
     GAME_NS.in(room.name).emit('msg', 'Select a starting position.');
@@ -408,18 +431,26 @@ function emitPositionUpdates(socketRoomUser, coordinates) {
   activeSocket.to(socketRoom.name).emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': true});
 }
 
-function isPlayersTurn(socketRoom, playerId)
-{
+function isPlayersTurn(socketRoom, playerId) {
   return socketRoom.playerTurn === playerId;
 }
 
-function getRoomByName(roomName)
-{
+function getRoomByName(roomName) {
   room = rooms.filter(
     room => room.name.toLowerCase() === roomName.toLowerCase()
   );
 
   return room[0];
+}
+
+function resetGame(socketRoom) {
+  socketRoom.treasureCoordinates = null;
+  socketRoom.playerTurn = null;
+  socketRoom.users.forEach(socketRoomUser => {
+    socketRoomUser.pos = null;
+    socketRoomUser.roll = null;
+  });
+  GAME_NS.in(socketRoom.name).emit('resetGame');
 }
 
 http.listen(3000, function() {

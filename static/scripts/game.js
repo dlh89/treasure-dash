@@ -33,7 +33,7 @@ socket.on('preGame', function() {
 socket.on('gameStart', function() {
   global.preGame = false; 
   global.gameLive = true;
-
+  
   initHandleTurnChoice();
 });
 
@@ -90,7 +90,6 @@ socket.on('activePlayer', function() {
   removeActiveClasses();
   var currentCell = jQuery('.grid__cell--current');
   currentCell.addClass('grid__cell--active');
-  // jQuery('.turn-choice').addClass('turn-choice--active');
   jQuery('.turn-choice').attr('disabled', false);
 });
 
@@ -119,22 +118,26 @@ socket.on('playerWin', function(data) {
   splashMsg('success', successMsg);
 
   renderDig(data.coordinates.row, data.coordinates.col, true);
-  global.gameLive = false;
   removeActiveClasses();
   jQuery('.grid-cell--reachable').removeClass('grid-cell--reachable')
 });
 
+socket.on('resetGame', resetGame);
+
 function initHandleTurnChoice() {
   jQuery('.js-choose-roll').on('click', function() {
-    // jQuery('.turn-choice').removeClass('turn-choice--active');
     jQuery('.turn-choice').attr('disabled', true);
     socket.emit('chooseRoll');
   });
   jQuery('.js-choose-dig').on('click', function() {
-    // jQuery('.turn-choice').removeClass('turn-choice--active');
     jQuery('.turn-choice').attr('disabled', true);
     socket.emit('chooseDig');
   });
+}
+
+function removeHandleTurnChoice() {
+  jQuery('.js-choose-roll').unbind('click');
+  jQuery('.js-choose-dig').unbind('click');
 }
 
 /**
@@ -207,4 +210,31 @@ function removeActiveClasses() {
   // remove any reachable classes
   var reachableCells = jQuery('.grid-cell--reachable');
   reachableCells.removeClass('grid-cell--reachable');
+}
+
+/**
+ * Emit event to reset the game on the server
+ * Reset the screen to how it looks before a game starts
+ * Set the global game settings to preGame
+ */
+function resetGame() {
+  global.gameLive = false;
+  var gridCells = jQuery('.grid__cell');
+  var gridClasses = [
+    'grid__cell--active', 
+    'grid__cell--current',
+    'grid__cell--opponent-active',
+    'grid__cell--opponent-current',
+    'grid__cell--dug',
+    'grid__cell--treasure'
+  ];
+  gridCells.removeClass(gridClasses);
+
+  jQuery('.turn-choice').attr('disabled', true);
+
+  jQuery('.js-msg-box-text').text('');
+  jQuery('.js-action-box-text').text('');
+  removeHandleTurnChoice();
+
+  socket.emit('playAgain');
 }

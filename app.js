@@ -177,15 +177,28 @@ GAME_NS.on('connection', function(socket) {
     const socketRoom = getSocketRoom(socket);
     if (isPlayersTurn(socketRoom, socket.id)) {
       const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
-      if (socketRoomUser.pos.row == socketRoom.treasureCoordinates.row &&
-        socketRoomUser.pos.col == socketRoom.treasureCoordinates.col) {
-        GAME_NS.in(socketRoom.name).emit('playerWin', {'winner' : socketRoomUser.name, 'coordinates' : socketRoomUser.pos});
-        resetGame(socketRoom);
+      const digPosition = {
+        row: socketRoomUser.pos.row,
+        col: socketRoomUser.pos.col
+      };
+      const isPositionAlreadyDug = socketRoom.dugCells.filter(
+        dugCell => dugCell.row == socketRoomUser.pos.row && dugCell.col == socketRoomUser.pos.col
+      ).length > 0;
+
+      if (!isPositionAlreadyDug) {
+        socketRoom.dugCells.push(digPosition);
+        if (socketRoomUser.pos.row == socketRoom.treasureCoordinates.row &&
+          socketRoomUser.pos.col == socketRoom.treasureCoordinates.col) {
+          GAME_NS.in(socketRoom.name).emit('playerWin', {'winner' : socketRoomUser.name, 'coordinates' : socketRoomUser.pos});
+          resetGame(socketRoom);
+        } else {
+          socket.emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: false});
+          socket.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: true})
+          switchPlayerTurn(socketRoom);
+          updateTurnText(socket, socketRoom);
+        }
       } else {
-        socket.emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: false});
-        socket.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: true})
-        switchPlayerTurn(socketRoom);
-        updateTurnText(socket, socketRoom);
+          socket.emit('msg', 'That position has already been dug up!');
       }
     }
   });
@@ -265,6 +278,7 @@ function initGame(socket, room) {
     room.users.forEach(user => {
       user.readyToPlayAgain = false;
     });
+    room.dugCells = [];
     setTreasureCoordinates(room);
     GAME_NS.in(room.name).emit('preGame')
     GAME_NS.in(room.name).emit('msg', 'Select a starting position.');
@@ -450,6 +464,7 @@ function resetGame(socketRoom) {
     socketRoomUser.pos = null;
     socketRoomUser.roll = null;
   });
+  room.dugCells = [];
   GAME_NS.in(socketRoom.name).emit('resetGame');
 }
 

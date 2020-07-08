@@ -62,6 +62,7 @@ socket.on('serverDig', function(data) {
   if (isOpponentDig) {
     splashMsg('cold', 'Your opponent dug but found nothing!');
   } else {
+    jQuery('.turn-choice').attr('disabled', true);
     splashMsg('cold', 'You dug but found nothing!');
   }
   renderDig(data.coordinates.row, data.coordinates.col);
@@ -130,7 +131,6 @@ function initHandleTurnChoice() {
     socket.emit('chooseRoll');
   });
   jQuery('.js-choose-dig').on('click', function() {
-    jQuery('.turn-choice').attr('disabled', true);
     socket.emit('chooseDig');
   });
 }

@@ -6,10 +6,17 @@ const localStorage = require('local-storage');
 const bodyParser = require('body-parser');
 
 const rooms = [];
+
 const PLAYERS_PER_GAME = 2;
 const MAX_ROLL = 6;
-
 const CLOSE_RANGE = 2;
+const ROW_COUNT = 10;
+const COL_COUNT = 10;
+const SPECIAL_ITEM_COUNT = 5;
+const SPECIAL_ITEMS = [
+  'extraTurn'
+];
+
 const GAME_NS = io.of('/game');
 const FIND_ROOM_NS = io.of('/find-room');
 
@@ -192,10 +199,29 @@ GAME_NS.on('connection', function(socket) {
           GAME_NS.in(socketRoom.name).emit('playerWin', {'winner' : socketRoomUser.name, 'coordinates' : socketRoomUser.pos});
           resetGame(socketRoom);
         } else {
-          socket.emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: false});
-          socket.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: true})
-          switchPlayerTurn(socketRoom);
-          updateTurnText(socket, socketRoom);
+          const isSpecialItem = socketRoom.specialItemCells.filter(
+            specialItemCell => specialItemCell.row == socketRoomUser.pos.row && specialItemCell.col == socketRoomUser.pos.col
+          ).length > 0;
+          socket.emit('serverDig', {
+            'coordinates' : socketRoomUser.pos,
+            'isOpponentDig': false,
+            'isSpecialItem': isSpecialItem
+          });
+          socket.to(socketRoom.name).emit('serverDig', {
+            'coordinates' : socketRoomUser.pos,
+            'isOpponentDig': true,
+            'isSpecialItem': isSpecialItem
+          });
+          if (isSpecialItem) {
+            // Randomly decide which type of item
+            const specialItem = SPECIAL_ITEMS[generateRandomNumber(SPECIAL_ITEMS.length)];
+            if (specialItem == 'extraTurn') {
+              specialExtraTurn(socket);
+            }
+          } else {
+            switchPlayerTurn(socketRoom);
+            updateTurnText(socket, socketRoom);
+          }
         }
       } else {
           socket.emit('msg', 'That position has already been dug up!');
@@ -279,6 +305,14 @@ function initGame(socket, room) {
       user.readyToPlayAgain = false;
     });
     room.dugCells = [];
+    room.specialItemCells = [];
+
+    for (var i = 0; i < SPECIAL_ITEM_COUNT; i ++) {
+      const specialItemPosition = getRandomCell();
+      room.specialItemCells.push(specialItemPosition);
+    }
+    console.log('room.specialItemCells: ', room.specialItemCells);
+
     setTreasureCoordinates(room);
     GAME_NS.in(room.name).emit('preGame')
     GAME_NS.in(room.name).emit('msg', 'Select a starting position.');
@@ -286,6 +320,15 @@ function initGame(socket, room) {
     socket.emit('msg', 'Waiting for an opponent...');
   }
 }
+
+function getRandomCell() {
+  const randomCell = {
+    row: generateRandomNumber(ROW_COUNT) + 1,
+    col: generateRandomNumber(COL_COUNT) + 1
+  };
+
+  return randomCell;
+};
 
 function getSocketRoom(socket) {
   let socketRoom;
@@ -303,12 +346,9 @@ function getSocketRoom(socket) {
 }
 
 function setTreasureCoordinates(room) {
-  const rowCount = 10;
-  const colCount = 10;
-
-  let treasureRow = generateRandomNumber(rowCount);
+  let treasureRow = generateRandomNumber(ROW_COUNT);
   treasureRow++;
-  let treasureCol = generateRandomNumber(colCount);
+  let treasureCol = generateRandomNumber(COL_COUNT);
   treasureCol++;
 
   room.treasureCoordinates = {'row': treasureRow, 'col': treasureCol};
@@ -457,6 +497,16 @@ function getRoomByName(roomName) {
   return room[0];
 }
 
+function specialExtraTurn(socket) {
+  // TODO allow serverDig msg to be displayed before these
+  const playerMsg = 'You got an extra turn!';
+  socket.emit('specialExtraTurn', playerMsg);
+  const socketRoom = getSocketRoom(socket);
+  const opponentMsg = 'Your opponent got an extra turn!';
+  socket.to(socketRoom.name).emit('splashMsg', {closeness: 'success', msg: opponentMsg});
+  socket.to(socketRoom.name).emit('msg', opponentMsg);
+}
+
 function resetGame(socketRoom) {
   socketRoom.treasureCoordinates = null;
   socketRoom.playerTurn = null;
@@ -464,7 +514,6 @@ function resetGame(socketRoom) {
     socketRoomUser.pos = null;
     socketRoomUser.roll = null;
   });
-  room.dugCells = [];
   GAME_NS.in(socketRoom.name).emit('resetGame');
 }
 

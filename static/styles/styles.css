@@ -458,6 +458,7 @@ body {
 }
 
 .grid__cell {
+  position: relative;
   float: left;
   box-sizing: border-box;
   width: 50px;
@@ -510,6 +511,14 @@ body {
   filter: brightness(1);
 }
 
+.grid__special-item {
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
 @media (max-width: 37.5em) {
   .grid {
     width: 100%;
@@ -523,6 +532,7 @@ body {
 }
 .splash-msg {
   position: absolute;
+  pointer-events: none;
   top: 50%;
   transform: translateY(-50%);
   width: 100%;

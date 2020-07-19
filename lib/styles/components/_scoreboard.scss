@@ -25,7 +25,7 @@
   height: 100%;
 }
 
-.scoreboard__score {
+.scoreboard__score-container {
   float: right;
   position: relative;
   background-color: $color-light-grey;
@@ -36,7 +36,7 @@
   height: 100%;
 }
 
-.scoreboard__score span {
+.scoreboard__score {
   position: absolute;
   top: 50%;
   left: 50%;

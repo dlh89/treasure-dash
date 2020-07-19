@@ -26,12 +26,20 @@ socket.on('connection', function() {
 });
 
 socket.on('playerJoin', function(players) {
-  jQuery('.js-player-name').text(players.playerName);
-  jQuery('.js-opponent-name').text(players.opponentName);
+  var playerNameElem = jQuery('.js-player-name');
+  playerNameElem.text(players.player.name);
+  var scoreboardPlayerElem = jQuery(playerNameElem).parent('.scoreboard__player');
+  scoreboardPlayerElem.attr('data-player-id', players.player.id);
+
+  jQuery('.js-opponent-name').text(players.opponent.name);
+  var scoreboardOpponentElem = jQuery('.js-opponent-name').parent('.scoreboard__player');
+  scoreboardOpponentElem.attr('data-player-id', players.opponent.id);
 });
 
-socket.on('opponentJoin', function(playerName) {
-  jQuery('.js-opponent-name').text(playerName);
+socket.on('opponentJoin', function(player) {
+  jQuery('.js-opponent-name').text(player.name);
+  var scoreboardOpponentElem = jQuery('.js-opponent-name').parent('.scoreboard__player');
+  scoreboardOpponentElem.attr('data-player-id', player.id);
 });
 
 socket.on('preGame', function() {
@@ -123,12 +131,15 @@ socket.on('roll', function(data) {
 });
 
 socket.on('playerWin', function(data) {
-  var successMsg = data.winner + ' has won the game!';
+  var successMsg = data.winnerName + ' has won the game!';
   splashMsg('success', successMsg);
 
   renderDig(data.coordinates.row, data.coordinates.col, true);
   removeActiveClasses();
-  jQuery('.grid-cell--reachable').removeClass('grid-cell--reachable')
+  jQuery('.grid-cell--reachable').removeClass('grid-cell--reachable');
+
+  var winnerScoreboard = jQuery('[data-player-id="' + data.winnerID + '"]')
+  incrementPlayerScore(winnerScoreboard);
 });
 
 socket.on('resetGame', resetGame);
@@ -219,6 +230,13 @@ function removeActiveClasses() {
   // remove any reachable classes
   var reachableCells = jQuery('.grid-cell--reachable');
   reachableCells.removeClass('grid-cell--reachable');
+}
+
+function incrementPlayerScore(playerScoreboard) {
+  var score = playerScoreboard.find('.scoreboard__score');
+  var currentScore = parseInt(score.attr('data-player-score'));
+  score.attr('data-player-score', currentScore + 1);
+  score.text(currentScore + 1);
 }
 
 /**

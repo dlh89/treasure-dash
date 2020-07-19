@@ -178,8 +178,13 @@ GAME_NS.on('connection', function(socket) {
     if (isPlayersTurn(socketRoom, socket.id)) {
       const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
       if (socketRoomUser.pos.row == socketRoom.treasureCoordinates.row &&
-        socketRoomUser.pos.col == socketRoom.treasureCoordinates.col) {
-        GAME_NS.in(socketRoom.name).emit('playerWin', {'winner' : socketRoomUser.name, 'coordinates' : socketRoomUser.pos});
+      socketRoomUser.pos.col == socketRoom.treasureCoordinates.col) {
+        const winner = {
+          'winnerName' : socketRoomUser.name,
+          'winnerID': socketRoomUser.id,
+          'coordinates' : socketRoomUser.pos
+        }
+        GAME_NS.in(socketRoom.name).emit('playerWin', winner);
         resetGame(socketRoom);
       } else {
         socket.emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: false});
@@ -256,12 +261,21 @@ function joinRoom(socket, room, playerName) {
 
   // populate the player names
   const opponentName = getOpponentName(playerName, room);
+  const opponent = getUserByName(opponentName, room);
+  const opponentId = opponent ? opponent.id : null;
   const players = {
-    playerName: playerName,
-    opponentName: opponentName
+    player: {
+      name: playerName,
+      id: socket.id
+    },
+    opponent: {
+      name: opponentName,
+      id: opponentId
+    }
   }
   socket.emit('playerJoin', players);
-  socket.to(room.name).emit('opponentJoin', playerName);
+
+  socket.to(room.name).emit('opponentJoin', {name: playerName, id: socket.id});
 
   // send message to the room
   GAME_NS.in(room.name).emit('logMsg', `Player '${playerName}' has joined the room.`);
@@ -389,6 +403,19 @@ function getOpponentName(playerName, socketRoom) {
   }
 
   return otherPlayerName;
+}
+
+function getUserByName(playerName, socketRoom) {
+  const userIndex = socketRoom.users.findIndex(function(user) {
+    return user.name === playerName
+  });
+
+  let user = null;
+  if (userIndex !== -1) {
+    user = socketRoom.users[userIndex];
+  }
+
+  return user;
 }
 
 function updateTurnText(socket, socketRoom) {

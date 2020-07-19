@@ -6,10 +6,17 @@ const localStorage = require('local-storage');
 const bodyParser = require('body-parser');
 
 const rooms = [];
+
 const PLAYERS_PER_GAME = 2;
 const MAX_ROLL = 6;
-
 const CLOSE_RANGE = 2;
+const ROW_COUNT = 10;
+const COL_COUNT = 10;
+const SPECIAL_ITEM_COUNT = 5;
+const SPECIAL_ITEMS = [
+  'extraTurn'
+];
+
 const GAME_NS = io.of('/game');
 const FIND_ROOM_NS = io.of('/find-room');
 
@@ -155,10 +162,9 @@ GAME_NS.on('connection', function(socket) {
     const socketRoom = getSocketRoom(socket);
 
     if (socketRoom) {
-      const socketIndex = socketRoom.users.indexOf(socketRoom);
-      socketRoom.users.splice(socketIndex, 1);
-    
       const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
+      const socketIndex = socketRoom.users.indexOf(socketRoomUser);
+      socketRoom.users.splice(socketIndex, 1);
 
       socket.to(socketRoom.name).emit('msg', `${socketRoomUser.name} has left the room.`);
       socket.to(socketRoom.name).emit('playerDisconnect', { name: socketRoomUser.name, id: socketRoomUser.id });
@@ -178,20 +184,52 @@ GAME_NS.on('connection', function(socket) {
     const socketRoom = getSocketRoom(socket);
     if (isPlayersTurn(socketRoom, socket.id)) {
       const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
-      if (socketRoomUser.pos.row == socketRoom.treasureCoordinates.row &&
-      socketRoomUser.pos.col == socketRoom.treasureCoordinates.col) {
-        const winner = {
-          'winnerName' : socketRoomUser.name,
-          'winnerID': socketRoomUser.id,
-          'coordinates' : socketRoomUser.pos
+      const digPosition = {
+        row: socketRoomUser.pos.row,
+        col: socketRoomUser.pos.col
+      };
+      const isPositionAlreadyDug = socketRoom.dugCells.filter(
+        dugCell => dugCell.row == socketRoomUser.pos.row && dugCell.col == socketRoomUser.pos.col
+      ).length > 0;
+
+      if (!isPositionAlreadyDug) {
+        socketRoom.dugCells.push(digPosition);
+        if (socketRoomUser.pos.row == socketRoom.treasureCoordinates.row &&
+          socketRoomUser.pos.col == socketRoom.treasureCoordinates.col) {
+            const winner = {
+              'winnerName' : socketRoomUser.name,
+              'winnerID': socketRoomUser.id,
+              'coordinates' : socketRoomUser.pos
+            }
+            GAME_NS.in(socketRoom.name).emit('playerWin', winner);
+            resetGame(socketRoom);
+        } else {
+          const isSpecialItem = socketRoom.specialItemCells.filter(
+            specialItemCell => specialItemCell.row == socketRoomUser.pos.row && specialItemCell.col == socketRoomUser.pos.col
+          ).length > 0;
+          socket.emit('serverDig', {
+            'coordinates' : socketRoomUser.pos,
+            'isOpponentDig': false,
+            'isSpecialItem': isSpecialItem
+          });
+          socket.to(socketRoom.name).emit('serverDig', {
+            'coordinates' : socketRoomUser.pos,
+            'isOpponentDig': true,
+            'isSpecialItem': isSpecialItem
+          });
+          if (isSpecialItem) {
+            // Randomly decide which type of item
+            const specialItem = SPECIAL_ITEMS[generateRandomNumber(SPECIAL_ITEMS.length)];
+            if (specialItem == 'extraTurn') {
+              specialExtraTurn(socket);
+            }
+          } else {
+            switchPlayerTurn(socketRoom);
+            updateTurnText(socket, socketRoom);
+          }
         }
-        GAME_NS.in(socketRoom.name).emit('playerWin', winner);
-        resetGame(socketRoom);
       } else {
-        socket.emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: false});
-        socket.to(socketRoom.name).emit('serverDig', {'coordinates' : socketRoomUser.pos, isOpponentDig: true})
-        switchPlayerTurn(socketRoom);
-        updateTurnText(socket, socketRoom);
+          socket.emit('msg', 'That position has already been dug up!');
       }
     }
   });
@@ -289,6 +327,15 @@ function initGame(socket, room) {
     room.users.forEach(user => {
       user.readyToPlayAgain = false;
     });
+    room.dugCells = [];
+    room.specialItemCells = [];
+
+    for (var i = 0; i < SPECIAL_ITEM_COUNT; i ++) {
+      const specialItemPosition = getRandomCell();
+      room.specialItemCells.push(specialItemPosition);
+    }
+    console.log('room.specialItemCells: ', room.specialItemCells);
+
     setTreasureCoordinates(room);
     GAME_NS.in(room.name).emit('preGame')
     GAME_NS.in(room.name).emit('msg', 'Select a starting position.');
@@ -296,6 +343,15 @@ function initGame(socket, room) {
     socket.emit('msg', 'Waiting for an opponent...');
   }
 }
+
+function getRandomCell() {
+  const randomCell = {
+    row: generateRandomNumber(ROW_COUNT) + 1,
+    col: generateRandomNumber(COL_COUNT) + 1
+  };
+
+  return randomCell;
+};
 
 function getSocketRoom(socket) {
   let socketRoom;
@@ -313,12 +369,9 @@ function getSocketRoom(socket) {
 }
 
 function setTreasureCoordinates(room) {
-  const rowCount = 10;
-  const colCount = 10;
-
-  let treasureRow = generateRandomNumber(rowCount);
+  let treasureRow = generateRandomNumber(ROW_COUNT);
   treasureRow++;
-  let treasureCol = generateRandomNumber(colCount);
+  let treasureCol = generateRandomNumber(COL_COUNT);
   treasureCol++;
 
   room.treasureCoordinates = {'row': treasureRow, 'col': treasureCol};
@@ -496,6 +549,16 @@ function getRoomByName(roomName) {
   );
 
   return room[0];
+}
+
+function specialExtraTurn(socket) {
+  // TODO allow serverDig msg to be displayed before these
+  const playerMsg = 'You got an extra turn!';
+  socket.emit('specialExtraTurn', playerMsg);
+  const socketRoom = getSocketRoom(socket);
+  const opponentMsg = 'Your opponent got an extra turn!';
+  socket.to(socketRoom.name).emit('splashMsg', {closeness: 'success', msg: opponentMsg});
+  socket.to(socketRoom.name).emit('msg', opponentMsg);
 }
 
 function resetGame(socketRoom) {

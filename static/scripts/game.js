@@ -55,9 +55,7 @@ socket.on('gameStart', function() {
 });
 
 socket.on('msg', function(msg) {
-  console.log('msg: ', msg);
-  var msgBoxText = jQuery('.js-msg-box-text');
-  msgBoxText.text(msg);
+  msgBoxText(msg);
 });
 
 socket.on('logMsg', function(msg) {
@@ -77,11 +75,22 @@ socket.on('serverDig', function(data) {
   var isOpponentDig = data.isOpponentDig;  
   
   if (isOpponentDig) {
-    splashMsg('cold', 'Your opponent dug but found nothing!');
+    var playerString = 'Your opponent';
   } else {
-    splashMsg('cold', 'You dug but found nothing!');
+    var playerString = 'You';
+    jQuery('.turn-choice').attr('disabled', true);
   }
-  renderDig(data.coordinates.row, data.coordinates.col);
+  let splashText = '';
+  let closeness = '';
+  if (data.isSpecialItem) {
+    splashText = playerString + ' dug and found a special item!';
+    closeness = 'success';
+  } else {
+    splashText = playerString + ' dug but found nothing!';
+    closeness = 'cold';
+  }
+  splashMsg(closeness, splashText);
+  renderDig(data.coordinates.row, data.coordinates.col, false, data.isSpecialItem);
 });
 
 socket.on('closenessMsg', function(data) {
@@ -97,6 +106,10 @@ socket.on('closenessMsg', function(data) {
   }
 
   splashMsg(data.closeness, infoResult);
+});
+
+socket.on('splashMsg',function(data) {
+  splashMsg(data.closeness, data.msg) 
 });
 
 socket.on('updatePlayerPosition', function(data) {
@@ -128,6 +141,12 @@ socket.on('roll', function(data) {
     actionBox.text(`You rolled a ${roll}`);
     addReachableClasses(roll);
   }
+});
+
+socket.on('specialExtraTurn', function(msg) {
+  splashMsg('success', msg);
+  msgBoxText(msg);
+  jQuery('.turn-choice').attr('disabled', false);
 });
 
 socket.on('playerWin', function(data) {
@@ -166,7 +185,6 @@ function initHandleTurnChoice() {
     socket.emit('chooseRoll');
   });
   jQuery('.js-choose-dig').on('click', function() {
-    jQuery('.turn-choice').attr('disabled', true);
     socket.emit('chooseDig');
   });
 }
@@ -199,6 +217,12 @@ function addReachableClasses(roll) {
   }
 }
 
+function msgBoxText(msg) {
+  console.log('msg: ', msg);
+  var msgBoxText = jQuery('.js-msg-box-text');
+  msgBoxText.text(msg);
+}
+
 function splashMsg(closeness, msg) {
   var splashText = jQuery('.splash-msg__text');
   var splashTextModifierClass = 'splash-msg__text splash-msg__text--' + closeness;
@@ -211,12 +235,18 @@ function splashMsg(closeness, msg) {
                   .fadeOut(1000);
 }
 
-function renderDig(row, col, success = false) {
+function renderDig(row, col, success = false, specialItem = false) {
   var digCell = jQuery('[data-row=' + row + '][data-col=' + col + ']');
   if (success) {
     var gridClass = 'grid__cell--treasure';
   } else {
     var gridClass = 'grid__cell--dug';
+    if (specialItem) {
+      digCell.append('<span class="grid__special-item">?</span>');
+      jQuery(digCell).find('.grid__special-item').fadeIn(1000)
+                  .delay(2000)
+                  .fadeOut(1000);
+    }
   }
   digCell.addClass(gridClass);
 }

@@ -1,64 +1,73 @@
 .grid {
-  position: relative;
-  float: left;
-  width: 500px;
+	position: relative;
+	float: left;
+	width: 500px;
 }
 
 .grid__cell {
-  float: left;
-  box-sizing: border-box;
-  width: 50px;
-  height: 50px;
-  background: $color-orange;
-  background: linear-gradient(to bottom right, #fdf137, $color-orange);
-  border: 1px solid #c89b1c;
+	position: relative;
+	float: left;
+	box-sizing: border-box;
+	width: 50px;
+	height: 50px;
+	background: $color-orange;
+	background: linear-gradient(to bottom right, #fdf137, $color-orange);
+	border: 1px solid #c89b1c;
 }
 
 .turn-active .grid__cell:hover
 {
-  transition: ease-out .5s;
-  filter: brightness(.75);
+	transition: ease-out .5s;
+	filter: brightness(.75);
 }
 
 .grid__cell--current {
-  border: 4px solid $color-green;
+	border: 4px solid $color-green;
 }
 
 .grid__cell--opponent-current {
-  border: 4px solid $color-red;
+	border: 4px solid $color-red;
 }
 
 .grid__cell--active {
-  animation-duration: 1.5s;
-  animation-name: pulseGreen;
-  animation-iteration-count: infinite;
+	animation-duration: 1.5s;
+	animation-name: pulseGreen;
+	animation-iteration-count: infinite;
 }
 
 .grid__cell--opponent-active {
-  animation-duration: 1.5s;
-  animation-name: pulseRed;
-  animation-iteration-count: infinite;
+	animation-duration: 1.5s;
+	animation-name: pulseRed;
+	animation-iteration-count: infinite;
 }
 
 .grid-cell--reachable {
-  opacity: 0.8;
+	opacity: 0.8;
 }
 
 .grid__cell--dug {
-  background: linear-gradient(to bottom right, #b98b0e, #6d5207);
+	background: linear-gradient(to bottom right, #b98b0e, #6d5207);
 
-  &:hover {
-    filter: brightness(1);
-  }
+	&:hover {
+		filter: brightness(1);
+	}
 }
 
 
 .grid__cell--treasure {
-  background: linear-gradient(to bottom right, #ffff15, #fffdcf);
+	background: linear-gradient(to bottom right, #ffff15, #fffdcf);
 
-  &:hover {
-    filter: brightness(1);
-  }
+	&:hover {
+		filter: brightness(1);
+	}
+}
+
+.grid__special-item {
+	text-align: center;
+	top: 50%;
+	left: 50%;
+	position: absolute;
+	transform: translate(-50%, -50%);
 }
 
 
@@ -73,7 +82,12 @@
 }
 
 @include respond(tab-port) {
-  .grid {
+	.grid {
+    width: 100%;
     margin-bottom: 20px;
-  }
+	}
+	.grid__cell {
+			width: calc((100vw - (#{$mobile-margin} * 2)) / 10);
+			height: calc((100vw - (#{$mobile-margin} * 2)) / 10);
+	}
 }

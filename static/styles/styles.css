@@ -396,6 +396,7 @@ body {
   width: 500px; }
 
 .grid__cell {
+  position: relative;
   float: left;
   box-sizing: border-box;
   width: 50px;
@@ -437,6 +438,13 @@ body {
   .grid__cell--treasure:hover {
     filter: brightness(1); }
 
+.grid__special-item {
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%); }
+
 @media (max-width: 37.5em) {
   .grid {
     width: 100%; }
@@ -446,9 +454,15 @@ body {
     height: calc((100vw - (2rem * 2)) / 10); } }
 @media (max-width: 56.25em) {
   .grid {
-    margin-bottom: 20px; } }
+    width: 100%;
+    margin-bottom: 20px; }
+
+  .grid__cell {
+    width: calc((100vw - (2rem * 2)) / 10);
+    height: calc((100vw - (2rem * 2)) / 10); } }
 .splash-msg {
   position: absolute;
+  pointer-events: none;
   top: 50%;
   transform: translateY(-50%);
   width: 100%;

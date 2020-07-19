@@ -1,0 +1,44 @@
+.scoreboard {
+  min-height: 140px;
+  font-family: $font-headings;
+  margin-bottom: 20px;
+}
+
+.scoreboard__player {
+  position: relative;
+  background-color: $color-dark-grey;
+  text-transform: uppercase;
+  border-top: 16px solid $color-green;
+  color: $color-green;
+  height: 70px;
+  background-color: $color-dark-grey;
+}
+.scoreboard__player--opponent {
+  border-color: $color-red;
+  color: $color-red;
+}
+
+.scoreboard__name {
+  float: left;
+  margin-left: 25px;
+  font-size: 32px;
+  height: 100%;
+}
+
+.scoreboard__score {
+  float: right;
+  position: relative;
+  background-color: $color-light-grey;
+  font-size: 46px;
+  text-align: center;
+  width: 62px;
+  color: $color-dark-grey;
+  height: 100%;
+}
+
+.scoreboard__score span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

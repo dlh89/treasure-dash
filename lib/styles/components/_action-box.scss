@@ -8,21 +8,18 @@
     float: left;
     position: relative;
     height: 100%;
-    width: calc(40% - ((8px * 2) / 3));
+    width: 38%;
     padding: $standard-padding;
     margin-bottom: 20px;
     background-color: $color-dark-grey;
-    min-height: 114px;
+    min-height: 140px;
 }
 .action-box__msg-box--buttons {
     padding: 0;
-    width: calc(20% - ((8px * 2) / 3));
+    width: 24%;
     background-color: transparent;
 }
 
-.action-box__msg-box:not(:last-child) {
-    margin-right: 8px;
-}
 
 @include respond(mobile) {
     .action-box {

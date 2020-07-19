@@ -25,6 +25,15 @@ socket.on('connection', function() {
   socket.emit('joinRoom', roomName);
 });
 
+socket.on('playerJoin', function(players) {
+  jQuery('.js-player-name').text(players.playerName);
+  jQuery('.js-opponent-name').text(players.opponentName);
+});
+
+socket.on('opponentJoin', function(playerName) {
+  jQuery('.js-opponent-name').text(playerName);
+});
+
 socket.on('preGame', function() {
   global.preGame = true;
   jQuery('.grid').addClass('turn-active');

@@ -254,6 +254,15 @@ function joinRoom(socket, room, playerName) {
   socket.emit('logMsg', `You have joined '${room.name}`);
   socket.emit('logMsg', `Your player name is ${playerName}`);
 
+  // populate the player names
+  const opponentName = getOpponentName(playerName, room);
+  const players = {
+    playerName: playerName,
+    opponentName: opponentName
+  }
+  socket.emit('playerJoin', players);
+  socket.to(room.name).emit('opponentJoin', playerName);
+
   // send message to the room
   GAME_NS.in(room.name).emit('logMsg', `Player '${playerName}' has joined the room.`);
 
@@ -359,9 +368,27 @@ function getInactivePlayer(socketRoom) {
   const currentPlayerIndex = socketRoom.users.findIndex(function(user) {
     return user.id === socketRoom.playerTurn
   })
-  const otherPlayerID = socketRoom.users[(currentPlayerIndex + 1) % socketRoom.users.length];
+  const otherPlayer = socketRoom.users[(currentPlayerIndex + 1) % socketRoom.users.length];
 
-  return otherPlayerID;
+  return otherPlayer;
+}
+
+/**
+ * Get the name of the other player in the room
+ * @param {String} playerName The name of this player
+ * @param {object} socketRoom
+ */
+function getOpponentName(playerName, socketRoom) {
+  let otherPlayerName = null;
+
+  if (socketRoom.users.length === 2) {
+    const currentPlayerIndex = socketRoom.users.findIndex(function(user) {
+      return user.name === playerName
+    });
+    otherPlayerName = socketRoom.users[(currentPlayerIndex + 1) % socketRoom.users.length].name;
+  }
+
+  return otherPlayerName;
 }
 
 function updateTurnText(socket, socketRoom) {

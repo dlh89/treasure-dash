@@ -38,6 +38,9 @@ fieldset {
   padding: 0;
 }
 
+body {
+  margin-bottom: 100px;
+}
 
 @include respond(mobile) {
   h1 {

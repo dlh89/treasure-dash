@@ -156,11 +156,12 @@ GAME_NS.on('connection', function(socket) {
 
     if (socketRoom) {
       const socketIndex = socketRoom.users.indexOf(socketRoom);
+      socketRoom.users.splice(socketIndex, 1);
     
       const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
-      // emit msg to that room to notify other player
+
       socket.to(socketRoom.name).emit('msg', `${socketRoomUser.name} has left the room.`);
-      socketRoom.users.splice(socketIndex, 1);
+      socket.to(socketRoom.name).emit('playerDisconnect', { name: socketRoomUser.name, id: socketRoomUser.id });
 
       resetGame(socketRoom);
     }

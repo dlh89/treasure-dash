@@ -142,6 +142,22 @@ socket.on('playerWin', function(data) {
   incrementPlayerScore(winnerScoreboard);
 });
 
+socket.on('playerDisconnect', function(disconnectedUser) {
+  var disconnectedUserScoreboardElem = jQuery('[data-player-id="' + disconnectedUser.id + '"]');
+  disconnectedUserScoreboardElem.attr('data-player-id', '');
+  disconnectedUserScoreboardElem.find('.scoreboard__name').text('');
+
+  // reset all scores to 0
+  var playerScoreboardElems = jQuery('.scoreboard__player');
+  playerScoreboardElems.each(function(i, elem) {
+    var scoreElem = jQuery(elem).find('.scoreboard__score');
+    scoreElem.text('0');
+    scoreElem.attr('data-player-score', 0);
+  });
+
+  splashMsg('success', disconnectedUser.name + ' left the room!');
+});
+
 socket.on('resetGame', resetGame);
 
 function initHandleTurnChoice() {

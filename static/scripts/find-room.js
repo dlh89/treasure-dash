@@ -1,4 +1,4 @@
-var socket = io('ws://treasuredash.davidhide/find-room', {transports: ['websocket']});
+var socket = io('ws://treasuredash.davidhide.com/find-room', {transports: ['websocket']});
 
 socket.on('connection', function(rooms, playerName) {
     var nameForm = jQuery('.js-enter-name-form');

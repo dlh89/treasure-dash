@@ -1,4 +1,4 @@
-var socket = io('/find-room');
+var socket = io('ws://localhost:3000/find-room', {transports: ['websocket']});
 
 socket.on('connection', function(rooms, playerName) {
     var nameForm = jQuery('.js-enter-name-form');

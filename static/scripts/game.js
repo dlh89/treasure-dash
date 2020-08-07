@@ -3,7 +3,7 @@ global = {
   preGame: false // the time when players pick starting positions
 }
 
-var socket = io('ws://209.97.180.114/game', {transports: ['websocket']});
+var socket = io('/game');
 
 var cells = jQuery('.grid__cell');
 jQuery(cells).on('click', cellClick);

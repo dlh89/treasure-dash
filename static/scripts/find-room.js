@@ -1,6 +1,7 @@
 var socket = io('/find-room');
 
-socket.on('connection', function(rooms, playerName) {
+socket.on('connection', function() {
+    var playerName = localStorage.getItem('playerName');
     var nameForm = jQuery('.js-enter-name-form');
     var nameInput = jQuery('.js-name-input');
     nameInput.val(playerName);
@@ -11,6 +12,7 @@ socket.on('connection', function(rooms, playerName) {
         var roomListBlock = jQuery('.js-rooms-list-block');
         roomListBlock.removeClass('block--hidden');
 
+        localStorage.setItem('playerName', playerName);
         socket.emit('saveName', playerName); 
     });
 

@@ -63,22 +63,14 @@ app.use(express.static('static'));
 
 FIND_ROOM_NS.on('connection', function(socket) {
   console.log('GAME_NS: ', GAME_NS);
-  var playerName = localStorage.get('playerName');
-  socket.emit('connection', rooms, playerName);
-
-  socket.on('saveName', function(playerName) {
-    localStorage.set('playerName', playerName);
-  });
-
+  socket.emit('connection');
 });
 
 GAME_NS.on('connection', function(socket) {
   socket.emit('connection');
   console.log('user connected:' + socket.id);
 
-  var playerName = localStorage.get('playerName');
-
-  socket.on('joinRoom', function(roomName) {
+  socket.on('joinRoom', function(roomName, playerName) {
     var room = getRoomByName(roomName);
     if (room && room.users.length < PLAYERS_PER_GAME) {
       joinRoom(socket, room, playerName);

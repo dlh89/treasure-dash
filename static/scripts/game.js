@@ -21,7 +21,11 @@ function cellClick(e) {
 socket.on('connection', function() {
   var roomNameElem = jQuery('.js-room-name');
   var roomName = roomNameElem.attr('data-room-name');
-  socket.emit('joinRoom', roomName);
+  var playerName = localStorage.getItem('playerName');
+  if (!playerName) {
+    playerName = "Unnamed";
+  }
+  socket.emit('joinRoom', roomName, playerName);
 });
 
 socket.on('playerJoin', function(players) {

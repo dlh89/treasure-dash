@@ -515,7 +515,8 @@ body {
 
 @media (max-width: 56.25em) {
   .sidebar {
-    height: auto; } }
+    height: auto;
+    max-height: 200px; } }
 .turn-choice {
   border: none; }
 

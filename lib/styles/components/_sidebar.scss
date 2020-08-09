@@ -27,5 +27,6 @@
 @include respond(tab-port) {
     .sidebar {
         height: auto;
+        max-height: 200px;
     }
 }

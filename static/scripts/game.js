@@ -22,9 +22,6 @@ socket.on('connection', function() {
   var roomNameElem = jQuery('.js-room-name');
   var roomName = roomNameElem.attr('data-room-name');
   var playerName = localStorage.getItem('playerName');
-  if (!playerName) {
-    playerName = "Unnamed";
-  }
   socket.emit('joinRoom', roomName, playerName);
 });
 

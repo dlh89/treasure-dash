@@ -16,6 +16,7 @@ const SPECIAL_ITEM_COUNT = 5;
 const SPECIAL_ITEMS = [
   'extraTurn'
 ];
+const PLAYERNAME_MAX_LENGTH = 14;
 
 const GAME_NS = io.of('/game');
 const FIND_ROOM_NS = io.of('/find-room');
@@ -71,6 +72,9 @@ GAME_NS.on('connection', function(socket) {
   console.log('user connected:' + socket.id);
 
   socket.on('joinRoom', function(roomName, playerName) {
+    if (!playerName || playerName.length > PLAYERNAME_MAX_LENGTH) {
+      playerName = "Unnamed";
+    }
     var room = getRoomByName(roomName);
     if (room && room.users.length < PLAYERS_PER_GAME) {
       joinRoom(socket, room, playerName);

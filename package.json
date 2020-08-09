@@ -4,8 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "build": "babel --presets es2015 -d lib/ static"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",

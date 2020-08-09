@@ -21,7 +21,6 @@ function cellClick(e) {
 socket.on('connection', function() {
   var roomNameElem = jQuery('.js-room-name');
   var roomName = roomNameElem.attr('data-room-name');
-  console.log('roomName: ', roomName);
   socket.emit('joinRoom', roomName);
 });
 
@@ -59,7 +58,6 @@ socket.on('msg', function(msg) {
 });
 
 socket.on('logMsg', function(msg) {
-  console.log('logMsg: ', msg);
   var sidebarText = jQuery('.sidebar__text');
   var sidebarHistory = jQuery('.sidebar__text--history');
   sidebarHistory.prepend(sidebarText.html()); 
@@ -218,7 +216,6 @@ function addReachableClasses(roll) {
 }
 
 function msgBoxText(msg) {
-  console.log('msg: ', msg);
   var msgBoxText = jQuery('.js-msg-box-text');
   msgBoxText.text(msg);
 }

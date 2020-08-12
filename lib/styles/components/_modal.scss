@@ -5,8 +5,25 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: $color-dark-grey;
-  padding: 100px;
+  width: 600px;
+  max-width: 90%;
+  height: 400px;
+  max-height: 90%;
   z-index: 100;
+}
+
+.modal__inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 30px 50px;
+  overflow: auto;
+}
+
+.modal__heading {
+  margin-bottom: 20px;
 }
 
 .modal__input {
@@ -18,6 +35,7 @@
   border-radius: 0;
   -webkit-appearance: none;
   border: 1px solid transparent;
+  max-width: 100%;
 }
 
 .modal__overlay {
@@ -37,8 +55,7 @@
 }
 
 @include respond(tab-port) {
-  .modal--rules {
-    width: 100%;
-    padding: 50px;
+  .modal__inner {
+    padding: 30px;
   }
 }

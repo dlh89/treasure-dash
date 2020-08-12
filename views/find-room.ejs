@@ -57,20 +57,24 @@
       </div>
     </div>
     <div class="modal js-create-room-modal">
-      <button class="rules__btn rules__btn--close js-close-modal-btn" data-modal-class=".js-create-room-modal">Close</button>
-      <h2>Create Room</h2>
-      <div class='notice notice--error js-error-notice' style="display: none"></div>
-      <form action="#" class="js-create-room-form">
-        <p>Enter your room name:</p>
-        <input class="modal__input js-room-name-input" name="room-name" type="text" required>
-        <input type="submit" class="button" value="Create">
-      </form>
+      <div class="modal__inner">
+        <button class="rules__btn rules__btn--close js-close-modal-btn" data-modal-class=".js-create-room-modal">Close</button>
+        <h2 class=modal__heading>Create Room</h2>
+        <div class='notice notice--error js-error-notice' style="display: none"></div>
+        <form action="#" class="js-create-room-form">
+          <p>Enter your room name:</p>
+          <input class="modal__input js-room-name-input" name="room-name" type="text" required>
+          <input type="submit" class="button" value="Create">
+        </form>
+      </div>
     </div>
     <button class="rules__btn js-open-modal-btn" data-modal-class=".js-rules-modal">Rules</button>
     <div class="modal modal--rules js-rules-modal">
-      <button class="rules__btn rules__btn--close js-close-modal-btn" data-modal-class=".js-rules-modal">Close</button>
-      <h2>Rules</h2>
-      <p>Treasure Dash is a turn-based game in which the first player to dig up the treasure wins. Once you have found an opponent, you must both pick a starting position. One of you will then be picked at random to go first. When it's your turn, you can choose to either roll or dig. Each time you move, you will find out whether you are close to the treasure. If you are within 2 squares of the treasure in any direction then you will see "Getting warm". You won't find out if you're on top of the treasure unless you dig.</p>
+      <div class="modal__inner">
+        <button class="rules__btn rules__btn--close js-close-modal-btn" data-modal-class=".js-rules-modal">Close</button>
+        <h2 class="modal__heading">Rules</h2>
+        <p>Treasure Dash is a turn-based game in which the first player to dig up the treasure wins. Once you have found an opponent, you must both pick a starting position. One of you will then be picked at random to go first. When it's your turn, you can choose to either roll or dig. Each time you move, you will find out whether you are close to the treasure. If you are within 2 squares of the treasure in any direction then you will see "Getting warm". You won't find out if you're on top of the treasure unless you dig.</p>
+      </div>
     </div>
     <div class="modal__overlay modal__overlay--hidden js-modal-overlay"></div>
     <script

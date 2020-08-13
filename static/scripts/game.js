@@ -152,6 +152,20 @@ socket.on('specialExtraTurn', function(msg) {
   jQuery('.turn-choice').attr('disabled', false);
 });
 
+socket.on('specialTreasureRow', function(data) {
+  splashMsg('success', data.playerMsg);
+  msgBoxText(data.playerMsg);
+  var treasureRowCells = jQuery("[data-row='" + data.row + "']");
+  treasureRowCells.addClass('grid__treasure-dimension');
+});
+
+socket.on('specialTreasureCol', function(data) {
+  splashMsg('success', data.playerMsg);
+  msgBoxText(data.playerMsg);
+  var treasureRowCells = jQuery("[data-col='" + data.col + "']");
+  treasureRowCells.addClass('grid__treasure-dimension');
+});
+
 socket.on('playerWin', function(data) {
   var successMsg = data.winnerName + ' has won the game!';
   splashMsg('success', successMsg);
@@ -305,6 +319,8 @@ function resetGame() {
   gridCells.removeClass(gridClasses);
 
   jQuery('.turn-choice').attr('disabled', true);
+
+  jQuery('.grid__treasure-dimension').removeClass('grid__treasure-dimension');
 
   jQuery('.grid__special-item').remove();
 

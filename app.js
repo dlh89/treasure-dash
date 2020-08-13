@@ -14,7 +14,9 @@ const ROW_COUNT = 10;
 const COL_COUNT = 10;
 const SPECIAL_ITEM_COUNT = 5;
 const SPECIAL_ITEMS = [
-  'extraTurn'
+  'extraTurn',
+  'treasureRow',
+  'treasureCol'
 ];
 const PLAYERNAME_MAX_LENGTH = 14;
 
@@ -216,8 +218,16 @@ GAME_NS.on('connection', function(socket) {
           if (isSpecialItem) {
             // Randomly decide which type of item
             const specialItem = SPECIAL_ITEMS[generateRandomNumber(SPECIAL_ITEMS.length)];
-            if (specialItem == 'extraTurn') {
-              specialExtraTurn(socket);
+            switch(specialItem) {
+              case 'extraTurn':
+                specialExtraTurn(socket);
+                break;
+              case 'treasureRow':
+                specialTreasureRow(socket, socketRoom);
+                break;
+              case 'treasureCol':
+                specialTreasureCol(socket, socketRoom);
+                break;
             }
           } else {
             switchPlayerTurn(socketRoom);
@@ -555,6 +565,20 @@ function specialExtraTurn(socket) {
   const opponentMsg = 'Your opponent got an extra turn!';
   socket.to(socketRoom.name).emit('splashMsg', {closeness: 'success', msg: opponentMsg});
   socket.to(socketRoom.name).emit('msg', opponentMsg);
+}
+
+function specialTreasureRow(socket, socketRoom) {
+  const playerMsg = 'You found out which row the treasure is in!';
+  socket.emit('specialTreasureRow', {playerMsg: playerMsg, row: socketRoom.treasureCoordinates.row});
+  switchPlayerTurn(socketRoom);
+  updateTurnText(socket, socketRoom);
+}
+
+function specialTreasureCol(socket, socketRoom) {
+  const playerMsg = 'You found out which column the treasure is in!';
+  socket.emit('specialTreasureCol', {playerMsg: playerMsg, col: socketRoom.treasureCoordinates.col});
+  switchPlayerTurn(socketRoom);
+  updateTurnText(socket, socketRoom);
 }
 
 function resetGame(socketRoom) {

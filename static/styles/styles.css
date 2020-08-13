@@ -530,6 +530,10 @@ body {
   pointer-events: none;
 }
 
+.grid__treasure-dimension {
+  filter: brightness(1.2);
+}
+
 @media (max-width: 37.5em) {
   .grid {
     width: 100%;

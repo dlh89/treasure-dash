@@ -72,6 +72,10 @@
 	pointer-events: none;
 }
 
+.grid__treasure-dimension {
+	filter: brightness(1.2);
+}
+
 
 @include respond(mobile) {
   .grid {

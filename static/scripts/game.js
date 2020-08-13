@@ -47,9 +47,13 @@ socket.on('preGame', function() {
   jQuery('.grid').addClass('turn-active');
 });
 
-socket.on('gameStart', function() {
+socket.on('gameStart', function(specialItemCells) {
   global.preGame = false; 
   global.gameLive = true;
+
+  jQuery.each(specialItemCells, function(i, specialItemCell) {
+    renderSpecialItemCell(specialItemCell)
+  });
   
   initHandleTurnChoice();
 });
@@ -100,7 +104,7 @@ socket.on('closenessMsg', function(data) {
       infoResult = 'Ice cold.';
       break;
     case 'warm':
-      infoResult = 'Getting warm.';
+      infoResult = 'You\'re warm!';
       break;
   }
 
@@ -240,7 +244,6 @@ function renderDig(row, col, success = false, specialItem = false) {
   } else {
     var gridClass = 'grid__cell--dug';
     if (specialItem) {
-      digCell.append('<span class="grid__special-item">?</span>');
       jQuery(digCell).find('.grid__special-item').fadeIn(1000)
                   .delay(2000)
                   .fadeOut(1000);
@@ -303,9 +306,17 @@ function resetGame() {
 
   jQuery('.turn-choice').attr('disabled', true);
 
+  jQuery('.grid__special-item').remove();
+
   jQuery('.js-msg-box-text').text('');
   jQuery('.js-action-box-text').text('');
   removeHandleTurnChoice();
 
   socket.emit('playAgain');
+}
+
+function renderSpecialItemCell(specialItemCell) {
+  var cell = jQuery('[data-row=' + specialItemCell.row + '][data-col=' + specialItemCell.col + ']');
+  cell.append('<span class="grid__special-item">?</span>');
+  cell.find('.grid__special-item').fadeIn(1000);
 }

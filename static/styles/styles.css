@@ -526,6 +526,8 @@ body {
   left: 50%;
   position: absolute;
   transform: translate(-50%, -50%);
+  color: #000000;
+  pointer-events: none;
 }
 
 @media (max-width: 37.5em) {

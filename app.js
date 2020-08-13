@@ -106,7 +106,7 @@ GAME_NS.on('connection', function(socket) {
       const playerTurn = socketRoom.users[randomIndex];
       socketRoom.playerTurn = playerTurn.id;
 
-      GAME_NS.in(socketRoom.name).emit('gameStart');
+      GAME_NS.in(socketRoom.name).emit('gameStart', socketRoom.specialItemCells);
       GAME_NS.in(socketRoom.name).emit('logMsg', 'The game is now live!');
       
       const activePlayerSocket = getSocketFromID(socketRoom.playerTurn);    

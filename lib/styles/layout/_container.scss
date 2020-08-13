@@ -20,7 +20,17 @@
   margin-bottom: 20px;
 }
 
-.block--hidden
-{
+.block--hidden {
   display: none;
+}
+
+
+@include respond(tab-port) {
+  .block {
+    padding: 20px 30px;
+  }
+}
+
+@include respond(mobile) {
+
 }

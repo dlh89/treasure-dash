@@ -52,7 +52,7 @@ socket.on('gameStart', function(specialItemCells) {
   global.gameLive = true;
 
   jQuery.each(specialItemCells, function(i, specialItemCell) {
-    renderSpecialItemCell(specialItemCell)
+    renderSpecialItemCell(specialItemCell.position)
   });
   
   initHandleTurnChoice();

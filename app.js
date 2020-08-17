@@ -12,11 +12,19 @@ const MAX_ROLL = 6;
 const CLOSE_RANGE = 2;
 const ROW_COUNT = 10;
 const COL_COUNT = 10;
-const SPECIAL_ITEM_COUNT = 5;
 const SPECIAL_ITEMS = [
-  'extraTurn',
-  'treasureRow',
-  'treasureCol'
+  {
+    'type': 'extraTurn',
+    'count': 3 
+  },
+  {
+    'type': 'treasureRow',
+    'count': 1 
+  },
+  {
+    'type': 'treasureCol',
+    'count': 1 
+  }
 ];
 const PLAYERNAME_MAX_LENGTH = 14;
 
@@ -65,7 +73,6 @@ app.post('/create-room', function(req, res) {
 app.use(express.static('static'));
 
 FIND_ROOM_NS.on('connection', function(socket) {
-  console.log('GAME_NS: ', GAME_NS);
   socket.emit('connection');
 });
 
@@ -202,9 +209,10 @@ GAME_NS.on('connection', function(socket) {
             GAME_NS.in(socketRoom.name).emit('playerWin', winner);
             resetGame(socketRoom);
         } else {
-          const isSpecialItem = socketRoom.specialItemCells.filter(
-            specialItemCell => specialItemCell.row == socketRoomUser.pos.row && specialItemCell.col == socketRoomUser.pos.col
-          ).length > 0;
+          const specialItem = socketRoom.specialItemCells.find((specialItemCell) => {
+            return specialItemCell.position.row == socketRoomUser.pos.row && specialItemCell.position.col == socketRoomUser.pos.col
+          });
+          const isSpecialItem = specialItem ? true : false;
           socket.emit('serverDig', {
             'coordinates' : socketRoomUser.pos,
             'isOpponentDig': false,
@@ -216,9 +224,7 @@ GAME_NS.on('connection', function(socket) {
             'isSpecialItem': isSpecialItem
           });
           if (isSpecialItem) {
-            // Randomly decide which type of item
-            const specialItem = SPECIAL_ITEMS[generateRandomNumber(SPECIAL_ITEMS.length)];
-            switch(specialItem) {
+            switch(specialItem.type) {
               case 'extraTurn':
                 specialExtraTurn(socket);
                 break;
@@ -336,10 +342,17 @@ function initGame(socket, room) {
     room.dugCells = [];
     room.specialItemCells = [];
 
-    for (var i = 0; i < SPECIAL_ITEM_COUNT; i ++) {
-      const specialItemPosition = getRandomCell();
-      room.specialItemCells.push(specialItemPosition);
-    }
+    SPECIAL_ITEMS.forEach((specialItem) => {
+      for (var i = 0; i < specialItem.count; i++) {
+        const specialItemPosition = getRandomCell();
+        const newSpecialItem = {
+          'type': specialItem.type,
+          'position': specialItemPosition
+        };
+        room.specialItemCells.push(newSpecialItem);
+      }
+    });
+
     console.log('room.specialItemCells: ', room.specialItemCells);
 
     setTreasureCoordinates(room);
@@ -412,7 +425,6 @@ function getDistance(cellA, cellB) {
   } else {
     distance = cellB - cellA;
   }
-  console.log('Distance: ', distance);
 
   return distance;
 }

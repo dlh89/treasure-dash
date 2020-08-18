@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-const localStorage = require('local-storage');
 const bodyParser = require('body-parser');
 
 const rooms = [];
@@ -344,7 +343,7 @@ function initGame(socket, room) {
 
     SPECIAL_ITEMS.forEach((specialItem) => {
       for (var i = 0; i < specialItem.count; i++) {
-        const specialItemPosition = getRandomCell();
+        const specialItemPosition = getRandomCell(room.specialItemCells);
         const newSpecialItem = {
           'type': specialItem.type,
           'position': specialItemPosition
@@ -363,11 +362,28 @@ function initGame(socket, room) {
   }
 }
 
-function getRandomCell() {
-  const randomCell = {
+function getRandomCell(excludeLocations = false) {
+  var randomCell = {
     row: generateRandomNumber(ROW_COUNT) + 1,
     col: generateRandomNumber(COL_COUNT) + 1
   };
+
+  var isExcludedLocation = excludeLocations.find((excludeLocation) => {
+    return excludeLocation.position.row == randomCell.row &&
+    excludeLocation.position.col == randomCell.col
+  });
+
+  while (isExcludedLocation) {
+    randomCell = {
+      row: generateRandomNumber(ROW_COUNT) + 1,
+      col: generateRandomNumber(COL_COUNT) + 1
+    };
+
+    isExcludedLocation = excludeLocations.find((excludeLocation) => {
+      return excludeLocation.position.row == randomCell.row &&
+      excludeLocation.position.col == randomCell.col
+    });
+  }
 
   return randomCell;
 };

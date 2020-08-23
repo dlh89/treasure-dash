@@ -211,18 +211,22 @@ GAME_NS.on('connection', function(socket) {
           const specialItem = socketRoom.specialItemCells.find((specialItemCell) => {
             return specialItemCell.position.row == socketRoomUser.pos.row && specialItemCell.position.col == socketRoomUser.pos.col
           });
-          const isSpecialItem = specialItem ? true : false;
+
+          // Remove the specialItem from the room
+          const specialItemIndex = socketRoom.specialItemCells.indexOf(specialItem);
+          socketRoom.specialItemCells.splice(specialItemIndex, 1);
+
           socket.emit('serverDig', {
             'coordinates' : socketRoomUser.pos,
             'isOpponentDig': false,
-            'isSpecialItem': isSpecialItem
+            'isSpecialItem': specialItem
           });
           socket.to(socketRoom.name).emit('serverDig', {
             'coordinates' : socketRoomUser.pos,
             'isOpponentDig': true,
-            'isSpecialItem': isSpecialItem
+            'isSpecialItem': specialItem
           });
-          if (isSpecialItem) {
+          if (specialItem) {
             switch(specialItem.type) {
               case 'extraTurn':
                 specialExtraTurn(socket);

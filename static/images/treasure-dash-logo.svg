@@ -1,0 +1,38 @@
+<svg id="Group_13" data-name="Group 13" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="55" height="48" viewBox="0 0 808 702">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: #c89b1c;
+        stroke-width: 16px;
+        fill: url(#linear-gradient);
+      }
+
+      .cls-2 {
+        fill: url(#linear-gradient-2);
+      }
+
+      .cls-3 {
+        stroke: none;
+      }
+
+      .cls-4 {
+        fill: none;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fdf137"/>
+      <stop offset="1" stop-color="#ffbc00"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+  </defs>
+  <g id="Rectangle_169" data-name="Rectangle 169" class="cls-1">
+    <rect class="cls-3" width="808" height="702"/>
+    <rect class="cls-4" x="8" y="8" width="792" height="686"/>
+  </g>
+  <path id="Path_46" data-name="Path 46" class="cls-2" d="M5983.2,1032.213h230.735l118.2-669.923H5865Z" transform="translate(-5695 -346)"/>
+  <path id="Path_47" data-name="Path 47" class="cls-2" d="M6016.575,1033.03l-173.938-671h-75.831l227.313,671Z" transform="translate(-5751 -347)"/>
+  <path id="Path_48" data-name="Path 48" class="cls-2" d="M5766.807,1033.03l173.938-671h75.831l-227.313,671Z" transform="translate(-5224 -347)"/>
+</svg>

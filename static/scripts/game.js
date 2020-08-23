@@ -85,16 +85,23 @@ socket.on('serverDig', function(data) {
   }
   let splashText = '';
   let closeness = '';
-  if (data.isSpecialItem) {
-    splashText = playerString + ' dug and found a special item!';
-    closeness = 'success';
-  } else {
-    splashText = playerString + ' dug but found nothing!';
-    closeness = 'cold';
-  }
+  splashText = playerString + ' dug but found nothing!';
+  closeness = 'cold';
   splashMsg(closeness, splashText);
-  renderDig(data.coordinates.row, data.coordinates.col, false, data.isSpecialItem);
+  renderDig(data.coordinates.row, data.coordinates.col, false);
 });
+
+socket.on('specialItem', function(coordinates) {
+  var cell = jQuery('[data-row=' + coordinates.row + '][data-col=' + coordinates.col + ']');
+  
+  jQuery(cell).find('.grid__special-item').fadeIn(1000)
+                                          .delay(2000)
+                                          .fadeOut(1000);
+
+  // remove any reachable classes
+  var reachableCells = jQuery('.grid-cell--reachable');
+  reachableCells.removeClass('grid-cell--reachable');
+})
 
 socket.on('closenessMsg', function(data) {
   var infoResult = '';
@@ -251,23 +258,17 @@ function splashMsg(closeness, msg) {
                   .fadeOut(1000);
 }
 
-function renderDig(row, col, success = false, specialItem = false) {
+function renderDig(row, col, success = false) {
   var digCell = jQuery('[data-row=' + row + '][data-col=' + col + ']');
   if (success) {
     var gridClass = 'grid__cell--treasure';
   } else {
     var gridClass = 'grid__cell--dug';
-    if (specialItem) {
-      jQuery(digCell).find('.grid__special-item').fadeIn(1000)
-                  .delay(2000)
-                  .fadeOut(1000);
-    }
   }
   digCell.addClass(gridClass);
 }
 
 function updatePlayerPosition(row, col, isOpponentMove = false) {
-  
   var gridClass = 'grid__cell--current';
   if (isOpponentMove) {
     var gridClass = 'grid__cell--opponent-current';

@@ -577,6 +577,12 @@ body {
   width: 24%;
   background-color: transparent; }
 
+.action-box__msg-box--roll {
+  text-align: center; }
+
+.action-box__die {
+  margin-top: 8px; }
+
 @media (max-width: 37.5em) {
   .action-box {
     width: 100%; }

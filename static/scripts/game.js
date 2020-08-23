@@ -144,6 +144,11 @@ socket.on('roll', function(data) {
     actionBox.text(`You rolled a ${roll}`);
     addReachableClasses(roll);
   }
+  // Remove any existing dice before adding die for this roll
+  var dice = jQuery('.action-box__die');
+  dice.remove();
+
+  actionBox.parent().append(`<img src="/images/dice/die_${roll}.svg" alt="Die showing a ${roll}" class="action-box__die">`);
 });
 
 socket.on('specialExtraTurn', function(msg) {
@@ -327,6 +332,10 @@ function resetGame() {
   jQuery('.js-msg-box-text').text('');
   jQuery('.js-action-box-text').text('');
   removeHandleTurnChoice();
+
+  // Remove any existing dice before adding die for this roll
+  var dice = jQuery('.action-box__die');
+  dice.remove();
 
   socket.emit('playAgain');
 }

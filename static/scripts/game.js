@@ -93,6 +93,11 @@ socket.on('serverDig', function(data) {
     closeness = 'cold';
   }
   splashMsg(closeness, splashText);
+
+  jQuery('.js-action-box-text').text(splashText);
+  var dice = jQuery('.action-box__die');
+  dice.remove();
+
   renderDig(data.coordinates.row, data.coordinates.col, false, data.isSpecialItem);
 });
 
@@ -144,7 +149,7 @@ socket.on('roll', function(data) {
     actionBox.text(`You rolled a ${roll}`);
     addReachableClasses(roll);
   }
-  // Remove any existing dice before adding die for this roll
+
   var dice = jQuery('.action-box__die');
   dice.remove();
 
@@ -268,6 +273,7 @@ function renderDig(row, col, success = false, specialItem = false) {
                   .fadeOut(1000);
     }
   }
+
   digCell.addClass(gridClass);
 }
 

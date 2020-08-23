@@ -212,10 +212,6 @@ GAME_NS.on('connection', function(socket) {
             return specialItemCell.position.row == socketRoomUser.pos.row && specialItemCell.position.col == socketRoomUser.pos.col
           });
 
-          // Remove the specialItem from the room
-          const specialItemIndex = socketRoom.specialItemCells.indexOf(specialItem);
-          socketRoom.specialItemCells.splice(specialItemIndex, 1);
-
           socket.emit('serverDig', {
             'coordinates' : socketRoomUser.pos,
             'isOpponentDig': false,
@@ -227,6 +223,10 @@ GAME_NS.on('connection', function(socket) {
             'isSpecialItem': specialItem
           });
           if (specialItem) {
+            // Remove the specialItem from the room
+            const specialItemIndex = socketRoom.specialItemCells.indexOf(specialItem);
+            socketRoom.specialItemCells.splice(specialItemIndex, 1);
+
             switch(specialItem.type) {
               case 'extraTurn':
                 specialExtraTurn(socket);

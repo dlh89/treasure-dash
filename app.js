@@ -151,9 +151,33 @@ GAME_NS.on('connection', function(socket) {
           
           // only send closeness to the player
           socket.emit('closenessMsg', {'closeness': closeness});
-    
-          switchPlayerTurn(socketRoom);
-          updateTurnText(socket, socketRoom);
+
+          // check if position has a special item
+          const specialItem = socketRoom.specialItemCells.find((specialItemCell) => {
+            return specialItemCell.position.row == socketRoomUser.pos.row && specialItemCell.position.col == socketRoomUser.pos.col
+          });
+
+          if (specialItem) {
+            // Remove the specialItem from the room so it can't be picked up again
+            const specialItemIndex = socketRoom.specialItemCells.indexOf(specialItem);
+            socketRoom.specialItemCells.splice(specialItemIndex, 1);
+
+            GAME_NS.in(socketRoom.name).emit('specialItem', coordinates);
+            switch(specialItem.type) {
+              case 'extraTurn':
+                specialExtraTurn(socket);
+                break;
+              case 'treasureRow':
+                specialTreasureRow(socket, socketRoom);
+                break;
+              case 'treasureCol':
+                specialTreasureCol(socket, socketRoom);
+                break;
+              }
+          } else {
+            switchPlayerTurn(socketRoom);
+            updateTurnText(socket, socketRoom);
+          }
         }
       }
     } else {
@@ -208,37 +232,9 @@ GAME_NS.on('connection', function(socket) {
             GAME_NS.in(socketRoom.name).emit('playerWin', winner);
             resetGame(socketRoom);
         } else {
-          const specialItem = socketRoom.specialItemCells.find((specialItemCell) => {
-            return specialItemCell.position.row == socketRoomUser.pos.row && specialItemCell.position.col == socketRoomUser.pos.col
-          });
-          const isSpecialItem = specialItem ? true : false;
-          socket.emit('serverDig', {
-            'coordinates' : socketRoomUser.pos,
-            'isOpponentDig': false,
-            'isSpecialItem': isSpecialItem
-          });
-          socket.to(socketRoom.name).emit('serverDig', {
-            'coordinates' : socketRoomUser.pos,
-            'isOpponentDig': true,
-            'isSpecialItem': isSpecialItem
-          });
-          if (isSpecialItem) {
-            switch(specialItem.type) {
-              case 'extraTurn':
-                specialExtraTurn(socket);
-                break;
-              case 'treasureRow':
-                specialTreasureRow(socket, socketRoom);
-                break;
-              case 'treasureCol':
-                specialTreasureCol(socket, socketRoom);
-                break;
-            }
-          } else {
             switchPlayerTurn(socketRoom);
             updateTurnText(socket, socketRoom);
           }
-        }
       } else {
           socket.emit('msg', 'That position has already been dug up!');
       }
@@ -593,6 +589,10 @@ function specialExtraTurn(socket) {
   const opponentMsg = 'Your opponent got an extra turn!';
   socket.to(socketRoom.name).emit('splashMsg', {closeness: 'success', msg: opponentMsg});
   socket.to(socketRoom.name).emit('msg', opponentMsg);
+
+  // Clear roll to prevent moving again before next roll
+  const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
+  socketRoomUser.roll = null;
 }
 
 function specialTreasureRow(socket, socketRoom) {

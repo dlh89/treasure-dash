@@ -647,7 +647,7 @@ function handleRoomUptime() {
       // check if it had users last time this was called
       if (!room.hasOwnProperty('emptyMinutes') || room.emptyMinutes === 0) {
         room.emptyMinutes = 1;
-      } else if (room.emptyMinutes >= 5) {
+      } else if (room.emptyMinutes >= 60) {
         // remove the room
         var roomIndex = rooms.indexOf(room);
         rooms.splice(roomIndex, 1);

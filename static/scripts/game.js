@@ -182,10 +182,12 @@ socket.on('playerWin', function(data) {
 
   renderDig(data.coordinates.row, data.coordinates.col, true);
   removeActiveClasses();
-  jQuery('.grid-cell--reachable').removeClass('grid-cell--reachable');
+  jQuery('.grid__cell--reachable').removeClass('grid__cell--reachable');
 
   var winnerScoreboard = jQuery('[data-player-id="' + data.winnerID + '"]')
   incrementPlayerScore(winnerScoreboard);
+
+  jQuery('.turn-choice').attr('disabled', true);
 });
 
 socket.on('playerDisconnect', function(disconnectedUser) {
@@ -239,7 +241,7 @@ function addReachableClasses(roll) {
     cells.push(jQuery('[data-col=' + currentCol + '][data-row=' + (currentRow + (i + 1) * -1) + ']'));
 
     jQuery(cells).each(function(i, cell) {
-      cell.addClass('grid-cell--reachable');
+      cell.addClass('grid__cell--reachable');
     });
   }
 }
@@ -300,8 +302,8 @@ function removeActiveClasses() {
   previouslyActiveOpponent.removeClass('grid__cell--opponent-active');
 
   // remove any reachable classes
-  var reachableCells = jQuery('.grid-cell--reachable');
-  reachableCells.removeClass('grid-cell--reachable');
+  var reachableCells = jQuery('.grid__cell--reachable');
+  reachableCells.removeClass('grid__cell--reachable');
 }
 
 function incrementPlayerScore(playerScoreboard) {
@@ -325,7 +327,8 @@ function resetGame() {
     'grid__cell--opponent-active',
     'grid__cell--opponent-current',
     'grid__cell--dug',
-    'grid__cell--treasure'
+    'grid__cell--treasure',
+    'grid__cell--reachable'
   ];
   gridCells.removeClass(gridClasses);
 

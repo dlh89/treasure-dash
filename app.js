@@ -26,6 +26,7 @@ const SPECIAL_ITEMS = [
   }
 ];
 const PLAYERNAME_MAX_LENGTH = 14;
+const RESET_GAME_TIMEOUT_MS = 5000;
 
 const GAME_NS = io.of('/game');
 const FIND_ROOM_NS = io.of('/find-room');
@@ -173,7 +174,9 @@ GAME_NS.on('connection', function(socket) {
       socket.to(socketRoom.name).emit('msg', `${socketRoomUser.name} has left the room.`);
       socket.to(socketRoom.name).emit('playerDisconnect', { name: socketRoomUser.name, id: socketRoomUser.id });
 
-      resetGame(socketRoom);
+      setTimeout(() => {
+        resetGame(socketRoom);
+      }, RESET_GAME_TIMEOUT_MS);
     }
   });
 
@@ -206,7 +209,9 @@ GAME_NS.on('connection', function(socket) {
               'coordinates' : socketRoomUser.pos
             }
             GAME_NS.in(socketRoom.name).emit('playerWin', winner);
-            resetGame(socketRoom);
+            setTimeout(() => {
+              resetGame(socketRoom);
+            }, RESET_GAME_TIMEOUT_MS);
         } else {
           const specialItem = socketRoom.specialItemCells.find((specialItemCell) => {
             return specialItemCell.position.row == socketRoomUser.pos.row && specialItemCell.position.col == socketRoomUser.pos.col
@@ -249,7 +254,7 @@ GAME_NS.on('connection', function(socket) {
     }
   });
 
-  socket.on('playAgain', function() {
+  socket.on('playAgain', function() { // TODO is this doing anything? implement?
     const socketRoom = getSocketRoom(socket);
     const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
     socketRoomUser.readyToPlayAgain = true;

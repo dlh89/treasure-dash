@@ -40,6 +40,9 @@ socket.on('opponentJoin', function(player) {
   jQuery('.js-opponent-name').text(player.name);
   var scoreboardOpponentElem = jQuery('.js-opponent-name').parent('.scoreboard__player');
   scoreboardOpponentElem.attr('data-player-id', player.id);
+
+  var splashText = player.name + ' has joined the game!';
+  splashMsg('warm', splashText);
 });
 
 socket.on('preGame', function() {

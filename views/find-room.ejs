@@ -9,7 +9,11 @@
         <h1 class="heading-primary heading-primary--logo">Treasure Dash</h1>
       </div>
       <% if (notice) { %>
-          <div class="notice notice--error"><%= notice %></div>
+          <div class="notice notice--error">
+            <% if (notice == 'not-found') { %>
+              Room either doesn't exist or is full.
+            <% } %>
+          </div>
       <% } %>
       <div class="block js-enter-name">
         <form action="#" class="single-row-form js-enter-name-form">

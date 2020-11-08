@@ -46,7 +46,7 @@ app.get('/game/:room', function(req, res) {
   if (room && room.users.length < PLAYERS_PER_GAME) {
     res.render(__dirname + '/views/game', {room_name: req.params.room});
   } else {
-    const notice = encodeURIComponent('Room either doesn\'t exist or is full.');
+    const notice = encodeURIComponent('not-found');
     res.redirect('/?notice=' + notice);
   }
 });

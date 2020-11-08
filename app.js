@@ -33,6 +33,10 @@ const FIND_ROOM_NS = io.of('/find-room');
 
 createRoom('Test'); // create a test room
 
+setInterval(function() {
+  handleRoomUptime();
+}, 1000 * 60); // call this every minute
+
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -624,6 +628,37 @@ function resetGame(socketRoom) {
     socketRoomUser.roll = null;
   });
   GAME_NS.in(socketRoom.name).emit('resetGame');
+}
+
+/**
+ * Handle room uptime
+ * This function is called every 60 seconds
+ * Increment the empty minutes count for every consecutive minute a room doesn't have users in
+ * After 60 minutes with no users, delete the room
+ */
+function handleRoomUptime() {
+  rooms.some(function(room) {
+    if (room.name === 'Test') {
+      // the test room should always be up
+      return;
+    }
+
+    if (room.users.length === 0) {
+      // check if it had users last time this was called
+      if (!room.hasOwnProperty('emptyMinutes') || room.emptyMinutes === 0) {
+        room.emptyMinutes = 1;
+      } else if (room.emptyMinutes >= 5) {
+        // remove the room
+        var roomIndex = rooms.indexOf(room);
+        rooms.splice(roomIndex, 1);
+      } else {
+        room.emptyMinutes += 1;
+      }
+    } else {
+      // reset the empty minutes as there are players in the room
+      room.emptyMinutes = 0;
+    }
+  });
 }
 
 http.listen(3000, function() {

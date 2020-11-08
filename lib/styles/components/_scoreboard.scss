@@ -4,6 +4,27 @@
   margin-bottom: 20px;
 }
 
+.scoreboard--active-player .js-scoreboard-player {
+  animation-duration: 1.5s;
+  animation-name: pulseGreen;
+  animation-iteration-count: infinite;
+}
+.scoreboard--active-opponent .js-scoreboard-opponent {
+  animation-duration: 1.5s;
+  animation-name: pulseRed;
+  animation-iteration-count: infinite;
+}
+.scoreboard--active-player .js-player-name {
+  animation-duration: 1.5s;
+  animation-name: pulseGreenText;
+  animation-iteration-count: infinite;
+}
+.scoreboard--active-opponent .js-opponent-name {
+  animation-duration: 1.5s;
+  animation-name: pulseRedText;
+  animation-iteration-count: infinite;
+}
+
 .scoreboard__player {
   position: relative;
   background-color: $color-dark-grey;
@@ -16,6 +37,12 @@
 .scoreboard__player--opponent {
   border-color: $color-red;
   color: $color-red;
+}
+
+.scoreboard__player--active-opponent {
+  animation-duration: 1.5s;
+  animation-name: pulseRedText;
+  animation-iteration-count: infinite;
 }
 
 .scoreboard__name {

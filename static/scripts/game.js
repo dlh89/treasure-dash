@@ -129,12 +129,20 @@ socket.on('activePlayer', function() {
   var currentCell = jQuery('.grid__cell--current');
   currentCell.addClass('grid__cell--active');
   jQuery('.turn-choice').attr('disabled', false);
+
+  var scoreboard = jQuery('.scoreboard');
+  scoreboard.removeClass('scoreboard--active-opponent');
+  scoreboard.addClass('scoreboard--active-player');
 });
 
 socket.on('activeOpponent', function() {
   removeActiveClasses();
   var currentCell = jQuery('.grid__cell--opponent-current');
   currentCell.addClass('grid__cell--opponent-active');
+
+  var scoreboard = jQuery('.scoreboard');
+  scoreboard.removeClass('scoreboard--active-player');
+  scoreboard.addClass('scoreboard--active-opponent');
 });
 
 socket.on('roll', function(data) {
@@ -345,6 +353,10 @@ function resetGame() {
   // Remove any existing dice before adding die for this roll
   var dice = jQuery('.action-box__die');
   dice.remove();
+
+  var scoreboard = jQuery('.scoreboard');
+  scoreboard.removeClass('scoreboard--active-opponent');
+  scoreboard.removeClass('scoreboard--active-player');
 
   socket.emit('playAgain');
 }

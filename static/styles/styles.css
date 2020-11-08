@@ -345,7 +345,7 @@ template {
 
 @keyframes pulseGreen {
   0% {
-    border-color: v;
+    border-color: #56ff00;
   }
   50% {
     border-color: #ddffcc;
@@ -363,6 +363,28 @@ template {
   }
   100% {
     border-color: #FF0054;
+  }
+}
+@keyframes pulseGreenText {
+  0% {
+    color: #56ff00;
+  }
+  50% {
+    color: #ddffcc;
+  }
+  100% {
+    color: #56ff00;
+  }
+}
+@keyframes pulseRedText {
+  0% {
+    color: #FF0054;
+  }
+  50% {
+    color: #330011;
+  }
+  100% {
+    color: #FF0054;
   }
 }
 *,
@@ -852,6 +874,30 @@ body {
   margin-bottom: 20px;
 }
 
+.scoreboard--active-player .js-scoreboard-player {
+  animation-duration: 1.5s;
+  animation-name: pulseGreen;
+  animation-iteration-count: infinite;
+}
+
+.scoreboard--active-opponent .js-scoreboard-opponent {
+  animation-duration: 1.5s;
+  animation-name: pulseRed;
+  animation-iteration-count: infinite;
+}
+
+.scoreboard--active-player .js-player-name {
+  animation-duration: 1.5s;
+  animation-name: pulseGreenText;
+  animation-iteration-count: infinite;
+}
+
+.scoreboard--active-opponent .js-opponent-name {
+  animation-duration: 1.5s;
+  animation-name: pulseRedText;
+  animation-iteration-count: infinite;
+}
+
 .scoreboard__player {
   position: relative;
   background-color: #071E22;
@@ -865,6 +911,12 @@ body {
 .scoreboard__player--opponent {
   border-color: #FF0054;
   color: #FF0054;
+}
+
+.scoreboard__player--active-opponent {
+  animation-duration: 1.5s;
+  animation-name: pulseRedText;
+  animation-iteration-count: infinite;
 }
 
 .scoreboard__name {

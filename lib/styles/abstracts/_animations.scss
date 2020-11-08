@@ -1,27 +1,55 @@
 @keyframes pulseGreen {
-    0% {
-      border-color:v
-    }
-  
-    50% {
-      border-color: lighten($color-green, 40%);
-    }
-
-    100% {
-        border-color: $color-green;
-    }
+  0% {
+    border-color: $color-green;
   }
 
-  @keyframes pulseRed {
-    0% {
+  50% {
+    border-color: lighten($color-green, 40%);
+  }
+
+  100% {
+      border-color: $color-green;
+  }
+}
+
+@keyframes pulseRed {
+  0% {
+    border-color: $color-red;
+  }
+
+  50% {
+    border-color: darken($color-red, 40%);
+  }
+
+  100% {
       border-color: $color-red;
-    }
-  
-    50% {
-      border-color: darken($color-red, 40%);
-    }
-
-    100% {
-        border-color: $color-red;
-    }
   }
+}
+
+@keyframes pulseGreenText {
+  0% {
+    color: $color-green;
+  }
+
+  50% {
+    color: lighten($color-green, 40%);
+  }
+
+  100% {
+      color: $color-green;
+  }
+}
+
+@keyframes pulseRedText {
+  0% {
+    color: $color-red;
+  }
+
+  50% {
+    color: darken($color-red, 40%);
+  }
+
+  100% {
+      color: $color-red;
+  }
+}

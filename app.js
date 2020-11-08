@@ -174,9 +174,7 @@ GAME_NS.on('connection', function(socket) {
       socket.to(socketRoom.name).emit('msg', `${socketRoomUser.name} has left the room.`);
       socket.to(socketRoom.name).emit('playerDisconnect', { name: socketRoomUser.name, id: socketRoomUser.id });
 
-      setTimeout(() => {
-        resetGame(socketRoom);
-      }, RESET_GAME_TIMEOUT_MS);
+      resetGame(socketRoom);
     }
   });
 

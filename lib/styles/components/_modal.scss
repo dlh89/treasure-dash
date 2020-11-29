@@ -52,6 +52,21 @@ body.body--modal-open
   background: rgba(0, 0, 0, 0.6);
 }
 
+.modal__close-btn {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.modal__close-btn svg {
+  fill: $color-orange;
+}
+
+
 @include respond(tab-port) {
   .modal__inner {
     padding: 30px;

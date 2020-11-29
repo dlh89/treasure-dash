@@ -136,6 +136,7 @@ socket.on('activePlayer', function() {
   var scoreboard = jQuery('.scoreboard');
   scoreboard.removeClass('scoreboard--active-opponent');
   scoreboard.addClass('scoreboard--active-player');
+  maybeDisableDigBtn();
 });
 
 socket.on('activeOpponent', function() {
@@ -171,6 +172,7 @@ socket.on('specialExtraTurn', function(msg) {
   splashMsg('success', msg);
   msgBoxText(msg);
   jQuery('.turn-choice').attr('disabled', false);
+  maybeDisableDigBtn();
 });
 
 socket.on('specialTreasureRow', function(data) {
@@ -368,4 +370,16 @@ function renderSpecialItemCell(specialItemCell) {
   var cell = jQuery('[data-row=' + specialItemCell.row + '][data-col=' + specialItemCell.col + ']');
   cell.append('<span class="grid__special-item">?</span>');
   cell.find('.grid__special-item').fadeIn(1000);
+}
+
+function maybeDisableDigBtn() {
+  // disable dig button if current cell is already dug up
+  var currentCell = jQuery('.grid__cell--current');
+  var isCellDug = currentCell.hasClass('grid__cell--dug');
+  var digBtn = jQuery('.js-choose-dig');
+  if (isCellDug) {
+    digBtn.attr('disabled', true);
+  } else {
+    digBtn.attr('disabled', false);
+  }
 }

@@ -676,6 +676,7 @@ body {
   cursor: pointer;
 }
 
+.turn-choice__btn:disabled,
 .turn-choice:disabled .turn-choice__btn {
   opacity: 0.25;
   color: #000000;

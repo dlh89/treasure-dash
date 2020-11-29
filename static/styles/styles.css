@@ -754,6 +754,19 @@ body {
   z-index: 100;
 }
 
+.body--modal-open .modal--active,
+.body--modal-open .modal__overlay {
+  display: block;
+}
+
+.body--modal-open .js-open-rules-modal-btn {
+  display: none;
+}
+
+body.body--modal-open {
+  overflow: hidden;
+}
+
 .modal__inner {
   position: absolute;
   top: 0;
@@ -769,6 +782,7 @@ body {
 }
 
 .modal__overlay {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -776,10 +790,6 @@ body {
   height: 100%;
   z-index: 50;
   background: rgba(0, 0, 0, 0.6);
-}
-
-.modal__overlay--hidden {
-  display: none;
 }
 
 @media (max-width: 56.25em) {

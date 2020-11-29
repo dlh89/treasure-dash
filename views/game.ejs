@@ -3,7 +3,7 @@
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <div class="container clearfix">
+    <div class="container clearfix js-content">
       <div class="logo-container">
         <img src="/images/treasure-dash-logo.svg" alt="Treasure Dash logo" class="logo-container__logo">
         <h1 class="heading-primary heading-primary--logo">Treasure Dash</h1>
@@ -185,16 +185,9 @@
         </div>
       </div>
     </div>
-    <button class="rules__btn js-open-modal-btn" data-modal-class=".js-rules-modal">Rules</button>
-    <div class="modal js-rules-modal">
-      <div class="modal__inner">
-        <button class="rules__btn rules__btn--close js-close-modal-btn" data-modal-class=".js-rules-modal">Close</button>
-        <h2 class="modal__heading">Rules</h2>
-        <p>Treasure Dash is a turn-based game in which the first player to dig up the treasure wins. Once you have found an opponent, you must both pick a starting position. One of you will then be picked at random to go first. When it's your turn, you can choose to either roll or dig. Each time you move, you will find out whether you are close to the treasure. If you are within 2 squares of the treasure in any direction then you will see "Getting warm". You won't find out if you're on top of the treasure unless you dig.</p>
-      </div>
-    </div>
+    <button class="rules__btn js-open-modal-btn js-open-rules-modal-btn" data-associated-modal-id="rules-modal">Rules</button>
     <div class="js-room-name" data-room-name="<%= room_name %>" hidden></div>
-    <div class="modal__overlay modal__overlay--hidden js-modal-overlay"></div>
+    <%- include( 'partials/rules-modal.ejs' ) %>
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -202,6 +195,6 @@
     </script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="../scripts/game.js" async defer></script>
-    <script src="../scripts/handle-modals.js" async defer></script>
+    <script src="../scripts/modals.js" async defer></script>
   </body>
   <%- include( 'partials/footer.ejs' ) %>

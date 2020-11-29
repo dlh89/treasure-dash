@@ -47,9 +47,10 @@ app.get('/', function(req, res) {
 });
 
 app.get('/game/:room', function(req, res) {
-  const room = getRoomByName(req.params.room);
+  var roomName = decodeURI(req.params.room);
+  const room = getRoomByName(roomName);
   if (room && room.users.length < PLAYERS_PER_GAME) {
-    res.render(__dirname + '/views/game', {room_name: req.params.room});
+    res.render(__dirname + '/views/game', {room_name: roomName});
   } else {
     const notice = encodeURIComponent('not-found');
     res.redirect('/?notice=' + notice);
@@ -597,7 +598,6 @@ function getRoomByName(roomName) {
 }
 
 function specialExtraTurn(socket) {
-  // TODO allow serverDig msg to be displayed before these
   const playerMsg = 'You got an extra turn!';
   socket.emit('specialExtraTurn', playerMsg);
   const socketRoom = getSocketRoom(socket);

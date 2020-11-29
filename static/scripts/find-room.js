@@ -55,12 +55,19 @@ function refreshRoomsList() {
         roomsListElem.empty();
         var rooms = rooms.sort((a, b) => a.name.localeCompare(b.name)); // sort alphabetically by name
         jQuery(rooms).each(function(index, room) {
+            var roomLink = '/game/' + room.name.toLowerCase();
+            roomLink = encodeURI(roomLink);
+
             roomsListElem.append(`
                 <tr>
-                    <td><a href="/game/${room.name.toLowerCase()}">${room.name}</a></td>
+                    <td><a href="${roomLink}"></a></td> 
                     <td>${room.users.length}</td>
                 </tr>
             `);
+
+            // Add room name after so we can use jQuery's text method to escape html
+            var appendedAnchor = jQuery(roomsListElem).find('td a').last();
+            appendedAnchor.text(room.name);
         });
     })       
 }

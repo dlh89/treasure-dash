@@ -886,18 +886,6 @@ body {
   animation-iteration-count: infinite;
 }
 
-.scoreboard--active-player .js-player-name {
-  animation-duration: 1.5s;
-  animation-name: pulseGreenText;
-  animation-iteration-count: infinite;
-}
-
-.scoreboard--active-opponent .js-opponent-name {
-  animation-duration: 1.5s;
-  animation-name: pulseRedText;
-  animation-iteration-count: infinite;
-}
-
 .scoreboard__player {
   position: relative;
   background-color: #071E22;

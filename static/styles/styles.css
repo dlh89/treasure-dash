@@ -592,6 +592,7 @@ body {
   width: 100%;
   text-align: center;
   font-family: "Pirata One", cursive;
+  z-index: 2;
 }
 
 .splash-msg__text {

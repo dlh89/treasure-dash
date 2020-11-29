@@ -14,6 +14,8 @@ function cellClick(e) {
   if (global.gameLive) {
     socket.emit('clientMove', {'row': row, 'col': col});
   } else if (global.preGame) {
+    var gridHighlight = jQuery('.grid__highlight');
+    gridHighlight.hide();
     socket.emit('startPos', {'row': row, 'col': col});
   }
 }
@@ -47,7 +49,8 @@ socket.on('opponentJoin', function(player) {
 
 socket.on('preGame', function() {
   global.preGame = true;
-  jQuery('.grid').addClass('turn-active');
+  var gridHighlight = jQuery('.grid__highlight');
+  gridHighlight.show();
 });
 
 socket.on('gameStart', function(specialItemCells) {
@@ -128,6 +131,7 @@ socket.on('updatePlayerPosition', function(data) {
 });
 
 socket.on('activePlayer', function() {
+  clearActionBox();
   removeActiveClasses();
   var currentCell = jQuery('.grid__cell--current');
   currentCell.addClass('grid__cell--active');
@@ -140,6 +144,7 @@ socket.on('activePlayer', function() {
 });
 
 socket.on('activeOpponent', function() {
+  clearActionBox();
   removeActiveClasses();
   var currentCell = jQuery('.grid__cell--opponent-current');
   currentCell.addClass('grid__cell--opponent-active');
@@ -352,12 +357,8 @@ function resetGame() {
   jQuery('.grid__special-item').remove();
 
   jQuery('.js-msg-box-text').text('');
-  jQuery('.js-action-box-text').text('');
   removeHandleTurnChoice();
-
-  // Remove any existing dice before adding die for this roll
-  var dice = jQuery('.action-box__die');
-  dice.remove();
+  clearActionBox();
 
   var scoreboard = jQuery('.scoreboard');
   scoreboard.removeClass('scoreboard--active-opponent');
@@ -382,4 +383,12 @@ function maybeDisableDigBtn() {
   } else {
     digBtn.attr('disabled', false);
   }
+}
+
+function clearActionBox()
+{
+  var actionBox = jQuery('.js-action-box-text');
+  actionBox.text('');
+  var dice = jQuery('.action-box__die');
+  dice.remove();
 }

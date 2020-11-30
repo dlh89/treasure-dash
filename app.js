@@ -42,8 +42,9 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', function(req, res) {
+  const siteUrl = req.protocol + '://' + req.get('host');
   const notice = req.query.notice;
-  res.render(__dirname + '/views/find-room', {rooms: rooms, notice: notice});
+  res.render(__dirname + '/views/find-room', {rooms: rooms, notice: notice, siteUrl: siteUrl});
 });
 
 app.get('/game/:room', function(req, res) {
@@ -58,7 +59,19 @@ app.get('/game/:room', function(req, res) {
 });
 
 app.get('/room-list', function(req, res) {
-  res.send(rooms);
+  const siteUrl = req.protocol + '://' + req.get('host');
+  const roomListRooms = [];
+  rooms.forEach(function(room) {
+    const roomDetails = {
+      'name': room.name,
+      'link': siteUrl + '/game/' + room.name.toLowerCase(),
+      'playerCount': room.users.length
+    };
+  
+    roomListRooms.push(roomDetails);
+  });
+
+  res.send(roomListRooms);
 });
 
 app.post('/create-room', function(req, res) {

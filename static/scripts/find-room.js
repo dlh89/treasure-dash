@@ -55,13 +55,12 @@ function refreshRoomsList() {
         roomsListElem.empty();
         var rooms = rooms.sort((a, b) => a.name.localeCompare(b.name)); // sort alphabetically by name
         jQuery(rooms).each(function(index, room) {
-            var roomLink = '/game/' + room.name.toLowerCase();
-            roomLink = encodeURI(roomLink);
+            const encodedRoomLink = encodeURI(room.link);
 
             roomsListElem.append(`
                 <tr>
-                    <td><a href="${roomLink}"></a></td> 
-                    <td>${room.users.length}</td>
+                    <td><a href="${encodedRoomLink}"></a></td> 
+                    <td>${room.playerCount}</td>
                 </tr>
             `);
 

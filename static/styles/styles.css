@@ -563,20 +563,20 @@ body {
   filter: brightness(1.2);
 }
 
-@media (max-width: 37.5em) {
-  .grid {
-    width: 100%;
-  }
-
-  .grid__cell {
-    width: calc((100vw - (2rem * 2)) / 10);
-    height: calc((100vw - (2rem * 2)) / 10);
-  }
-}
 @media (max-width: 56.25em) {
   .grid {
     width: 100%;
     margin-bottom: 20px;
+  }
+
+  .grid__cell {
+    width: calc((100vw - (3.2rem * 2)) / 10);
+    height: calc((100vw - (3.2rem * 2)) / 10);
+  }
+}
+@media (max-width: 37.5em) {
+  .grid {
+    width: 100%;
   }
 
   .grid__cell {

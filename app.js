@@ -43,8 +43,9 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', function(req, res) {
+  var protocol = process.env.PROTOCOL ? process.env.PROTOCOL : req.protocol;
   var host = process.env.SITE_HOST ? process.env.SITE_HOST : req.get('host');
-  const siteUrl = req.protocol + '://' + host;
+  const siteUrl = protocol + '://' + host;
   const notice = req.query.notice;
   res.render(__dirname + '/views/find-room', {rooms: rooms, notice: notice, siteUrl: siteUrl});
 });
@@ -61,8 +62,9 @@ app.get('/game/:room', function(req, res) {
 });
 
 app.get('/room-list', function(req, res) {
+  var protocol = process.env.PROTOCOL ? process.env.PROTOCOL : req.protocol;
   var host = process.env.SITE_HOST ? process.env.SITE_HOST : req.get('host');
-  const siteUrl = req.protocol + '://' + host;
+  const siteUrl = protocol + '://' + host;
   const roomListRooms = [];
   rooms.forEach(function(room) {
     const roomDetails = {

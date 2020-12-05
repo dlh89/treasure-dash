@@ -43,18 +43,17 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', function(req, res) {
-  var protocol = process.env.PROTOCOL ? process.env.PROTOCOL : req.protocol;
-  var host = process.env.SITE_HOST ? process.env.SITE_HOST : req.get('host');
-  const siteUrl = protocol + '://' + host;
+  siteUrl = getSiteUrl(req);
   const notice = req.query.notice;
   res.render(__dirname + '/views/find-room', {rooms: rooms, notice: notice, siteUrl: siteUrl});
 });
 
 app.get('/game/:room', function(req, res) {
+  siteUrl = getSiteUrl(req);
   var roomName = decodeURI(req.params.room);
   const room = getRoomByName(roomName);
   if (room && room.users.length < PLAYERS_PER_GAME) {
-    res.render(__dirname + '/views/game', {room_name: roomName});
+    res.render(__dirname + '/views/game', {room_name: roomName, siteUrl: siteUrl});
   } else {
     const notice = encodeURIComponent('not-found');
     res.redirect('/?notice=' + notice);
@@ -62,9 +61,7 @@ app.get('/game/:room', function(req, res) {
 });
 
 app.get('/room-list', function(req, res) {
-  var protocol = process.env.PROTOCOL ? process.env.PROTOCOL : req.protocol;
-  var host = process.env.SITE_HOST ? process.env.SITE_HOST : req.get('host');
-  const siteUrl = protocol + '://' + host;
+  siteUrl = getSiteUrl(req);
   const roomListRooms = [];
   rooms.forEach(function(room) {
     const roomDetails = {
@@ -677,6 +674,14 @@ function handleRoomUptime() {
       room.emptyMinutes = 0;
     }
   });
+}
+
+function getSiteUrl(req) {
+  var protocol = process.env.PROTOCOL ? process.env.PROTOCOL : req.protocol;
+  var host = process.env.SITE_HOST ? process.env.SITE_HOST : req.get('host');
+  const siteUrl = protocol + '://' + host;
+
+  return siteUrl;
 }
 
 http.listen(3000, function() {

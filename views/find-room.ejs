@@ -4,10 +4,7 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     <div class="container js-content">
-      <div class="logo-container">
-        <img src="/images/treasure-dash-logo.svg" alt="Treasure Dash logo" class="logo-container__logo">
-        <h1 class="heading-primary heading-primary--logo">Treasure Dash</h1>
-      </div>
+      <%- include( 'partials/title-block.ejs' ) %>
       <% if (notice) { %>
           <div class="notice notice--error">
             <% if (notice == 'not-found') { %>

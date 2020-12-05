@@ -1,3 +1,38 @@
+.rules {
+  position: relative;
+  background-color: $color-light-grey;
+  color: $color-dark-grey;
+}
+
+.rules__text {
+  float: left;
+  width: 50%;
+  padding: 38px 40px;
+}
+
+.rules__image {
+  float: right;
+  width: 50%;
+  overflow: hidden;
+  height: 100%;
+  clip-path: polygon(9% 0, 100% 0, 100% 101%, 0 101%);
+}
+
+.rules__image img {
+  display: block;
+}
+
+
+.rules__image img {
+  width: auto;
+  min-height: 400px;
+}
+
+.rules__heading {
+  font-weight: 800;
+  margin-bottom: 26px;
+}
+
 .rules__btn {
   position: fixed;
   bottom: 30px;
@@ -26,4 +61,22 @@
 
 .rules__close-btn svg {
   fill: $color-orange;
+}
+
+
+@include respond(tab-port) {
+  .rules__text,
+  .rules__image {
+    width: 100%;
+    clip-path: polygon(0 9%, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .rules__text {
+    padding: 34px 24px 8px 34px;
+  }
+
+  .rules__image img {
+    width: 100%;
+    min-height: auto;
+  }
 }

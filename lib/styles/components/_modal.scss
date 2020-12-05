@@ -5,7 +5,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: $color-dark-grey;
-  width: 600px;
+  width: 960px;
   max-width: 90%;
   height: 400px;
   max-height: 90%;
@@ -35,6 +35,10 @@ body.body--modal-open
   padding: 30px 50px;
   overflow: auto;
 }
+.modal__inner--slider {
+	overflow: hidden; // TODO change to auto once flexslider has loaded?
+  padding: 0;
+}
 
 .modal__heading {
   margin-bottom: 20px;
@@ -54,21 +58,40 @@ body.body--modal-open
 
 .modal__close-btn {
   position: absolute;
+  cursor: pointer;
   top: 30px;
   right: 30px;
   padding: 0;
   background-color: transparent;
   border: none;
-  cursor: pointer;
+  background-color: rgba(0,0,0,.6);
+  padding: 10px;
+  z-index: 1;
 }
 
 .modal__close-btn svg {
+  display: block;
   fill: $color-orange;
+  width: 25px;
+  height: 25px;
 }
 
 
 @include respond(tab-port) {
+  .modal {
+    height: auto;
+    overflow: auto;
+  }
+
   .modal__inner {
     padding: 30px;
+  }
+  .modal__inner--slider {
+    padding: 0;
+  }
+
+  .modal__close-btn {
+    top: 0;
+    right: 0;
   }
 }

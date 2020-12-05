@@ -102,6 +102,8 @@ function openModal(e)
 
     var modalContent = jQuery(globals.modals.element).find('.js-modal-content');
     modalContent.focus();
+
+    initFlexslider(); // flexslider can't be initialised while hidden
 }
 
 function closeModal()
@@ -117,4 +119,39 @@ function closeModal()
 
     // return focus to where it was before we opened the dialog
     globals.modals.focusedElementBeforeOpened.focus();
+}
+
+function initFlexslider()
+{
+    jQuery('.flexslider').flexslider({
+        animation: "slide",
+        slideshow: false,
+        directionNav: false,
+        start: function() {
+            equaliseRulesTextHeight();
+        }
+    });
+
+
+}
+
+function equaliseRulesTextHeight()
+{
+    var rulesTexts = jQuery('.js-rules-text');
+    var maxHeight = 0;
+
+    // find the tallest text
+    rulesTexts.each(function(i, rulesText) {
+        console.log(rulesText);
+        var height = jQuery(rulesText).height();
+        console.log(height);
+        if (height > maxHeight) {
+            maxHeight = height;
+        }
+    })
+
+    // set all texts to the height of the tallest
+    rulesTexts.each(function(i, rulesText) {
+        jQuery(rulesText).height(maxHeight);
+    })
 }

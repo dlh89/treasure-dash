@@ -1,0 +1,45 @@
+.flexslider ol,
+.flexslider ul {
+    list-style: none;
+}
+
+.flex-control-nav {
+    position: fixed;
+    left: 37px;
+    bottom: 57px;
+}
+
+.flex-control-nav li {
+    display: inline-block;
+}
+.flex-control-nav li:not(:last-child) {
+    margin-right: 12px;
+}
+
+.flex-control-nav a {
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    width: 40px;
+    padding: 7px;
+    border: 1px solid $color-dark-grey;
+    background-color: $color-light-grey;
+    color: $color-dark-grey;
+}
+.flex-control-nav a.flex-active {
+    background-color: $color-dark-grey;
+    color: $color-light-grey;
+}
+
+
+@include respond(tab-port) {
+    .flex-control-nav {
+        position: absolute;
+        background: rgba(0,0,0,.6);
+        padding: 20px;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+    }
+}

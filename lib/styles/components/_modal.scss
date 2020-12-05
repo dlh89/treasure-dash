@@ -27,13 +27,7 @@ body.body--modal-open
 }
 
 .modal__inner {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   padding: 30px 50px;
-  overflow: auto;
 }
 .modal__inner--slider {
 	overflow: hidden; // TODO change to auto once flexslider has loaded?

@@ -3,6 +3,7 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const rooms = [];
 
@@ -42,7 +43,8 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', function(req, res) {
-  const siteUrl = req.protocol + '://' + req.get('host');
+  var host = process.env.SITE_HOST ? process.env.SITE_HOST : req.get('host');
+  const siteUrl = req.protocol + '://' + host;
   const notice = req.query.notice;
   res.render(__dirname + '/views/find-room', {rooms: rooms, notice: notice, siteUrl: siteUrl});
 });
@@ -59,7 +61,8 @@ app.get('/game/:room', function(req, res) {
 });
 
 app.get('/room-list', function(req, res) {
-  const siteUrl = req.protocol + '://' + req.get('host');
+  var host = process.env.SITE_HOST ? process.env.SITE_HOST : req.get('host');
+  const siteUrl = req.protocol + '://' + host;
   const roomListRooms = [];
   rooms.forEach(function(room) {
     const roomDetails = {

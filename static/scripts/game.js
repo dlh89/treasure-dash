@@ -20,6 +20,21 @@ function cellClick(e) {
   }
 }
 
+var copyLinkBtn = jQuery('.js-copy-link-btn');
+copyLinkBtn.on('click', copyLink);
+
+function copyLink() {
+  var roomLink = jQuery('.js-room-link');
+  roomLink.attr('disabled', false); // temporarily enable the input so that we can select it
+  roomLink.select();
+  document.execCommand("copy");
+  roomLink.attr('disabled', true);
+  var copyNotice = jQuery('.js-copied-notice');
+  copyNotice.text('Copied to clipboard!').fadeIn(1000)
+    .delay(2000)
+    .fadeOut(1000);
+}
+
 socket.on('connection', function() {
   var roomNameElem = jQuery('.js-room-name');
   var roomName = roomNameElem.attr('data-room-name');

@@ -1115,5 +1115,50 @@ body.body--modal-open {
     text-align: center;
   }
 }
+.navy-block {
+  background-color: #071E22;
+  padding: 20px 25px;
+  font-family: "Pirata One", cursive;
+  margin-bottom: 20px;
+}
+
+.navy-block__large-text {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.navy-block__link {
+  position: relative;
+}
+
+.navy-block__link input {
+  float: left;
+  width: 75%;
+}
+
+.navy-block__link button {
+  width: 25%;
+  float: left;
+}
+
+.navy-block__copied-notice {
+  display: none;
+  position: absolute;
+  bottom: -35px;
+  background-color: #92ff6f;
+  color: black;
+  padding: 4px 13px;
+  font-size: 16px;
+  width: 100%;
+  text-align: center;
+}
+
+@media (max-width: 56.25em) {
+  .navy-block__link button,
+.navy-block__link input {
+    float: none;
+    width: 100%;
+  }
+}
 
 /*# sourceMappingURL=styles.css.map */

@@ -66,6 +66,9 @@ socket.on('preGame', function() {
   global.preGame = true;
   var gridHighlight = jQuery('.grid__highlight');
   gridHighlight.show();
+
+  var roomLink = jQuery('.js-copy-link-block');
+  roomLink.hide();
 });
 
 socket.on('gameStart', function(specialItemCells) {

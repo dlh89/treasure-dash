@@ -759,6 +759,11 @@ body {
   z-index: 100;
 }
 
+.modal--small {
+  width: auto;
+  height: auto;
+}
+
 .body--modal-open .modal--active,
 .body--modal-open .modal__overlay {
   display: block;
@@ -774,6 +779,7 @@ body.body--modal-open {
 
 .modal__inner {
   padding: 30px 50px;
+  padding-right: 87px;
 }
 
 .modal__inner--slider {
@@ -820,6 +826,7 @@ body.body--modal-open {
   .modal {
     height: auto;
     overflow: auto;
+    width: 100%;
   }
 
   .modal__inner {
@@ -1016,7 +1023,7 @@ body.body--modal-open {
 .scoreboard__name {
   float: left;
   margin-left: 25px;
-  font-size: 32px;
+  font-size: 30px;
   height: 100%;
 }
 

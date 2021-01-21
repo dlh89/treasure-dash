@@ -175,6 +175,7 @@
     </div>
     <button class="rules__btn js-open-modal-btn js-open-rules-modal-btn" data-associated-modal-id="rules-modal">Rules</button>
     <div class="js-room-name" data-room-name="<%= room_name %>" hidden></div>
+    <%- include( 'partials/player-name-modal.ejs' ) %>
     <%- include( 'partials/rules-modal.ejs' ) %>
     <script src="../scripts/third-party/jquery-3.4.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>

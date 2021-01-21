@@ -35,11 +35,28 @@ function copyLink() {
     .fadeOut(1000);
 }
 
+var playerNameForm = jQuery('.js-enter-name-form');
+playerNameForm.on('submit', setNameAndJoin);
+
+function setNameAndJoin(e) {
+  e.preventDefault();
+  var playerName = jQuery('.js-name-input').val();
+  localStorage.setItem('playerName', playerName);
+  var roomNameElem = jQuery('.js-room-name');
+  var roomName = roomNameElem.attr('data-room-name');
+  socket.emit('joinRoom', roomName, playerName);
+  window.closeModal();
+}
+
 socket.on('connection', function() {
   var roomNameElem = jQuery('.js-room-name');
   var roomName = roomNameElem.attr('data-room-name');
   var playerName = localStorage.getItem('playerName');
-  socket.emit('joinRoom', roomName, playerName);
+  if (!playerName) {
+    window.openModal(this, 'player-name-modal');
+  } else {
+    socket.emit('joinRoom', roomName, playerName);
+  }
 });
 
 socket.on('playerJoin', function(players) {

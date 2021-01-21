@@ -71,11 +71,12 @@ function modalKeyboardEvents(e)
     }
 }
 
-function openModal(e)
+function openModal(e, modalId = false)
 {
-    e.preventDefault();
-    var modalBtn = jQuery(e.target).closest('.js-open-modal-btn');
-    var modalId = modalBtn.attr('data-associated-modal-id');
+    if (!modalId) {
+        var modalBtn = jQuery(e.target).closest('.js-open-modal-btn');
+        var modalId = modalBtn.attr('data-associated-modal-id');
+    }
 
     globals.modals.focusedElementBeforeOpened = document.activeElement;
     var associatedModal = jQuery('[data-modal-id=' + modalId + ']');
@@ -142,9 +143,7 @@ function equaliseRulesTextHeight()
 
     // find the tallest text
     rulesTexts.each(function(i, rulesText) {
-        console.log(rulesText);
         var height = jQuery(rulesText).height();
-        console.log(height);
         if (height > maxHeight) {
             maxHeight = height;
         }
@@ -155,3 +154,6 @@ function equaliseRulesTextHeight()
         jQuery(rulesText).height(maxHeight);
     })
 }
+
+window.openModal = openModal;
+window.closeModal = closeModal;

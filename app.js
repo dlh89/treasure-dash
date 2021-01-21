@@ -26,7 +26,7 @@ const SPECIAL_ITEMS = [
     'count': 1 
   }
 ];
-const PLAYERNAME_MAX_LENGTH = 14;
+const PLAYERNAME_MAX_LENGTH = 10;
 const RESET_GAME_TIMEOUT_MS = 5000;
 
 const GAME_NS = io.of('/game');

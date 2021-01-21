@@ -15,7 +15,7 @@
       <div class="block js-enter-name">
         <form action="#" class="single-row-form js-enter-name-form">
           <p>Please enter your name:</p>
-          <input class="single-row-form__input js-name-input" type="text" maxlength="14" required>
+          <input class="single-row-form__input js-name-input" type="text" maxlength="10" required>
           <input type="submit" class="button" value="Find a game">
         </form>
       </div>
@@ -46,7 +46,7 @@
       </div>
     </div>
     <button class="rules__btn js-open-modal-btn js-open-rules-modal-btn" data-associated-modal-id="rules-modal">Rules</button>
-    <div class="modal js-modal js-create-room-modal" data-modal-id="create-room-modal">
+    <div class="modal modal--small js-modal js-create-room-modal" data-modal-id="create-room-modal">
       <div class="modal__inner">
         <button class="modal__close-btn js-close-modal-btn" title="Close modal">
           <%- include( '../static/images/cross.svg' ) %>

@@ -355,6 +355,10 @@ function incrementPlayerScore(playerScoreboard) {
  * Set the global game settings to preGame
  */
 function resetGame() {
+  global.preGame = false;
+  var gridHighlight = jQuery('.grid__highlight');
+  gridHighlight.hide();
+
   global.gameLive = false;
   var gridCells = jQuery('.grid__cell');
   var gridClasses = [

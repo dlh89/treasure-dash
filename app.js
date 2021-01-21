@@ -50,10 +50,11 @@ app.get('/', function(req, res) {
 
 app.get('/game/:room', function(req, res) {
   siteUrl = getSiteUrl(req);
+  var roomUrl = siteUrl + '/game/' + encodeURIComponent(req.params.room);
   var roomName = decodeURI(req.params.room);
   const room = getRoomByName(roomName);
   if (room && room.users.length < PLAYERS_PER_GAME) {
-    res.render(__dirname + '/views/game', {room_name: roomName, siteUrl: siteUrl});
+    res.render(__dirname + '/views/game', {room_name: roomName, room_url: roomUrl, siteUrl: siteUrl});
   } else {
     const notice = encodeURIComponent('not-found');
     res.redirect('/?notice=' + notice);

@@ -240,6 +240,9 @@ socket.on('playerDisconnect', function(disconnectedUser) {
   });
 
   splashMsg('success', disconnectedUser.name + ' left the room!');
+
+  var copyLinkBlock = jQuery('.js-copy-link-block');
+  copyLinkBlock.show();
 });
 
 socket.on('resetGame', resetGame);

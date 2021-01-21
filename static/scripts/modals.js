@@ -109,6 +109,9 @@ function openModal(e, modalId = false)
 
 function closeModal()
 {
+    if (jQuery(globals.modals.element).hasClass('js-no-close')) {
+        return;
+    }
     var body = jQuery('body');
     body.removeClass('body--modal-open');
 

@@ -44,6 +44,8 @@ function setNameAndJoin(e) {
   localStorage.setItem('playerName', playerName);
   var roomNameElem = jQuery('.js-room-name');
   var roomName = roomNameElem.attr('data-room-name');
+  var playerNameModal = jQuery('.js-player-name-modal');
+  playerNameModal.removeClass('js-no-close');
   socket.emit('joinRoom', roomName, playerName);
   window.closeModal();
 }

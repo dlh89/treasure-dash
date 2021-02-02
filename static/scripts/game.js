@@ -8,6 +8,9 @@ var socket = io('/game');
 var cells = jQuery('.grid__cell');
 jQuery(cells).on('click', cellClick);
 
+var sidebarTabButtons = jQuery('.js-sidebar-tab-button');
+sidebarTabButtons.on('click', changeSidebarTab);
+
 function cellClick(e) {
   var row = jQuery(e.target).data('row');
   var col = jQuery(e.target).data('col');
@@ -106,10 +109,19 @@ socket.on('msg', function(msg) {
 });
 
 socket.on('logMsg', function(msg) {
-  var sidebarText = jQuery('.sidebar__text');
-  var sidebarHistory = jQuery('.sidebar__text--history');
-  sidebarHistory.prepend(sidebarText.html()); 
-  sidebarText.html('<p>' + msg + '<p>'); 
+  var logTab = jQuery('[data-tab="log"]');
+  var logText = logTab.find('.sidebar__text')
+  var logHistory = logTab.find('.sidebar__text--history');
+  logHistory.prepend(logText.html()); 
+  logText.html('<p>' + msg + '<p>'); 
+});
+
+socket.on('chatMsg', function(msg) {
+  var chatTab = jQuery('[data-tab="chat"]');
+  var chatText = chatTab.find('.sidebar__text')
+  var chatHistory = chatTab.find('.sidebar__text--history');
+  chatHistory.prepend(chatText.html()); 
+  chatText.html('<p>' + msg + '<p>'); 
 });
 
 socket.on('clearMsg', function(msg) {
@@ -429,10 +441,25 @@ function maybeDisableDigBtn() {
   }
 }
 
-function clearActionBox()
-{
+function clearActionBox() {
   var actionBox = jQuery('.js-action-box-text');
   actionBox.text('');
   var dice = jQuery('.action-box__die');
   dice.remove();
+}
+
+function changeSidebarTab(e) {
+  // remove active class from previously active tab
+  var sidebarButtons = jQuery('.js-sidebar-tab-button');
+  sidebarButtons.removeClass('button--sidebar-active')
+  var sidebarTabs = jQuery('.sidebar__tab');
+  sidebarTabs.removeClass('sidebar__tab--active')
+
+  var sidebarButtonElem = jQuery(e.target);
+  sidebarButtonElem.addClass('button--sidebar-active');
+
+  var associatedTab = jQuery(e.target).attr('data-associated-tab');
+  var associatedTabSelector = '[data-tab="' + associatedTab + '"]';
+  var associatedTabElem = jQuery(associatedTabSelector);
+  associatedTabElem.addClass('sidebar__tab--active');
 }

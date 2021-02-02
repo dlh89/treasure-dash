@@ -167,9 +167,26 @@
           </div>
         </div>
         <div class="sidebar">
-          <h3 class="sidebar__heading">Game log</h3>
-          <div class="sidebar__text"></div>
-          <div class="sidebar__text--history"></div>
+          <div class="clearfix">
+            <button class="button button--sidebar button--sidebar-active js-sidebar-tab-button" data-associated-tab="log">Game log</button>
+            <button class="button button--sidebar js-sidebar-tab-button" data-associated-tab="chat">Chat</button>
+          </div>
+          <div class="sidebar__tab sidebar__tab--active" data-tab="log">
+            <div class="sidebar__body">
+              <div class="sidebar__text"></div>
+              <div class="sidebar__text--history"></div>
+            </div>
+          </div>
+          <div class="sidebar__tab" data-tab="chat">
+            <div class="sidebar__body sidebar__body--chat">
+              <div class="sidebar__text"></div>
+              <div class="sidebar__text--history"></div>
+            </div>
+            <div class="sidebar__chatbox">
+              <input type="text" class="sidebar__chat-input">
+              <div class="button button--chat">Send</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

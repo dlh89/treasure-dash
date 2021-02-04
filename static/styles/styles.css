@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 /* Document
    ========================================================================== */
@@ -660,6 +661,17 @@ body {
   margin-bottom: 20px;
 }
 
+.sidebar__button--unread::after {
+  content: " ";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #56ff00;
+}
+
 .sidebar__button--active {
   opacity: 1;
 }
@@ -700,8 +712,7 @@ body {
 
 @media (max-width: 56.25em) {
   .sidebar {
-    height: auto;
-    max-height: 200px;
+    height: 300px;
   }
 }
 .turn-choice {
@@ -986,6 +997,7 @@ body.body--modal-open {
 
 .button--sidebar {
   float: left;
+  position: relative;
   background-color: #071E22;
   font-family: "Pirata One", cursive;
   color: #ffffff;

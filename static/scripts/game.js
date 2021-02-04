@@ -297,6 +297,11 @@ socket.on('receiveChat', function(messageData) {
   newChat.appendTo('.js-chat-body');
   var chatBody = jQuery('.js-chat-body');
   chatBody.scrollTop(chatBody.prop('scrollHeight'));
+  
+  var chatTabBtn = jQuery('.js-sidebar-tab-button-chat');
+  if (!chatTabBtn.hasClass('button--sidebar-active')) {
+    chatTabBtn.addClass('sidebar__button--unread');
+  }
 });
 
 socket.on('resetGame', resetGame);
@@ -476,7 +481,8 @@ function changeSidebarTab(e) {
   var sidebarButtons = jQuery('.js-sidebar-tab-button');
   sidebarButtons.removeClass('button--sidebar-active')
   var sidebarTabs = jQuery('.sidebar__tab');
-  sidebarTabs.removeClass('sidebar__tab--active')
+  sidebarTabs.removeClass('sidebar__tab--active');
+  sidebarButtons.removeClass('sidebar__button--unread');
 
   var sidebarButtonElem = jQuery(e.target);
   sidebarButtonElem.addClass('button--sidebar-active');

@@ -11,6 +11,10 @@ jQuery(cells).on('click', cellClick);
 var sidebarTabButtons = jQuery('.js-sidebar-tab-button');
 sidebarTabButtons.on('click', changeSidebarTab);
 
+var sendChatBtn = jQuery('.js-send-chat');
+var chatForm = jQuery('.js-chat-form');
+chatForm.on('submit', sendChat);
+
 function cellClick(e) {
   var row = jQuery(e.target).data('row');
   var col = jQuery(e.target).data('col');
@@ -112,8 +116,10 @@ socket.on('logMsg', function(msg) {
   var logTab = jQuery('[data-tab="log"]');
   var logText = logTab.find('.sidebar__text')
   var logHistory = logTab.find('.sidebar__text--history');
-  logHistory.prepend(logText.html()); 
-  logText.html('<p>' + msg + '<p>'); 
+  logHistory.append(logText.html()); 
+  logText.html(`<p>${msg}</p>`); 
+  var sidebarBody = jQuery('.sidebar__body');
+  sidebarBody.scrollTop(sidebarBody.prop('scrollHeight'));
 });
 
 socket.on('chatMsg', function(msg) {
@@ -121,7 +127,7 @@ socket.on('chatMsg', function(msg) {
   var chatText = chatTab.find('.sidebar__text')
   var chatHistory = chatTab.find('.sidebar__text--history');
   chatHistory.prepend(chatText.html()); 
-  chatText.html('<p>' + msg + '<p>'); 
+  chatText.html('<p>' + msg + '</p>'); 
 });
 
 socket.on('clearMsg', function(msg) {
@@ -274,6 +280,23 @@ socket.on('playerDisconnect', function(disconnectedUser) {
 
   var copyLinkBlock = jQuery('.js-copy-link-block');
   copyLinkBlock.show();
+});
+
+socket.on('receiveChat', function(messageData) {
+  var chatTab = jQuery('[data-tab="chat"]');
+  var chatText = chatTab.find('.sidebar__text');
+  var chatHistory = chatTab.find('.sidebar__text--history');
+  chatHistory.append(chatText.html()); 
+  var emptyChat = jQuery('.sidebar__chat-message');
+  emptyChat.clone();
+  var newChat = jQuery('.sidebar__chat-message').first();
+  var chatName = newChat.find('.sidebar__chat-name');
+  var chatText = newChat.find('.sidebar__chat-text');
+  chatName.text(messageData.from);
+  chatText.text(messageData.message);
+  newChat.appendTo('.js-chat-body');
+  var chatBody = jQuery('.js-chat-body');
+  chatBody.scrollTop(chatBody.prop('scrollHeight'));
 });
 
 socket.on('resetGame', resetGame);
@@ -462,4 +485,19 @@ function changeSidebarTab(e) {
   var associatedTabSelector = '[data-tab="' + associatedTab + '"]';
   var associatedTabElem = jQuery(associatedTabSelector);
   associatedTabElem.addClass('sidebar__tab--active');
+
+  if (associatedTab === 'chat') {
+    var chatInput = jQuery('.js-chat-input');
+    chatInput.focus();
+  }
+}
+
+function sendChat(e) {
+  e.preventDefault();
+  var chatInput = jQuery('.js-chat-input');
+  var message = chatInput.val();
+  if (message) {
+    chatInput.val(''); // clear the input
+    socket.emit('sendChat', message);
+  }
 }

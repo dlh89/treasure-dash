@@ -630,12 +630,16 @@ body {
     width: 100%;
   }
 }
+.sidebar {
+  height: 500px;
+}
+
 .sidebar__tab {
   display: none;
   position: relative;
   background-color: #071E22;
-  height: 460px;
   overflow: auto;
+  height: calc(100% - 48px);
 }
 
 .sidebar__tab--active {
@@ -645,6 +649,7 @@ body {
 .sidebar__body {
   padding: 20px 25px;
   height: 100%;
+  overflow: auto;
 }
 
 .sidebar__body--chat {
@@ -682,6 +687,15 @@ body {
   float: right;
   width: 57px;
   height: 100%;
+}
+
+.sidebar__chat-message {
+  margin-bottom: 10px;
+}
+
+.sidebar__chat-name {
+  font-family: "Pirata One", cursive;
+  text-transform: uppercase;
 }
 
 @media (max-width: 56.25em) {
@@ -979,6 +993,7 @@ body.body--modal-open {
   padding: 3px 25px;
   min-width: 114px;
   opacity: 0.65;
+  text-align: left;
 }
 
 .button--chat {

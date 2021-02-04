@@ -284,6 +284,17 @@ GAME_NS.on('connection', function(socket) {
       initGame(socket, socketRoom);
     }
   });
+
+  socket.on('sendChat', function(message) {
+    const socketRoom = getSocketRoom(socket);
+    const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
+    const messageData = {
+      'from': socketRoomUser.name,
+      'message': message
+    }
+    
+    GAME_NS.in(socketRoom.name).emit('receiveChat', messageData);
+  });
 });
 
 function findRoom(socket, playerName) {

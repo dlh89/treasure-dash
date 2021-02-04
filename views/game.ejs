@@ -173,19 +173,24 @@
           </div>
           <div class="sidebar__tab sidebar__tab--active" data-tab="log">
             <div class="sidebar__body">
-              <div class="sidebar__text"></div>
               <div class="sidebar__text--history"></div>
+              <div class="sidebar__text"></div>
             </div>
           </div>
           <div class="sidebar__tab" data-tab="chat">
-            <div class="sidebar__body sidebar__body--chat">
-              <div class="sidebar__text"></div>
+            <div class="sidebar__body sidebar__body--chat js-chat-body">
               <div class="sidebar__text--history"></div>
+              <div class="sidebar__text">
+                <div class="sidebar__chat-message">
+                  <p class="sidebar__chat-name"></p>
+                  <p class="sidebar__chat-text"></p>
+                </div>
+              </div>
             </div>
-            <div class="sidebar__chatbox">
-              <input type="text" class="sidebar__chat-input">
-              <div class="button button--chat">Send</div>
-            </div>
+            <form class="sidebar__chatbox js-chat-form">
+              <input type="text" class="sidebar__chat-input js-chat-input">
+              <input class="button button--chat js-send-chat" type="submit" value="Send">
+            </form>
           </div>
         </div>
       </div>

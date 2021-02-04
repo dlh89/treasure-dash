@@ -1,13 +1,13 @@
 .sidebar {
-
+    height: 500px;
 }
 
 .sidebar__tab {
     display: none;
     position: relative;
     background-color: $color-dark-grey;
-    height: 460px;
     overflow: auto;
+    height: calc(100% - 48px);
 }
 .sidebar__tab--active {
     display: block;
@@ -16,6 +16,7 @@
 .sidebar__body {
     padding: $standard-padding;
     height: 100%;
+    overflow: auto;
 }
 
 .sidebar__body--chat {
@@ -62,6 +63,15 @@
     width: 57px;
     height: 100%;
 }
+
+.sidebar__chat-message {
+    margin-bottom: 10px;
+}
+
+.sidebar__chat-name {
+    font-family: $font-headings;
+    text-transform: uppercase;
+  }
 
 
 @include respond(tab-port) {

@@ -437,6 +437,7 @@ body {
 .heading-primary {
   font-family: "Pirata One", cursive;
   font-size: 5.2rem;
+  font-weight: 300;
 }
 
 .heading-primary--logo {

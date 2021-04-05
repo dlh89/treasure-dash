@@ -7,6 +7,7 @@ var globals = {
         firstFocusable: false,
         lastFocusable: false
     },
+    isFlexSliderInitialised: false,
     content: null
 };
 
@@ -80,6 +81,9 @@ function openModal(e, modalId = false)
 
     globals.modals.focusedElementBeforeOpened = document.activeElement;
     var associatedModal = jQuery('[data-modal-id=' + modalId + ']');
+
+    maybeInitFlexslider(associatedModal);
+
     associatedModal.addClass('modal--active');
     globals.modals.element = associatedModal;
 
@@ -103,8 +107,24 @@ function openModal(e, modalId = false)
 
     var modalContent = jQuery(globals.modals.element).find('.js-modal-content');
     modalContent.focus();
+}
 
-    initFlexslider(); // flexslider can't be initialised while hidden
+/**
+ * If the associatedModal contains a flexslider then we need to initialise
+ * it on first open
+ *
+ * @param {object} associatedModal jQuery object of the modal div
+ */
+function maybeInitFlexslider(associatedModal)
+{
+    if (associatedModal.find('.flexslider').length)
+    {
+        if (!globals.isFlexSliderInitialised)
+        {
+            globals.isFlexSliderInitialised = true;
+            initFlexslider(); // flexslider can't be initialised while hidden
+        }
+    }
 }
 
 function closeModal()
@@ -127,15 +147,18 @@ function closeModal()
 
 function initFlexslider()
 {
+    // to prevent flashing while initialising, make it transparent until start callback
+    jQuery('.js-rules-modal').css('opacity', '0');
+
     jQuery('.flexslider').flexslider({
         animation: "slide",
         slideshow: false,
         directionNav: false,
         start: function() {
+            jQuery('.js-rules-modal').css('opacity', '1');
             equaliseRulesTextHeight();
         }
     });
-
 
 }
 

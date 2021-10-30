@@ -484,14 +484,6 @@ function getDistance(cellA, cellB) {
   return distance;
 }
 
-function inRange(value, min, max) {
-  if (value >= min && value <= max) {
-    return true;
-  }
-
-  return false;
-}
-
 function switchPlayerTurn(socketRoom) {
   const playerTurn = getInactivePlayer(socketRoom);
   socketRoom.playerTurn = playerTurn.id;

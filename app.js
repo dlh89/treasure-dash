@@ -273,7 +273,7 @@ GAME_NS.on('connection', function(socket) {
     }
   });
 
-  socket.on('playAgain', function() { // TODO is this doing anything? implement?
+  socket.on('playAgain', function() {
     const socketRoom = getSocketRoom(socket);
     const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
     socketRoomUser.readyToPlayAgain = true;

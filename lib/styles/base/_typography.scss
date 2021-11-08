@@ -4,6 +4,9 @@ body {
   font-size: 1.6rem;
   line-height: 1.7;
 }
+body.homepage {
+  font-family: $font-home;
+}
 
 .heading-primary {
   font-family: $font-headings;

@@ -387,7 +387,6 @@ template {
 
 html {
   font-size: 62.5%;
-  background: #002642;
 }
 @media (max-width: 75em) {
   html {
@@ -398,6 +397,14 @@ html {
   html {
     font-size: 50%;
   }
+}
+
+body {
+  background: #002642;
+}
+
+body.homepage {
+  background-color: #fff;
 }
 
 h2 {
@@ -432,6 +439,10 @@ body {
   font-family: "Lacquer", arial;
   font-size: 1.6rem;
   line-height: 1.7;
+}
+
+body.homepage {
+  font-family: "Poppins", sans-serif;
 }
 
 .heading-primary {
@@ -1167,7 +1178,7 @@ body.body--modal-open {
 }
 
 .flex-control-nav {
-  position: fixed;
+  position: absolute;
   left: 37px;
   bottom: 57px;
 }
@@ -1198,7 +1209,6 @@ body.body--modal-open {
 
 @media (max-width: 56.25em) {
   .flex-control-nav {
-    position: absolute;
     background: rgba(0, 0, 0, 0.6);
     padding: 20px;
     bottom: 0;

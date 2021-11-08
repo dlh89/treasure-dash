@@ -4,7 +4,7 @@
 }
 
 .flex-control-nav {
-    position: fixed;
+    position: absolute;
     left: 37px;
     bottom: 57px;
 }
@@ -34,7 +34,6 @@
 
 @include respond(tab-port) {
     .flex-control-nav {
-        position: absolute;
         background: rgba(0,0,0,.6);
         padding: 20px;
         bottom: 0;

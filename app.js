@@ -45,7 +45,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', function(req, res) {
   siteUrl = getSiteUrl(req);
   const notice = req.query.notice;
-  res.render(__dirname + '/views/find-room', {rooms: rooms, notice: notice, siteUrl: siteUrl});
+  res.render(__dirname + '/views/index', {page_name: 'home'});
+});
+
+app.get('/play', function(req, res) {
+  siteUrl = getSiteUrl(req);
+  const notice = req.query.notice;
+  res.render(__dirname + '/views/find-room', {page_name: 'play', rooms: rooms, notice: notice, siteUrl: siteUrl});
 });
 
 app.get('/game/:room', function(req, res) {
@@ -54,7 +60,7 @@ app.get('/game/:room', function(req, res) {
   var roomName = decodeURI(req.params.room);
   const room = getRoomByName(roomName);
   if (room && room.users.length < PLAYERS_PER_GAME) {
-    res.render(__dirname + '/views/game', {room_name: roomName, room_url: roomUrl, siteUrl: siteUrl});
+    res.render(__dirname + '/views/game', {page_name: 'play', room_name: roomName, room_url: roomUrl, siteUrl: siteUrl});
   } else {
     const notice = encodeURIComponent('not-found');
     res.redirect('/?notice=' + notice);

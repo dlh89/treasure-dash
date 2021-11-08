@@ -1,5 +1,4 @@
 <%- include( 'partials/header.ejs' ) %>
-  <body>
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -199,10 +198,6 @@
     <div class="js-room-name" data-room-name="<%= room_name %>" hidden></div>
     <%- include( 'partials/player-name-modal.ejs' ) %>
     <%- include( 'partials/rules-modal.ejs' ) %>
-    <script src="../scripts/third-party/jquery-3.4.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="../scripts/third-party/jquery.flexslider-min.js" async defer></script>
     <script src="../scripts/game.js" async defer></script>
-    <script src="../scripts/modals.js" async defer></script>
-  </body>
-  <%- include( 'partials/footer.ejs' ) %>
+<%- include( 'partials/footer.ejs' ) %>

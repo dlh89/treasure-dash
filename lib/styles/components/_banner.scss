@@ -1,0 +1,20 @@
+.banner
+{
+	display: flex;
+	margin-top: 56px;
+	margin-bottom: 46px;
+}
+
+.banner__logo
+{
+	width: 100px;
+	margin-right: 27px;
+}
+
+.banner__heading
+{
+	font-family: $font-headings;
+	font-size: 8rem;
+	color: $color-dark-grey;
+	line-height: 1.1;
+}

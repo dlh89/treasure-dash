@@ -1,7 +1,12 @@
 <%- include( 'partials/header.ejs' ) %>
 
 <div class="container">
-    <h1>Treasure Dash</h1>
+    <div class="banner">
+        <a href="<%= siteUrl %>">
+            <img src="/images/treasure-dash-logo.svg" alt="Treasure Dash logo" class="banner__logo">
+        </a>
+        <h1 class="banner__heading">Treasure Dash</h1>
+    </div>
     <%- include( 'partials/rules-block.ejs' ) %>
 </div>
 

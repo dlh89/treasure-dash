@@ -1,4 +1,5 @@
 .button {
+	font-family: $font-standard;
 	background-color: $color-orange;
 	display: inline-block;
 	padding: 10px 15px;
@@ -8,6 +9,10 @@
 	border: 1px solid transparent;
 	min-height: 45px;
 	text-align: center;
+}
+
+.button--pirata {
+	font-family: $font-headings;
 }
 
 .button--refresh {

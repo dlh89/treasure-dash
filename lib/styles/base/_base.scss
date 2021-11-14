@@ -52,6 +52,11 @@ input {
 	font-family: $font-standard;
 }
 
+strong
+{
+	font-weight: 700;
+}
+
 @include respond(mobile) {
 	h1 {
 		margin: 10px 0;

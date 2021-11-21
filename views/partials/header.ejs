@@ -4,18 +4,33 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Treasure Dash</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/styles/styles.css">
-  <link href="https://fonts.googleapis.com/css?family=Lacquer|Pirata+One&display=swap" rel="stylesheet">
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
-  <link rel="manifest" href="/favicons/site.webmanifest">
-  <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Treasure Dash</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/styles/styles.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+	<link rel="manifest" href="/favicons/site.webmanifest">
+	<link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#5bbad5">
+	<meta name="msapplication-TileColor" content="#da532c">
+	<meta name="theme-color" content="#ffffff">
 </head>
+<body <% if (page_name === 'home') { %>class="homepage" <% }  %>>
+	<nav>
+		<div class="nav">
+			<div class="container clearfix">
+				<ul>
+					<li><a href="/" <% if (page_name === 'home') { %>class="current" <% } %>>Home</a></li>
+					<li><a href="/play" <% if (page_name === 'play' || page_name === 'game') { %>class="current" <% } %>>Play</a></li>
+					<li><a href="/about" <% if (page_name === 'about') { %>class="current" <% } %>>About</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<main>

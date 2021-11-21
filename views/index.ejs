@@ -1,0 +1,24 @@
+<%- include( 'partials/header.ejs' ) %>
+
+<div class="container">
+    <div class="banner">
+        <a href="<%= siteUrl %>">
+            <img src="/images/treasure-dash-logo.svg" alt="Treasure Dash logo" class="banner__logo">
+        </a>
+        <h1 class="banner__heading">Treasure Dash</h1>
+    </div>
+    <div class="cta cta--two-col">
+        <div class="cta__column">
+            <h2 class="cta__heading">Play online with your friends.</h2>
+            <p>Simple. Strategic. <strong>Completely free.</strong></p>
+        </div>
+        <div class="cta__column cta__column--btn">
+            <a href="/play" class="cta__btn">Play now</a>
+        </div>
+    </div>
+        <div class="cta__tab">How it works</div>
+        <%- include( 'partials/rules-block.ejs' ) %>
+    </div>
+</div>
+
+<%- include( 'partials/footer.ejs' ) %>

@@ -1,5 +1,8 @@
 .button {
+	font-family: $font-standard;
 	background-color: $color-orange;
+	font-weight: 600;
+	color: $color-dark-blue;
 	display: inline-block;
 	padding: 10px 15px;
 	font-size: 20px;
@@ -9,6 +12,15 @@
 	min-height: 45px;
 	text-align: center;
 }
+.button:hover {
+	background-color: lighten($color-orange, 10%);
+	transition: .2s ease-out;
+}
+
+.button--pirata {
+	font-family: $font-headings;
+	font-weight: 300;
+}
 
 .button--refresh {
 	background-image: url(../images/refresh.svg);
@@ -16,6 +28,7 @@
 	background-position: center;
 	background-color: $color-dark-blue;
 	padding: 10px 25px;
+	height: 52px;
 }
 
 .button--sidebar {
@@ -23,6 +36,7 @@
     position: relative;
     background-color: $color-dark-grey;
 	font-family: $font-headings;
+	font-weight: 300;
 	color: #ffffff;
     font-size: 20px;
     padding: 3px 25px;
@@ -31,12 +45,19 @@
 	text-align: left;
 }
 
+.button--refresh:hover,
+.button--sidebar:hover {
+	background-color: lighten($color-dark-grey, 10%);
+	transition: .2s ease-out;
+}
+
 .button--chat {
 	padding: 6px;
 	height: 48px;
 	font-size: 20px;
 	color: #000000;
 	font-family: $font-headings;
+	font-weight: 300;
 }
 
 .button--sidebar-active {
@@ -53,4 +74,19 @@
 
 .button:hover {
 	cursor: pointer;
+}
+
+.rules-button {
+	font-family: $font-standard;
+	font-weight: 600;
+	position: fixed;
+	bottom: 30px;
+	left: 30px;
+	padding: 12px 18px;
+	z-index: 100;
+	background: $color-dark-grey;
+	color: #ffffff;
+	border: none;
+	cursor: pointer;
+	box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 1);
 }

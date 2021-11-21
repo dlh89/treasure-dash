@@ -1,5 +1,4 @@
 <%- include( 'partials/header.ejs' ) %>
-  <body>
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -35,8 +34,8 @@
             <div class="invite js-copy-link-block">
               <p class="invite__large-text">Why not invite a friend?</p>
               <div class="invite__link js-copy-link-container clearfix">
-                <input class="single-row-form__input js-room-link" disabled value="<%= room_url %>">
-                <button class="button js-copy-link-btn">Copy link</button>
+                <input class="single-row-form__input single-row-form__input--pirata js-room-link" disabled value="<%= room_url %>">
+                <button class="button button--pirata js-copy-link-btn">Copy link</button>
                 <div class="invite__copied-notice js-copied-notice"></div>
               </div>
             </div>
@@ -195,14 +194,8 @@
         </div>
       </div>
     </div>
-    <button class="rules__btn js-open-modal-btn js-open-rules-modal-btn" data-associated-modal-id="rules-modal">Rules</button>
+    <button class="rules-button js-open-modal-btn js-open-rules-modal-btn" data-associated-modal-id="rules-modal">Rules</button>
     <div class="js-room-name" data-room-name="<%= room_name %>" hidden></div>
     <%- include( 'partials/player-name-modal.ejs' ) %>
     <%- include( 'partials/rules-modal.ejs' ) %>
-    <script src="../scripts/third-party/jquery-3.4.1.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="../scripts/third-party/jquery.flexslider-min.js" async defer></script>
-    <script src="../scripts/game.js" async defer></script>
-    <script src="../scripts/modals.js" async defer></script>
-  </body>
-  <%- include( 'partials/footer.ejs' ) %>
+<%- include( 'partials/footer.ejs' ) %>

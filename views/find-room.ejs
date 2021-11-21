@@ -1,5 +1,4 @@
 <%- include( 'partials/header.ejs' ) %>
-  <body>
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -45,7 +44,7 @@
         </div>
       </div>
     </div>
-    <button class="rules__btn js-open-modal-btn js-open-rules-modal-btn" data-associated-modal-id="rules-modal">Rules</button>
+    <button class="rules-button js-open-modal-btn js-open-rules-modal-btn" data-associated-modal-id="rules-modal">Rules</button>
     <div class="modal modal--small js-modal js-create-room-modal" data-modal-id="create-room-modal">
       <div class="modal__inner">
         <button class="modal__close-btn js-close-modal-btn" title="Close modal">
@@ -61,10 +60,4 @@
       </div>
     </div>
     <%- include( 'partials/rules-modal.ejs' ) %>
-    <script src="scripts/third-party/jquery-3.4.1.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="scripts/third-party/jquery.flexslider-min.js" async defer></script>
-    <script src="scripts/find-room.js" async defer></script>
-    <script src="scripts/modals.js" async defer></script>
-  </body>
-  <%- include( 'partials/footer.ejs' ) %>
+    <%- include( 'partials/footer.ejs' ) %>

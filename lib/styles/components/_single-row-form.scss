@@ -10,6 +10,10 @@
     max-width: 100%;
 }
 
+.single-row-form__input--pirata {
+	font-family: $font-headings;
+}
+
 
 @include respond(mobile) {
     .single-row-form__input {

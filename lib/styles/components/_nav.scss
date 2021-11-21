@@ -1,0 +1,29 @@
+.nav
+{
+    background-color: $color-dark-grey;
+}
+
+.nav ul
+{
+    list-style: none;
+}
+
+.nav li
+{
+    float: left;
+}
+
+.nav a
+{
+    display: block;
+    font-weight: 700;
+    padding: 14px 30px;
+    text-decoration: none;
+    color: #fff;
+}
+
+.nav a:hover,
+.nav a.current
+{
+    background-color: $color-dark-blue;
+}

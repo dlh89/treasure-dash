@@ -1,4 +1,4 @@
-@import './third-party/normalize';
+@import './third-party/reset';
 @import './abstracts/mixins';
 @import './abstracts/variables';
 @import './abstracts/clearfix';
@@ -13,7 +13,6 @@
 @import './components/turn-choice';
 @import './components/action-box';
 @import './components/modal';
-@import './components/rules';
 @import './components/buttons';
 @import './components/notice';
 @import './components/room-list';
@@ -22,3 +21,7 @@
 @import './components/logo-container';
 @import './components/flexslider';
 @import './components/invite';
+@import './components/nav';
+@import './components/banner';
+@import './components/cta';
+@import './components/footer';

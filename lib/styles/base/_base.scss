@@ -1,49 +1,60 @@
 *,
 *::after,
 *::before {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 html {
-  font-size: 62.5%;
-  background: $color-dark-blue;
+	font-size: 62.5%;
 
-  @include respond(tab-land) {
-    font-size: 56.25%;
-  }
+	@include respond(tab-land) {
+		font-size: 56.25%;
+	}
 
-  @include respond(tab-port) {
-    font-size: 50%;
-  }
+	@include respond(tab-port) {
+		font-size: 50%;
+	}
+}
+
+body {
+	background: $color-dark-blue;
+}
+body.homepage {
+	background-color: #fff;
 }
 
 h2 {
-  font-size: 2.8rem;
-  font-weight: 300;
+	font-size: 2.8rem;
+	font-weight: 600;
 }
 
 h3 {
-  font-size: 2.2rem;
-  font-weight: 300;
+	font-size: 2.2rem;
+	font-weight: 300;
 }
 
 input[type="text"]
 {
-  font-family: $font-standard;
+	font-family: $font-standard;
 }
 
 fieldset {
-  padding: 0;
+	padding: 0;
 }
 
-body {
-  margin-bottom: 100px;
+input {
+	font-family: $font-standard;
+}
+
+strong
+{
+	font-weight: 700;
 }
 
 @include respond(mobile) {
-  h1 {
-    margin: 10px 0;
-  }
+	h1 {
+		margin: 10px 0;
+	}
 }

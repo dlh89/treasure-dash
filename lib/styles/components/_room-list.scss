@@ -10,10 +10,17 @@
 }
 
 .room-list thead {
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid darken($color-light-grey, 50%);
+  font-weight: 600;
 }
 
 .room-list a {
   color: #ffffff;
   text-decoration: none;
+}
+
+.room-list th,
+.room-list td {
+  padding-top: 4px;
+  padding-bottom: 4px;
 }

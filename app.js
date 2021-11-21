@@ -63,7 +63,7 @@ app.get('/game/:room', function(req, res) {
     res.render(__dirname + '/views/game', {page_name: 'game', room_name: roomName, room_url: roomUrl, siteUrl: siteUrl});
   } else {
     const notice = encodeURIComponent('not-found');
-    res.redirect('/?notice=' + notice);
+    res.redirect('/play/?notice=' + notice);
   }
 });
 

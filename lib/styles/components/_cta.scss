@@ -73,6 +73,12 @@
 	background-repeat: no-repeat;
 }
 
+.cta__btn:hover
+{
+	background-color: lighten($color-orange, 10%);
+	transition: .2s ease-out;
+}
+
 .cta__tab
 {
 	background-color: $color-light-grey;

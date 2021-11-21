@@ -286,6 +286,7 @@ body {
   transform: translate(-50%, -50%);
   color: #000000;
   pointer-events: none;
+  font-weight: 600;
 }
 
 .grid__treasure-dimension {
@@ -643,8 +644,14 @@ body.body--modal-open {
   text-align: center;
 }
 
+.button:hover {
+  background-color: #ffc933;
+  transition: 0.2s ease-out;
+}
+
 .button--pirata {
   font-family: "Pirata One", cursive;
+  font-weight: 300;
 }
 
 .button--refresh {
@@ -661,6 +668,7 @@ body.body--modal-open {
   position: relative;
   background-color: #071E22;
   font-family: "Pirata One", cursive;
+  font-weight: 300;
   color: #ffffff;
   font-size: 20px;
   padding: 3px 25px;
@@ -669,12 +677,19 @@ body.body--modal-open {
   text-align: left;
 }
 
+.button--refresh:hover,
+.button--sidebar:hover {
+  background-color: #10434c;
+  transition: 0.2s ease-out;
+}
+
 .button--chat {
   padding: 6px;
   height: 48px;
   font-size: 20px;
   color: #000000;
   font-family: "Pirata One", cursive;
+  font-weight: 300;
 }
 
 .button--sidebar-active {
@@ -1047,6 +1062,11 @@ body.body--modal-open {
   background-size: 95px;
   background-position: 50% 50%;
   background-repeat: no-repeat;
+}
+
+.cta__btn:hover {
+  background-color: #ffc933;
+  transition: 0.2s ease-out;
 }
 
 .cta__tab {

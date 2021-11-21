@@ -73,6 +73,16 @@
 	background-repeat: no-repeat;
 }
 
+.cta__tab
+{
+	background-color: $color-light-grey;
+	display: inline-block;
+    padding: 13px 40px;
+	color: rgba(0, 38, 66, .76);
+    font-weight: 600;
+	text-transform: uppercase;
+}
+
 
 @include respond(tab-port) {
 	.cta {

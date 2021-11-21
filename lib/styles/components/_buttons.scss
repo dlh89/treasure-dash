@@ -1,6 +1,8 @@
 .button {
 	font-family: $font-standard;
 	background-color: $color-orange;
+	font-weight: 600;
+	color: $color-dark-blue;
 	display: inline-block;
 	padding: 10px 15px;
 	font-size: 20px;
@@ -21,6 +23,7 @@
 	background-position: center;
 	background-color: $color-dark-blue;
 	padding: 10px 25px;
+	height: 52px;
 }
 
 .button--sidebar {
@@ -62,6 +65,7 @@
 
 .rules-button {
 	font-family: $font-standard;
+	font-weight: 600;
 	position: fixed;
 	bottom: 30px;
 	left: 30px;

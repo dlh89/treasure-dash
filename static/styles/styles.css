@@ -124,7 +124,7 @@ body.homepage {
 
 h2 {
   font-size: 2.8rem;
-  font-weight: 300;
+  font-weight: 600;
 }
 
 h3 {
@@ -133,7 +133,7 @@ h3 {
 }
 
 input[type=text] {
-  font-family: "Lacquer", arial;
+  font-family: "Poppins", sans-serif;
 }
 
 fieldset {
@@ -145,7 +145,7 @@ body {
 }
 
 input {
-  font-family: "Lacquer", arial;
+  font-family: "Poppins", sans-serif;
 }
 
 strong {
@@ -159,13 +159,9 @@ strong {
 }
 body {
   color: #e9e9e9;
-  font-family: "Lacquer", arial;
+  font-family: "Poppins", sans-serif;
   font-size: 1.6rem;
   line-height: 1.7;
-}
-
-body.homepage {
-  font-family: "Poppins", sans-serif;
 }
 
 .heading-primary {
@@ -637,8 +633,10 @@ body.body--modal-open {
   }
 }
 .button {
-  font-family: "Lacquer", arial;
+  font-family: "Poppins", sans-serif;
   background-color: #ffbc00;
+  font-weight: 600;
+  color: #002642;
   display: inline-block;
   padding: 10px 15px;
   font-size: 20px;
@@ -659,6 +657,7 @@ body.body--modal-open {
   background-position: center;
   background-color: #002642;
   padding: 10px 25px;
+  height: 52px;
 }
 
 .button--sidebar {
@@ -699,7 +698,8 @@ body.body--modal-open {
 }
 
 .rules-button {
-  font-family: "Lacquer", arial;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
   position: fixed;
   bottom: 30px;
   left: 30px;
@@ -1044,7 +1044,6 @@ body.body--modal-open {
   color: #002642;
   text-transform: uppercase;
   font-size: 2.8rem;
-  font-family: "Poppins", sans-serif;
   font-weight: 800;
   line-height: 1.3;
   padding: 11px 43px;

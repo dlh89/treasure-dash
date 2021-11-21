@@ -140,10 +140,6 @@ fieldset {
   padding: 0;
 }
 
-body {
-  margin-bottom: 100px;
-}
-
 input {
   font-family: "Poppins", sans-serif;
 }
@@ -1053,6 +1049,15 @@ body.body--modal-open {
   background-repeat: no-repeat;
 }
 
+.cta__tab {
+  background-color: #e9e9e9;
+  display: inline-block;
+  padding: 13px 40px;
+  color: rgba(0, 38, 66, 0.76);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
 @media (max-width: 56.25em) {
   .cta {
     padding: 24px 34px;
@@ -1084,6 +1089,42 @@ body.body--modal-open {
     width: 100%;
     min-height: auto;
   }
+}
+.footer {
+  background-color: #071E22;
+  margin-top: 80px;
+  padding-top: 56px;
+  padding-bottom: 56px;
+  color: #b6b6b6;
+}
+
+.footer__heading {
+  font-weight: 700;
+  margin-bottom: 11px;
+}
+
+.footer ul {
+  list-style: none;
+}
+
+.footer li {
+  margin-bottom: 6px;
+}
+
+.footer a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer__copyright {
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid #6a6a6a;
+  color: #9d9d9d;
 }
 
 /*# sourceMappingURL=styles.css.map */

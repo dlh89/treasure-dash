@@ -1,0 +1,35 @@
+.footer {
+	background-color: $color-dark-grey;
+	margin-top: 80px;
+	padding-top: 56px;
+	padding-bottom: 56px;
+	color: darken($color-light-grey, 20%);
+}
+
+.footer__heading {
+	font-weight: 700;
+	margin-bottom: 11px;
+}
+
+.footer ul {
+	list-style: none;
+}
+
+.footer li {
+	margin-bottom: 6px;
+}
+
+.footer a {
+	text-decoration: none;
+	color: inherit;
+}
+.footer a:hover {
+	text-decoration: underline;
+}
+
+.footer__copyright {
+	margin-top: 30px;
+	padding-top: 10px;
+	border-top: 1px solid darken($color-light-grey, 50%);
+	color: darken($color-light-grey, 30%);
+}

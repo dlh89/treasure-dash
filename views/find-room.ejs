@@ -12,13 +12,13 @@
           </div>
       <% } %>
       <div class="block js-enter-name">
-        <form action="#" class="single-row-form js-enter-name-form">
-          <p>Please enter your name:</p>
+        <form action="#" class="single-row-form js-enter-name-form" disabled>
+          <p>Your name:</p>
           <input class="single-row-form__input js-name-input" type="text" maxlength="10" required>
-          <input type="submit" class="button" value="Find a game">
+          <input type="submit" class="button js-enter-name-form-btn" value="Save">
         </form>
       </div>
-      <div class="block block--hidden js-rooms-list-block">
+      <div class="block js-rooms-list-block">
         <h2>Rooms</h2>
         <div class="room-list js-rooms-list">
           <table>

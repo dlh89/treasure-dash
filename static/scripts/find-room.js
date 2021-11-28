@@ -4,16 +4,24 @@ socket.on('connection', function() {
     var playerName = localStorage.getItem('playerName');
     var nameForm = jQuery('.js-enter-name-form');
     var nameInput = jQuery('.js-name-input');
-    nameInput.val(playerName);
+    if (playerName) {
+        nameInput.val(playerName);
+        disableNameForm();
+    } else {
+        nameInput.trigger('focus');
+    }
     nameForm.on('submit', function (e) {
         e.preventDefault();
-        playerName = nameInput.val();
-
-        var roomListBlock = jQuery('.js-rooms-list-block');
-        roomListBlock.removeClass('block--hidden');
-
-        localStorage.setItem('playerName', playerName);
-        socket.emit('saveName', playerName); 
+        var enterNameForm = jQuery('.js-enter-name-form');
+        var enterNameInput = enterNameForm.find('input[type="text"]');
+        if (enterNameInput.attr('disabled') === 'disabled') {
+            enableNameForm();
+        } else {
+            disableNameForm();
+            playerName = nameInput.val();
+            localStorage.setItem('playerName', playerName);
+            socket.emit('saveName', playerName); 
+        }
     });
 
     var createRoomForm = jQuery('.js-create-room-form');
@@ -40,9 +48,25 @@ socket.on('connection', function() {
 
     });
 
-    var refreshBtn = jQuery('.js-refresh-rooms-btn').on('click', refreshRoomsList);
+    jQuery('.js-refresh-rooms-btn').on('click', refreshRoomsList);
 });
 
+function disableNameForm() {
+    var enterNameForm = jQuery('.js-enter-name-form');
+    var enterNameInput = enterNameForm.find('input[type="text"]');
+    enterNameInput.attr('disabled', true);
+    var enterNameFormBtn = jQuery('.js-enter-name-form-btn');
+    enterNameFormBtn.val('Edit');
+}
+
+function enableNameForm() {
+    var enterNameForm = jQuery('.js-enter-name-form');
+    var enterNameInput = enterNameForm.find('input[type="text"]');
+    enterNameInput.attr('disabled', false);
+    enterNameInput.trigger('focus');
+    var enterNameFormBtn = jQuery('.js-enter-name-form-btn');
+    enterNameFormBtn.val('Save');
+}
 
 /**
  * Make an AJAX request to get the current rooms

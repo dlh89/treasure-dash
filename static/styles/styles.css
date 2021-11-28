@@ -136,6 +136,10 @@ input[type=text] {
   font-family: "Poppins", sans-serif;
 }
 
+input:disabled {
+  opacity: 0.5;
+}
+
 fieldset {
   padding: 0;
 }

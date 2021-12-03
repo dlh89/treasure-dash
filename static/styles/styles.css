@@ -410,7 +410,7 @@ body {
 }
 
 .sidebar__text--history {
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 .sidebar__chatbox {
@@ -845,6 +845,11 @@ body.body--modal-open {
 
 .single-row-form__input--pirata {
   font-family: "Pirata One", cursive;
+}
+
+.single-row-form__label-above {
+  display: block;
+  margin-bottom: 10px;
 }
 
 @media (max-width: 37.5em) {

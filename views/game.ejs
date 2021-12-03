@@ -32,9 +32,9 @@
           </div>
           <div class="action-box">
             <div class="invite js-copy-link-block">
-              <p class="invite__large-text">Why not invite a friend?</p>
+              <label class="single-row-form__label-above invite__large-text" for="room-url">Why not invite a friend?</label>
               <div class="invite__link js-copy-link-container clearfix">
-                <input class="single-row-form__input single-row-form__input--pirata js-room-link" disabled value="<%= room_url %>">
+                <input class="single-row-form__input single-row-form__input--pirata js-room-link" id="room-url" disabled value="<%= room_url %>">
                 <button class="button button--pirata js-copy-link-btn">Copy link</button>
                 <div class="invite__copied-notice js-copied-notice"></div>
               </div>

@@ -13,8 +13,8 @@
       <% } %>
       <div class="block js-enter-name">
         <form action="#" class="single-row-form js-enter-name-form" disabled>
-          <p>Your name:</p>
-          <input class="single-row-form__input js-name-input" type="text" maxlength="10" required>
+          <label class="single-row-form__label-above" for="player-name">Your name:</label>
+          <input class="single-row-form__input js-name-input" id="player-name" type="text" maxlength="10" required>
           <input type="submit" class="button js-enter-name-form-btn" value="Save">
         </form>
       </div>
@@ -53,8 +53,8 @@
         <h2 class="modal__heading js-modal-content">Create Room</h2>
         <div class='notice notice--error js-error-notice' style="display: none"></div>
         <form action="#" class="single-row-form js-create-room-form">
-          <p>Enter your room name:</p>
-          <input class="single-row-form__input js-room-name-input" name="room-name" type="text" required>
+          <label class="single-row-form__label-above" for="room-name">Enter your room name:</label>
+          <input class="single-row-form__input js-room-name-input" id="room-name" name="room-name" type="text" required>
           <input type="submit" class="button" value="Create">
         </form>
       </div>

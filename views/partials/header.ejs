@@ -43,8 +43,8 @@
 		<div class="nav">
 			<div class="container clearfix">
 				<ul>
-					<li><a href="/" <% if (page_name === 'home') { %>class="current" <% } %>>Home</a></li>
-					<li><a href="/play" <% if (page_name === 'play' || page_name === 'game') { %>class="current" <% } %>>Play</a></li>
+					<li><a href="<%= siteUrl %>/" <% if (page_name === 'home') { %>class="current" <% } %>>Home</a></li>
+					<li><a href="<%= siteUrl %>/play" <% if (page_name === 'play' || page_name === 'game') { %>class="current" <% } %>>Play</a></li>
 				</ul>
 			</div>
 		</div>

@@ -48,6 +48,11 @@ app.get('/', function(req, res) {
   res.render(__dirname + '/views/index', {page_name: 'home'});
 });
 
+app.get('/about', function(req, res) {
+  siteUrl = getSiteUrl(req);
+  res.render(__dirname + '/views/about', {page_name: 'about'});
+});
+
 app.get('/play', function(req, res) {
   siteUrl = getSiteUrl(req);
   const notice = req.query.notice;

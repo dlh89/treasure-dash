@@ -118,8 +118,9 @@ body {
   background: #002642;
 }
 
-body.homepage {
+body.lightpage {
   background-color: #fff;
+  color: #071E22;
 }
 
 h2 {
@@ -173,6 +174,25 @@ body {
 
 .heading-primary--logo {
   margin-left: 79px;
+}
+
+.heading-secondary {
+  font-family: "Pirata One", cursive;
+  font-size: 4rem;
+  line-height: 1.1;
+  font-weight: 300;
+  margin-bottom: 22px;
+  color: #0e3c44;
+}
+
+.medium-text {
+  font-size: 2rem;
+  color: #145661;
+  margin-bottom: 18px;
+}
+
+.section {
+  margin-bottom: 37px;
 }
 
 .container {

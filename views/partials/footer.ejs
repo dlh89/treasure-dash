@@ -2,8 +2,15 @@
 			<div class="container">
 				<div class="footer__heading">Treasure Dash</div>
 				<ul>
-					<li><a href="<%= siteUrl %>/">Home</a></li>
-					<li><a href="<%= siteUrl %>/play">Play</a></li>
+					<% if (page_name !=='home' ) { %>
+						<li><a href="<%= siteUrl %>/">Home</a></li>
+					<% } %>
+					<% if (page_name !=='play' ) { %>
+						<li><a href="<%= siteUrl %>/play">Play</a></li>
+					<% } %>
+					<% if (page_name !=='about' ) { %>
+						<li><a href="<%= siteUrl %>/about">About</a></li>
+					<% } %>
 				</ul>
 				<div class="footer__copyright">
 					&copy; <script type="text/JavaScript">document.write(new Date().getFullYear());</script> Treasure Dash
@@ -14,14 +21,14 @@
 	<script src="../scripts/third-party/jquery-3.6.0.min.js"></script>
 	<script src="../scripts/third-party/jquery.flexslider-min.js" async defer></script>
 	<script src="../scripts/modals.js" async defer></script>
-	<% if (page_name==='home' ) { %>
+	<% if (page_name ==='home' ) { %>
 		<script src="../scripts/home.js" async defer></script>
 	<% } %>
-	<% if (page_name==='play' ) { %>
+	<% if (page_name ==='play' ) { %>
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="../scripts/find-room.js" async defer></script>
 	<% } %>
-	<% if (page_name==='game' ) { %>
+	<% if (page_name ==='game' ) { %>
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="../scripts/game.js" async defer></script>
 	<% } %>

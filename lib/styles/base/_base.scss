@@ -21,8 +21,9 @@ html {
 body {
 	background: $color-dark-blue;
 }
-body.homepage {
+body.lightpage {
 	background-color: #fff;
+	color: $color-dark-grey;
 }
 
 h2 {

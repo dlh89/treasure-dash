@@ -11,7 +11,25 @@ body {
   line-height: 1.1;
   font-weight: 300;
 }
-
 .heading-primary--logo {
   margin-left: 79px;
+}
+
+.heading-secondary {
+  font-family: $font-headings;
+  font-size: 4rem;
+  line-height: 1.1;
+  font-weight: 300;
+  margin-bottom: 22px;
+  color: lighten($color-dark-grey, 8%);
+}
+
+.medium-text {
+  font-size: 2rem;
+  color: lighten($color-dark-grey, 15%);
+  margin-bottom: 18px;
+}
+
+.section {
+  margin-bottom: 37px;
 }

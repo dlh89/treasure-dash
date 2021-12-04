@@ -38,13 +38,14 @@
 	<meta name="msapplication-TileColor" content="#da532c">
 	<meta name="theme-color" content="#ffffff">
 </head>
-<body <% if (page_name === 'home') { %>class="homepage" <% }  %>>
+<body <% if (page_name === 'home' || page_name === 'about') { %>class="lightpage" <% }  %>>
 	<nav>
 		<div class="nav">
 			<div class="container clearfix">
 				<ul>
 					<li><a href="<%= siteUrl %>/" <% if (page_name === 'home') { %>class="current" <% } %>>Home</a></li>
 					<li><a href="<%= siteUrl %>/play" <% if (page_name === 'play' || page_name === 'game') { %>class="current" <% } %>>Play</a></li>
+					<li><a href="<%= siteUrl %>/about" <% if (page_name === 'about') { %>class="current" <% } %>>About</a></li>
 				</ul>
 			</div>
 		</div>

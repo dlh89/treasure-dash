@@ -1026,6 +1026,24 @@ body.body--modal-open {
   line-height: 1.1;
 }
 
+@media (max-width: 56.25em) {
+  .banner {
+    display: block;
+  }
+
+  .banner a {
+    display: block;
+    text-align: center;
+  }
+
+  .banner__logo {
+    margin-right: 0;
+  }
+
+  .banner__heading {
+    text-align: center;
+  }
+}
 .cta {
   position: relative;
   padding: 45px 52px;

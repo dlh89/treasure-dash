@@ -570,6 +570,11 @@ body {
   z-index: 100;
 }
 
+.modal--rules {
+  height: auto;
+  overflow: hidden;
+}
+
 .modal--small {
   width: auto;
   height: auto;
@@ -594,7 +599,6 @@ body.body--modal-open {
 }
 
 .modal__inner--slider {
-  overflow: hidden;
   padding: 0;
 }
 
@@ -636,7 +640,6 @@ body.body--modal-open {
 @media (max-width: 56.25em) {
   .modal {
     height: auto;
-    overflow: auto;
     width: 100%;
   }
 

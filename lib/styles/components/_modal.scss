@@ -11,6 +11,10 @@
   max-height: 90%;
   z-index: 100;
 }
+.modal--rules {
+  height: auto;
+  overflow: hidden;
+}
 
 .modal--small {
   width: auto;
@@ -36,7 +40,6 @@ body.body--modal-open
   padding-right: 87px;
 }
 .modal__inner--slider {
-	overflow: hidden; // TODO change to auto once flexslider has loaded?
   padding: 0;
 }
 
@@ -80,7 +83,6 @@ body.body--modal-open
 @include respond(tab-port) {
   .modal {
     height: auto;
-    overflow: auto;
     width: 100%;
   }
 

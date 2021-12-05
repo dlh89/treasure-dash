@@ -1079,20 +1079,16 @@ body.body--modal-open {
   padding: 38px 40px;
 }
 
-.cta__column--rules-image {
+.cta__column--rules-video {
   flex-basis: 50%;
   overflow: hidden;
   height: 100%;
   clip-path: polygon(9% 0, 100% 0, 100% 101%, 0 101%);
 }
 
-.cta__column--rules-image img {
+.cta video {
   display: block;
-}
-
-.cta__column--rules-image img {
-  width: auto;
-  min-height: 400px;
+  width: 480px;
 }
 
 .cta__heading {
@@ -1150,7 +1146,7 @@ body.body--modal-open {
   }
 
   .cta__column--rules-text,
-.cta__column--rules-image {
+.cta__column--rules-video {
     width: 100%;
     clip-path: polygon(0 9%, 100% 0, 100% 100%, 0 100%);
   }
@@ -1159,9 +1155,8 @@ body.body--modal-open {
     padding: 34px 24px 8px 34px;
   }
 
-  .cta__column--rules-image img {
+  .cta__column--rules-video video {
     width: 100%;
-    min-height: auto;
   }
 }
 .footer {

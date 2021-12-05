@@ -82,7 +82,6 @@ function openModal(e, modalId = false)
     globals.modals.focusedElementBeforeOpened = document.activeElement;
     var associatedModal = jQuery('[data-modal-id=' + modalId + ']');
 
-    maybeInitFlexslider(associatedModal);
 
     associatedModal.addClass('modal--active');
     globals.modals.element = associatedModal;
@@ -107,6 +106,8 @@ function openModal(e, modalId = false)
 
     var modalContent = jQuery(globals.modals.element).find('.js-modal-content');
     modalContent.focus();
+
+    maybeInitFlexslider(associatedModal);
 }
 
 /**
@@ -156,29 +157,9 @@ function initFlexslider()
         directionNav: false,
         start: function() {
             jQuery('.js-rules-modal').css('opacity', '1');
-            equaliseRulesTextHeight();
         }
     });
 
-}
-
-function equaliseRulesTextHeight()
-{
-    var rulesTexts = jQuery('.js-rules-text');
-    var maxHeight = 0;
-
-    // find the tallest text
-    rulesTexts.each(function(i, rulesText) {
-        var height = jQuery(rulesText).height();
-        if (height > maxHeight) {
-            maxHeight = height;
-        }
-    })
-
-    // set all texts to the height of the tallest
-    rulesTexts.each(function(i, rulesText) {
-        jQuery(rulesText).height(maxHeight);
-    })
 }
 
 window.openModal = openModal;

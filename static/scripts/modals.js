@@ -108,6 +108,8 @@ function openModal(e, modalId = false)
     modalContent.focus();
 
     maybeInitFlexslider(associatedModal);
+
+    maybeFocusForm(associatedModal);
 }
 
 /**
@@ -125,6 +127,21 @@ function maybeInitFlexslider(associatedModal)
             globals.isFlexSliderInitialised = true;
             initFlexslider(); // flexslider can't be initialised while hidden
         }
+    }
+}
+
+/**
+ * If the modal has a form then focus the first input
+ *
+ * @param {object} associatedModal jQuery object of the modal div
+ */
+function maybeFocusForm(associatedModal)
+{
+    var form = associatedModal.find('form');
+    if (form.length)
+    {
+        var inputs = form.find('input');
+        jQuery(inputs.first()).trigger('focus');
     }
 }
 

@@ -156,6 +156,7 @@ GAME_NS.on('connection', function(socket) {
       activePlayerSocket.to(socketRoom.name).emit('msg', 'Your opponent has been chosen to go first.');
       activePlayerSocket.emit('activePlayer');
       activePlayerSocket.to(socketRoom.name).emit('activeOpponent');
+      GAME_NS.in(socketRoom.name).emit('logMsg', `${socketRoomUser.name} has been chosen to go first`);
     } else if (socketRoom.users.length == PLAYERS_PER_GAME) {
       socket.emit('msg', 'Waiting for your opponent to pick a starting position.')
     }
@@ -205,6 +206,7 @@ GAME_NS.on('connection', function(socket) {
 
       socket.to(socketRoom.name).emit('msg', `${socketRoomUser.name} has left the room.`);
       socket.to(socketRoom.name).emit('playerDisconnect', { name: socketRoomUser.name, id: socketRoomUser.id });
+      GAME_NS.in(socketRoom.name).emit('logMsg', `${socketRoomUser.name} left the room`);
 
       resetGame(socketRoom);
     }
@@ -239,6 +241,8 @@ GAME_NS.on('connection', function(socket) {
               'coordinates' : socketRoomUser.pos
             }
             GAME_NS.in(socketRoom.name).emit('playerWin', winner);
+            GAME_NS.in(socketRoom.name).emit('logMsg', `${winner.winnerName} found the treasure!`);
+            GAME_NS.in(socketRoom.name).emit('logMsg', '------------------------');
             setTimeout(() => {
               resetGame(socketRoom);
             }, RESET_GAME_TIMEOUT_MS);
@@ -261,6 +265,7 @@ GAME_NS.on('connection', function(socket) {
             // Remove the specialItem from the room
             const specialItemIndex = socketRoom.specialItemCells.indexOf(specialItem);
             socketRoom.specialItemCells.splice(specialItemIndex, 1);
+            GAME_NS.in(socketRoom.name).emit('logMsg', `${socketRoomUser.name} found a special item!`);
 
             switch(specialItem.type) {
               case 'extraTurn':
@@ -274,6 +279,7 @@ GAME_NS.on('connection', function(socket) {
                 break;
             }
           } else {
+            GAME_NS.in(socketRoom.name).emit('logMsg', `${socketRoomUser.name} dug but found nothing!`);
             switchPlayerTurn(socketRoom);
             updateTurnText(socket, socketRoom);
           }
@@ -578,8 +584,7 @@ function rollDice(socketRoom, socket) {
   socketRoomUser.roll = roll + 1;
 
   activePlayerSocket = getSocketFromID(activePlayerID);
-  activePlayerSocket.emit('logMsg', `You rolled a ${socketRoomUser.roll}`);
-  activePlayerSocket.to(socketRoom.name).emit('logMsg', `Your opponent rolled a ${socketRoomUser.roll}`)
+  GAME_NS.in(socketRoom.name).emit('logMsg', `${socketRoomUser.name} rolled a ${socketRoomUser.roll}`);
   activePlayerSocket.emit('roll', {roll: socketRoomUser.roll, isOpponentRoll: false});
   activePlayerSocket.to(socketRoom.name).emit('roll', {roll: socketRoomUser.roll, isOpponentRoll: true});
 }

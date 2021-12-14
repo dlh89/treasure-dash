@@ -1,0 +1,15 @@
+.items {
+    background-color: $color-light-grey;
+    color: #000;
+}
+
+.items__btn {
+    font-family: $font-headings;
+    font-size: 2.6rem;
+    padding: 7px;
+    cursor: pointer;
+    background-color: $color-orange;
+    border: 1px solid $color-grey;
+    width: 257px;
+    max-width: 100%;
+}

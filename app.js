@@ -15,7 +15,7 @@ const COL_COUNT = 10;
 const SPECIAL_ITEMS = [
   {
     'type': 'extraTurn',
-    'count': 3 
+    'count': 2 
   },
   {
     'type': 'treasureRow',
@@ -27,7 +27,7 @@ const SPECIAL_ITEMS = [
   },
   {
     'type': 'swapPosition',
-    'count': 1 
+    'count': 2
   },
 ];
 const PLAYERNAME_MAX_LENGTH = 10;
@@ -313,6 +313,7 @@ GAME_NS.on('connection', function(socket) {
       socket.broadcast.emit('splashMsg', {closeness: 'cold', msg: `${socketRoomUser.name} used a special item to switch position with you!`});
       socket.emit('splashMsg', {closeness: 'success', msg: `You switched positions with ${opponentSocketRoomUser.name}!`});
       switchPlayerTurn(socketRoom);
+      updateTurnText(socket, socketRoomUser);
     }
   });
 
@@ -585,11 +586,11 @@ function getUserByName(playerName, socketRoom) {
 
 function updateTurnText(socket, socketRoom) {
   if (socketRoom.playerTurn === socket.id) {
-    socket.emit('msg', 'It\'s your turn!');    
-    socket.to(socketRoom.name).emit('msg', 'It\'s your opponent\'s turn.');    
+    socket.emit('msg', 'It\'s your turn!');  
+    socket.broadcast.emit('msg', 'It\'s your opponent\'s turn.');    
   } else {
-    socket.emit('msg', 'It\'s your opponent\'s turn.');
-    socket.to(socketRoom.name).emit('msg', 'It\'s your turn!');    
+    socket.broadcast.emit('msg', 'It\'s your turn!');  
+    socket.emit('msg', 'It\'s your opponent\'s turn.');    
   }
 }
 

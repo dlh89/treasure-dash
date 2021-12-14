@@ -24,7 +24,7 @@
                     <span>Dig</span>
                   </div>
                 </button>
-                <button class="turn-choice__btn turn-choice__btn--item js-choose-item">
+                <button class="turn-choice__btn turn-choice__btn--item js-open-modal-btn js-choose-item" data-associated-modal-id="items-modal">
                   <div>
                     <span>Use item</span>
                   </div>
@@ -202,5 +202,6 @@
     <button class="rules-button js-open-modal-btn js-open-rules-modal-btn" data-associated-modal-id="rules-modal">Rules</button>
     <div class="js-room-name" data-room-name="<%= room_name %>" hidden></div>
     <%- include( 'partials/player-name-modal.ejs' ) %>
+    <%- include( 'partials/items-modal.ejs' ) %>
     <%- include( 'partials/rules-modal.ejs' ) %>
 <%- include( 'partials/footer.ejs' ) %>

@@ -2,7 +2,11 @@ global = {
   gameLive: false,
   preGame: false, // the time when players pick starting positions
   playerItems: {
-    swapPosition: 0,
+    swapPosition: {
+      name: 'Swap positions',
+      quantity: 0,
+      classSelector: '.js-swap-positions',
+    },
   },
 }
 
@@ -17,6 +21,13 @@ sidebarTabButtons.on('click', changeSidebarTab);
 var sendChatBtn = jQuery('.js-send-chat');
 var chatForm = jQuery('.js-chat-form');
 chatForm.on('submit', sendChat);
+
+jQuery('.js-swap-positions').on('click', function() {
+  global.playerItems.swapPosition.quantity--;
+  window.closeModal();
+  jQuery('.turn-choice').attr('disabled', true);
+  socket.emit('choosePositionSwap');
+});
 
 function cellClick(e) {
   var row = jQuery(e.target).data('row');
@@ -256,7 +267,8 @@ socket.on('specialTreasureCol', function(data) {
 socket.on('specialSwapPosition', function(data) {
   splashMsg('success', data.playerMsg);
   msgBoxText(data.playerMsg);
-  global.playerItems.swapPosition++;
+  global.playerItems.swapPosition.quantity++;
+  updateItemsModal();
 });
 
 socket.on('playerWin', function(data) {
@@ -324,18 +336,11 @@ function initHandleTurnChoice() {
   jQuery('.js-choose-dig').on('click', function() {
     socket.emit('chooseDig');
   });
-  jQuery('.js-choose-item').on('click', function() {
-    // TODO open the menu
-    // TODO for now let's just use the item
-    jQuery('.turn-choice').attr('disabled', true);
-    socket.emit('choosePositionSwap');
-  });
 }
 
 function removeHandleTurnChoice() {
   jQuery('.js-choose-roll').unbind('click');
   jQuery('.js-choose-dig').unbind('click');
-  jQuery('.js-choose-item').unbind('click');
 }
 
 /**
@@ -395,7 +400,6 @@ function renderDig(row, col, success = false, specialItem = false) {
 }
 
 function updatePlayerPosition(row, col, isOpponentMove = false) {
-  
   var gridClass = 'grid__cell--current';
   if (isOpponentMove) {
     var gridClass = 'grid__cell--opponent-current';
@@ -451,6 +455,10 @@ function resetGame() {
   ];
   gridCells.removeClass(gridClasses);
 
+  jQuery.each(global.playerItems, function(i, item) {
+    item.quantity = 0;
+  });
+
   jQuery('.turn-choice').attr('disabled', true);
 
   jQuery('.grid__treasure-dimension').removeClass('grid__treasure-dimension');
@@ -499,8 +507,8 @@ function maybeDisableItemBtn() {
 function hasItems() {
   var hasItems = false;
 
-  jQuery.each(global.playerItems, function(key, value) {
-    if (value) {
+  jQuery.each(global.playerItems, function(key, item) {
+    if (item.quantity) {
       hasItems = true;
       return false; // break the loop
     }
@@ -546,4 +554,16 @@ function sendChat(e) {
     chatInput.val(''); // clear the input
     socket.emit('sendChat', message);
   }
+}
+
+function updateItemsModal() {
+  jQuery.each(global.playerItems, function(i, item) {
+    var itemElem = jQuery(item.classSelector);
+    if (item.quantity) {
+      itemElem.show();
+      itemElem.text(item.name + ' x' + item.quantity);
+    } else {
+      itemElem.hide();
+    }
+  });
 }

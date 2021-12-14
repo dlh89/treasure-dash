@@ -1,6 +1,9 @@
 global = {
   gameLive: false,
-  preGame: false // the time when players pick starting positions
+  preGame: false, // the time when players pick starting positions
+  playerItems: {
+    swapPosition: 0,
+  },
 }
 
 var socket = io('/game');
@@ -196,6 +199,7 @@ socket.on('activePlayer', function() {
   scoreboard.removeClass('scoreboard--active-opponent');
   scoreboard.addClass('scoreboard--active-player');
   maybeDisableDigBtn();
+  maybeDisableItemBtn();
 });
 
 socket.on('activeOpponent', function() {
@@ -247,6 +251,12 @@ socket.on('specialTreasureCol', function(data) {
   msgBoxText(data.playerMsg);
   var treasureRowCells = jQuery("[data-col='" + data.col + "']");
   treasureRowCells.addClass('grid__treasure-dimension');
+});
+
+socket.on('specialSwapPosition', function(data) {
+  splashMsg('success', data.playerMsg);
+  msgBoxText(data.playerMsg);
+  global.playerItems.swapPosition++;
 });
 
 socket.on('playerWin', function(data) {
@@ -314,11 +324,18 @@ function initHandleTurnChoice() {
   jQuery('.js-choose-dig').on('click', function() {
     socket.emit('chooseDig');
   });
+  jQuery('.js-choose-item').on('click', function() {
+    // TODO open the menu
+    // TODO for now let's just use the item
+    jQuery('.turn-choice').attr('disabled', true);
+    socket.emit('choosePositionSwap');
+  });
 }
 
 function removeHandleTurnChoice() {
   jQuery('.js-choose-roll').unbind('click');
   jQuery('.js-choose-dig').unbind('click');
+  jQuery('.js-choose-item').unbind('click');
 }
 
 /**
@@ -467,6 +484,29 @@ function maybeDisableDigBtn() {
   } else {
     digBtn.attr('disabled', false);
   }
+}
+
+function maybeDisableItemBtn() {
+  var itemBtn = jQuery('.js-choose-item');
+  var playerHasItems = hasItems();
+  if (playerHasItems) {
+    itemBtn.attr('disabled', false);
+  } else {
+    itemBtn.attr('disabled', true);
+  }
+}
+
+function hasItems() {
+  var hasItems = false;
+
+  jQuery.each(global.playerItems, function(key, value) {
+    if (value) {
+      hasItems = true;
+      return false; // break the loop
+    }
+  });
+
+  return hasItems;
 }
 
 function clearActionBox() {

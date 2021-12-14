@@ -24,7 +24,11 @@ const SPECIAL_ITEMS = [
   {
     'type': 'treasureCol',
     'count': 1 
-  }
+  },
+  {
+    'type': 'swapPosition',
+    'count': 1 
+  },
 ];
 const PLAYERNAME_MAX_LENGTH = 10;
 const RESET_GAME_TIMEOUT_MS = 5000;
@@ -277,6 +281,9 @@ GAME_NS.on('connection', function(socket) {
               case 'treasureCol':
                 specialTreasureCol(socket, socketRoom);
                 break;
+              case 'swapPosition':
+                specialSwapPosition(socket, socketRoom);
+                break;
             }
           } else {
             GAME_NS.in(socketRoom.name).emit('logMsg', `${socketRoomUser.name} dug but found nothing!`);
@@ -287,6 +294,25 @@ GAME_NS.on('connection', function(socket) {
       } else {
           socket.emit('msg', 'That position has already been dug up!');
       }
+    }
+  });
+
+  socket.on('choosePositionSwap', function() {
+    const socketRoom = getSocketRoom(socket);
+    const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
+
+    if (socketRoomUser.specialItems.swapPosition) {
+      socketRoomUser.specialItems.swapPosition--;
+      const opponentSocketRoomUser = getInactivePlayer(socketRoom);
+      const playerCurrentPos = socketRoomUser.pos;
+      emitPositionUpdates(opponentSocketRoomUser, playerCurrentPos);
+      emitPositionUpdates(socketRoomUser, opponentSocketRoomUser.pos);
+      socketRoomUser.pos = opponentSocketRoomUser.pos;
+      opponentSocketRoomUser.pos = playerCurrentPos;
+
+      socket.broadcast.emit('splashMsg', {closeness: 'cold', msg: `${socketRoomUser.name} used a special item to switch position with you!`});
+      socket.emit('splashMsg', {closeness: 'success', msg: `You switched positions with ${opponentSocketRoomUser.name}!`});
+      switchPlayerTurn(socketRoom);
     }
   });
 
@@ -356,7 +382,10 @@ function joinRoom(socket, room, playerName) {
   const newUser = {
     id: socket.id,
     name: playerName,
-    pos: null
+    pos: null,
+    specialItems: {
+      swapPosition: 0,
+    }
   }
   room.users.push(newUser); // add user to that room
   socket.join(room.name);
@@ -511,7 +540,7 @@ function switchPlayerTurn(socketRoom) {
 }
 
 /**
- * Get the player who's turn it isn't
+ * Get the player whose turn it isn't
  * @param {*} socketRoom 
  */
 function getInactivePlayer(socketRoom) {
@@ -655,12 +684,24 @@ function specialTreasureCol(socket, socketRoom) {
   updateTurnText(socket, socketRoom);
 }
 
+function specialSwapPosition(socket, socketRoom) {
+  socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
+  socketRoomUser.specialItems.swapPosition++;
+  const playerMsg = 'You got a position swap! You can use it when it\'s your turn';
+  socket.emit('specialSwapPosition', {playerMsg: playerMsg});
+  switchPlayerTurn(socketRoom);
+  updateTurnText(socket, socketRoom);
+}
+
 function resetGame(socketRoom) {
   socketRoom.treasureCoordinates = null;
   socketRoom.playerTurn = null;
   socketRoom.users.forEach(socketRoomUser => {
     socketRoomUser.pos = null;
     socketRoomUser.roll = null;
+    socketRoomUser.specialItems = {
+      swapPosition: 0,
+    };
   });
   GAME_NS.in(socketRoom.name).emit('resetGame');
 }

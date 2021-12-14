@@ -7,14 +7,21 @@
     float: left;
     font-family: inherit;
     font-size: 20px;
-    height: 140px;
+    height: 92px;
     width: calc(50% - 1px);
     padding: 10px 14px;
     border: none;
     background-color: $color-orange;
 }
+.turn-choice__btn--item
+{
+    float: none;
+    height: 45px;
+    width: 100%;
+    margin-top: 2px;
+}
 
-.turn-choice__btn:not(:last-child)
+.turn-choice__btn:first-child
 {
     margin-right: 2px;
 }

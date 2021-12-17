@@ -29,6 +29,10 @@ const SPECIAL_ITEMS = [
     'type': 'swapPosition',
     'count': 2
   },
+  {
+    'type': 'teleport',
+    'count': 1
+  },
 ];
 const PLAYERNAME_MAX_LENGTH = 10;
 const RESET_GAME_TIMEOUT_MS = 5000;
@@ -166,34 +170,41 @@ GAME_NS.on('connection', function(socket) {
     }
   });
 
-  socket.on('clientMove', function(coordinates) {
+  socket.on('clientMove', function(coordinates, isTeleport = false) {
     const socketRoom = getSocketRoom(socket);
 
     // check if it's their turn
     if (isPlayersTurn(socketRoom, socket.id)) {
       const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
-
-      if (socketRoomUser.roll)
-      {
-        // check move is in range
-        const isValidMove = getIsValidMove(socketRoomUser.pos, coordinates, socketRoomUser.roll)
-        if (!isValidMove) { 
-          const msgText = `Invalid move! You only rolled a ${socketRoomUser.roll}.`;
-          socket.emit('msg', msgText);
-        } else {
-          // update their position
-          socketRoomUser.pos = coordinates;
-      
-          const closeness = getCloseness(socketRoom, coordinates); 
-          emitPositionUpdates(socketRoomUser, coordinates);
-          
-          // only send closeness to the player
-          socket.emit('closenessMsg', {'closeness': closeness});
-    
-          switchPlayerTurn(socketRoom);
-          updateTurnText(socket, socketRoom);
-        }
+      let isValidMove = false;
+      // check move is in range
+      if (isTeleport) {
+        socketRoomUser.specialItems.teleport--;
+        isValidMove = true;
+      } else {
+        isValidMove = getIsValidMove(socketRoomUser.pos, coordinates, socketRoomUser.roll)
       }
+      if (!isValidMove) { 
+        const msgText = `Invalid move! You only rolled a ${socketRoomUser.roll}.`;
+        socket.emit('msg', msgText);
+        return;
+      }
+
+      // update their position
+      socketRoomUser.pos = coordinates;
+        
+      const closeness = getCloseness(socketRoom, coordinates); 
+      emitPositionUpdates(socketRoomUser, coordinates);
+      
+      // only send closeness to the player
+      socket.emit('closenessMsg', {'closeness': closeness});
+
+      if (isTeleport) {
+        socket.broadcast.emit('splashMsg', {closeness: 'cold', msg: `${socketRoomUser.name} teleported to a new position!`});
+      }
+
+      switchPlayerTurn(socketRoom);
+      updateTurnText(socket, socketRoom);
     } else {
       socket.emit('msg', 'Wait for your turn!');
     }
@@ -283,6 +294,9 @@ GAME_NS.on('connection', function(socket) {
                 break;
               case 'swapPosition':
                 specialSwapPosition(socket, socketRoom);
+                break;
+              case 'teleport':
+                specialTeleport(socket, socketRoom);
                 break;
             }
           } else {
@@ -590,7 +604,7 @@ function updateTurnText(socket, socketRoom) {
     socket.broadcast.emit('msg', 'It\'s your opponent\'s turn.');    
   } else {
     socket.broadcast.emit('msg', 'It\'s your turn!');  
-    socket.emit('msg', 'It\'s your opponent\'s turn.');    
+    socket.emit('msg', 'It\'s your opponent\'s turn.');
   }
 }
 
@@ -690,6 +704,15 @@ function specialSwapPosition(socket, socketRoom) {
   socketRoomUser.specialItems.swapPosition++;
   const playerMsg = 'You got a position swap! You can use it when it\'s your turn';
   socket.emit('specialSwapPosition', {playerMsg: playerMsg});
+  switchPlayerTurn(socketRoom);
+  updateTurnText(socket, socketRoom);
+}
+
+function specialTeleport(socket, socketRoom) {
+  socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
+  socketRoomUser.specialItems.swapPosition++;
+  const playerMsg = 'You got a teleport! You can use it when it\'s your turn';
+  socket.emit('specialTeleport', {playerMsg: playerMsg});
   switchPlayerTurn(socketRoom);
   updateTurnText(socket, socketRoom);
 }

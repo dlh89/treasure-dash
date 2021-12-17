@@ -1212,6 +1212,8 @@ body.body--modal-open {
 }
 
 .items__btn {
+  display: block;
+  margin-bottom: 10px;
   font-family: "Pirata One", cursive;
   font-size: 2.6rem;
   padding: 7px;

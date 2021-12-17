@@ -7,7 +7,13 @@ global = {
       quantity: 0,
       classSelector: '.js-swap-positions',
     },
+    teleport: {
+      name: 'Teleport',
+      quantity: 0,
+      classSelector: '.js-teleport',
+    },
   },
+  isTeleporting: false,
 }
 
 var socket = io('/game');
@@ -24,16 +30,35 @@ chatForm.on('submit', sendChat);
 
 jQuery('.js-swap-positions').on('click', function() {
   global.playerItems.swapPosition.quantity--;
+  updateItemsModal();
   window.closeModal();
   jQuery('.turn-choice').attr('disabled', true);
   socket.emit('choosePositionSwap');
+});
+
+jQuery('.js-teleport').on('click', function() {
+  global.playerItems.teleport.quantity--;
+  updateItemsModal();
+  window.closeModal();
+  jQuery('.turn-choice').attr('disabled', true);
+  var currentCell = jQuery('.grid__cell--current');
+  var gridCells = jQuery('.grid__cell');
+  gridCells.addClass('grid__cell--reachable');
+  currentCell.removeClass('grid__cell--reachable');
+  jQuery('.grid').addClass('turn-active');
+  global.isTeleporting = true;
 });
 
 function cellClick(e) {
   var row = jQuery(e.target).data('row');
   var col = jQuery(e.target).data('col');
   if (global.gameLive) {
-    socket.emit('clientMove', {'row': row, 'col': col});
+    var isTeleporting = false;
+    if (global.isTeleporting) {
+      global.isTeleporting = false;
+      isTeleporting = true;
+    }
+    socket.emit('clientMove', {'row': row, 'col': col}, isTeleporting);
   } else if (global.preGame) {
     var gridHighlight = jQuery('.grid__highlight');
     gridHighlight.hide();
@@ -270,6 +295,14 @@ socket.on('specialSwapPosition', function(data) {
   global.playerItems.swapPosition.quantity++;
   updateItemsModal();
 });
+
+socket.on('specialTeleport', function(data) {
+  splashMsg('success', data.playerMsg);
+  msgBoxText(data.playerMsg);
+  global.playerItems.teleport.quantity++;
+  updateItemsModal();
+});
+
 
 socket.on('playerWin', function(data) {
   var successMsg = data.winnerName + ' has won the game!';

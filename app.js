@@ -172,10 +172,10 @@ GAME_NS.on('connection', function(socket) {
 
   socket.on('clientMove', function(coordinates, isTeleport = false) {
     const socketRoom = getSocketRoom(socket);
+    const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
 
     // check if it's their turn
-    if (isPlayersTurn(socketRoom, socket.id)) {
-      const socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
+    if (isPlayersTurn(socketRoom, socket.id) && (socketRoomUser.roll || isTeleport)) {
       let isValidMove = false;
       // check move is in range
       if (isTeleport) {
@@ -193,7 +193,8 @@ GAME_NS.on('connection', function(socket) {
       // update their position
       socketRoomUser.pos = coordinates;
         
-      const closeness = getCloseness(socketRoom, coordinates); 
+      const closeness = getCloseness(socketRoom, coordinates);
+      socketRoomUser.roll = null;
       emitPositionUpdates(socketRoomUser, coordinates);
       
       // only send closeness to the player

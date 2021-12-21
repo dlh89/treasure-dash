@@ -16,11 +16,8 @@ global = {
   isTeleporting: false,
 }
 
+jQuery('.grid__cell').on('click', cellClick);
 var socket = io('/game');
-
-var cells = jQuery('.grid__cell');
-jQuery(cells).on('click', cellClick);
-
 var sidebarTabButtons = jQuery('.js-sidebar-tab-button');
 sidebarTabButtons.on('click', changeSidebarTab);
 
@@ -47,6 +44,7 @@ jQuery('.js-teleport').on('click', function() {
   currentCell.removeClass('grid__cell--reachable');
   jQuery('.grid').addClass('turn-active');
   global.isTeleporting = true;
+  jQuery('.grid__cell').on('click', cellClick);
 });
 
 function cellClick(e) {
@@ -139,6 +137,7 @@ socket.on('preGame', function() {
 socket.on('gameStart', function(specialItemCells) {
   global.preGame = false; 
   global.gameLive = true;
+  jQuery('.grid__cell').off();
 
   jQuery.each(specialItemCells, function(i, specialItemCell) {
     renderSpecialItemCell(specialItemCell.position)
@@ -221,7 +220,19 @@ socket.on('splashMsg',function(data) {
 });
 
 socket.on('updatePlayerPosition', function(data) {
-  updatePlayerPosition(data.coordinates.row, data.coordinates.col, data.isOpponentMove);
+  var gridClass = 'grid__cell--current';
+  if (data.isOpponentMove) {
+    var gridClass = 'grid__cell--opponent-current';
+  } else {
+    jQuery('.grid__cell').off();
+    jQuery('.grid').removeClass('turn-active');
+  }
+  var currentCell = jQuery('.' + gridClass);
+  if (currentCell.length) {
+    currentCell.removeClass(gridClass);
+  }
+  var currentCell = jQuery('[data-row=' + data.coordinates.row + '][data-col=' + data.coordinates.col + ']');
+  currentCell.addClass(gridClass);
 });
 
 socket.on('activePlayer', function() {
@@ -260,6 +271,7 @@ socket.on('roll', function(data) {
   } else {
     actionBox.text(`You rolled a ${roll}`);
     addReachableClasses(roll);
+    jQuery('.grid__cell').on('click', cellClick);
   }
 
   var dice = jQuery('.action-box__die');
@@ -432,21 +444,6 @@ function renderDig(row, col, success = false, specialItem = false) {
   digCell.addClass(gridClass);
 }
 
-function updatePlayerPosition(row, col, isOpponentMove = false) {
-  var gridClass = 'grid__cell--current';
-  if (isOpponentMove) {
-    var gridClass = 'grid__cell--opponent-current';
-  } else {
-    jQuery('.grid').removeClass('turn-active');
-  }
-  var currentCell = jQuery('.' + gridClass);
-  if (currentCell.length) {
-    currentCell.removeClass(gridClass);
-  }
-  var currentCell = jQuery('[data-row=' + row + '][data-col=' + col + ']');
-  currentCell.addClass(gridClass);
-}
-
 function removeActiveClasses() {
   var previouslyActivePlayer = jQuery('.grid__cell--active');
   var previouslyActiveOpponent = jQuery('.grid__cell--opponent-active');
@@ -505,6 +502,8 @@ function resetGame() {
   var scoreboard = jQuery('.scoreboard');
   scoreboard.removeClass('scoreboard--active-opponent');
   scoreboard.removeClass('scoreboard--active-player');
+
+  jQuery('.grid__cell').on('click', cellClick);
 
   socket.emit('playAgain');
 }

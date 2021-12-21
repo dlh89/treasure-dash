@@ -45,6 +45,7 @@ jQuery('.js-teleport').on('click', function() {
   jQuery('.grid').addClass('turn-active');
   global.isTeleporting = true;
   jQuery('.grid__cell').on('click', cellClick);
+  jQuery('.js-action-box-text').text('You\'re teleporting! Click on the cell you wish to move to.');
 });
 
 function cellClick(e) {

@@ -481,6 +481,7 @@ body {
   padding: 10px 14px;
   border: none;
   background-color: #ffbc00;
+  color: #000000;
 }
 
 .turn-choice__btn--item {

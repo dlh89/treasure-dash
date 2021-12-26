@@ -407,7 +407,7 @@ function joinRoom(socket, room, playerName) {
   socket.join(room.name);
 
   // send message to the client
-  socket.emit('logMsg', `You have joined '${room.name}`);
+  socket.emit('logMsg', `You have joined '${room.name}'`);
   socket.emit('logMsg', `Your player name is ${playerName}`);
 
   // populate the player names

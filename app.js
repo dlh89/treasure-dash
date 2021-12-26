@@ -636,7 +636,7 @@ function rollDice(socketRoom, socket) {
 
 function getSocketFromID(socketID)
 {
-  const socket = GAME_NS.sockets[socketID];
+  const socket = GAME_NS.sockets.get(socketID);
   return socket;
 }
 

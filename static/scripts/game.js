@@ -45,7 +45,7 @@ jQuery('.js-teleport').on('click', function() {
   jQuery('.grid').addClass('turn-active');
   global.isTeleporting = true;
   jQuery('.grid__cell').on('click', cellClick);
-  jQuery('.js-action-box-text').text('You\'re teleporting! Click on the cell you wish to move to.');
+  msgBoxText('You\'re teleporting! Click on the cell you wish to move to.');
 });
 
 function cellClick(e) {
@@ -123,7 +123,7 @@ socket.on('opponentJoin', function(player) {
   scoreboardOpponentElem.attr('data-player-id', player.id);
 
   var splashText = player.name + ' has joined the game!';
-  splashMsg('warm', splashText);
+  splashMsg('success', splashText);
 });
 
 socket.on('preGame', function() {
@@ -167,11 +167,6 @@ socket.on('chatMsg', function(msg) {
   var chatHistory = chatTab.find('.sidebar__text--history');
   chatHistory.prepend(chatText.html()); 
   chatText.html('<p>' + msg + '</p>'); 
-});
-
-socket.on('clearMsg', function(msg) {
-  var msgBoxText = jQuery('.js-msg-box-text');
-  msgBoxText.text('');
 });
 
 socket.on('serverDig', function(data) {
@@ -221,6 +216,9 @@ socket.on('splashMsg',function(data) {
 });
 
 socket.on('updatePlayerPosition', function(data) {
+  if (!data.preserveActionBox) {
+    clearActionBox();
+  }
   var gridClass = 'grid__cell--current';
   if (data.isOpponentMove) {
     var gridClass = 'grid__cell--opponent-current';
@@ -237,7 +235,6 @@ socket.on('updatePlayerPosition', function(data) {
 });
 
 socket.on('activePlayer', function() {
-  clearActionBox();
   removeActiveClasses();
   var currentCell = jQuery('.grid__cell--current');
   currentCell.addClass('grid__cell--active');
@@ -251,7 +248,6 @@ socket.on('activePlayer', function() {
 });
 
 socket.on('activeOpponent', function() {
-  clearActionBox();
   removeActiveClasses();
   var currentCell = jQuery('.grid__cell--opponent-current');
   currentCell.addClass('grid__cell--opponent-active');
@@ -266,6 +262,7 @@ socket.on('roll', function(data) {
   var isOpponentRoll = data.isOpponentRoll;
   
   var actionBox = jQuery('.js-action-box-text');
+  actionBox.addClass('js-action-box-text--roll');
   
   if (isOpponentRoll) {
     actionBox.text(`Your opponent rolled a ${roll}`);
@@ -319,6 +316,7 @@ socket.on('specialTeleport', function(data) {
 
 socket.on('playerWin', function(data) {
   var successMsg = data.winnerName + ' has won the game!';
+  clearActionBox();
   splashMsg('success', successMsg);
 
   renderDig(data.coordinates.row, data.coordinates.col, true);
@@ -413,7 +411,7 @@ function addReachableClasses(roll) {
 }
 
 function msgBoxText(msg) {
-  var msgBoxText = jQuery('.js-msg-box-text');
+  var msgBoxText = jQuery('.js-action-box-text');
   msgBoxText.text(msg);
 }
 
@@ -496,7 +494,6 @@ function resetGame() {
 
   jQuery('.grid__special-item').remove();
 
-  jQuery('.js-msg-box-text').text('');
   removeHandleTurnChoice();
   clearActionBox();
 
@@ -552,6 +549,7 @@ function hasItems() {
 
 function clearActionBox() {
   var actionBox = jQuery('.js-action-box-text');
+  actionBox.removeClass('js-action-box-text--roll');
   actionBox.text('');
   var dice = jQuery('.action-box__die');
   dice.remove();

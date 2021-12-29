@@ -139,7 +139,8 @@ GAME_NS.on('connection', function(socket) {
     if (!socketRoomUser.pos)
     {
       socketRoomUser.pos = coordinates;
-      emitPositionUpdates(socketRoomUser, coordinates);
+      const preserveActionBox = true;
+      emitPositionUpdates(socketRoomUser, coordinates, preserveActionBox);
   
       const closeness = getCloseness(socketRoom, coordinates);
       socket.emit('closenessMsg', {'closeness': closeness});
@@ -602,10 +603,8 @@ function getUserByName(playerName, socketRoom) {
 function updateTurnText(socket, socketRoom) {
   if (socketRoom.playerTurn === socket.id) {
     socket.emit('msg', 'It\'s your turn!');  
-    socket.broadcast.emit('msg', 'It\'s your opponent\'s turn.');    
   } else {
     socket.broadcast.emit('msg', 'It\'s your turn!');  
-    socket.emit('msg', 'It\'s your opponent\'s turn.');
   }
 }
 
@@ -658,11 +657,11 @@ function getIsValidMove(currentPos, newPos, roll) {
   return false;
 }
 
-function emitPositionUpdates(socketRoomUser, coordinates) {
+function emitPositionUpdates(socketRoomUser, coordinates, preserveActionBox = false) {
   const activeSocket = getSocketFromID(socketRoomUser.id);
   const socketRoom = getSocketRoom(socketRoomUser);
-  activeSocket.emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': false});
-  activeSocket.to(socketRoom.name).emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': true});
+  activeSocket.emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': false, preserveActionBox});
+  activeSocket.to(socketRoom.name).emit('updatePlayerPosition', {'coordinates' : coordinates, 'isOpponentMove': true, preserveActionBox});
 }
 
 function isPlayersTurn(socketRoom, playerId) {

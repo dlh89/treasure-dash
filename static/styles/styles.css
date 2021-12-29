@@ -521,7 +521,7 @@ body {
   float: left;
   position: relative;
   height: 100%;
-  width: 38%;
+  width: 50%;
   padding: 20px 25px;
   margin-bottom: 20px;
   background-color: #071E22;
@@ -530,16 +530,16 @@ body {
 
 .action-box__msg-box--buttons {
   padding: 0;
-  width: 24%;
   background-color: transparent;
 }
 
 .action-box__msg-box--roll {
   text-align: center;
+  font-size: 18px;
 }
 
 .action-box__die {
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 @media (max-width: 37.5em) {
@@ -558,7 +558,11 @@ body {
   }
 
   .action-box__msg-box--roll {
-    min-height: 124px;
+    min-height: 126px;
+  }
+
+  .js-action-box-text--roll {
+    font-size: 12.8px;
   }
 }
 .modal {

@@ -8,7 +8,7 @@
     float: left;
     position: relative;
     height: 100%;
-    width: 38%;
+    width: 50%;
     padding: $standard-padding;
     margin-bottom: 20px;
     background-color: $color-dark-grey;
@@ -16,15 +16,15 @@
 }
 .action-box__msg-box--buttons {
     padding: 0;
-    width: 24%;
     background-color: transparent;
 }
 .action-box__msg-box--roll {
     text-align: center;
+    font-size: 18px;
 }
 
 .action-box__die {
-    margin-top: 8px;
+    margin-top: 6px;
 }
 
 
@@ -45,6 +45,10 @@
     }
 
     .action-box__msg-box--roll {
-        min-height: 124px;
+        min-height: 126px;
+    }
+
+    .js-action-box-text--roll {
+        font-size: 12.8px;
     }
 }

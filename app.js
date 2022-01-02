@@ -182,6 +182,7 @@ GAME_NS.on('connection', function(socket) {
       if (isTeleport) {
         socketRoomUser.specialItems.teleport--;
         isValidMove = true;
+        GAME_NS.in(socketRoom.name).emit('logMsg', `${socketRoomUser.name} teleported to a new position!`);
       } else {
         isValidMove = getIsValidMove(socketRoomUser.pos, coordinates, socketRoomUser.roll)
       }
@@ -330,6 +331,7 @@ GAME_NS.on('connection', function(socket) {
       socket.emit('splashMsg', {closeness: 'success', msg: `You switched positions with ${opponentSocketRoomUser.name}!`});
       switchPlayerTurn(socketRoom);
       updateTurnText(socket, socketRoomUser);
+      GAME_NS.in(socketRoom.name).emit('logMsg', `${socketRoomUser.name} used a special item to swap positions with ${opponentSocketRoomUser.name}!`);
     }
   });
 
@@ -683,6 +685,8 @@ function specialExtraTurn(socket) {
   const opponentMsg = 'Your opponent got an extra turn!';
   socket.to(socketRoom.name).emit('splashMsg', {closeness: 'success', msg: opponentMsg});
   socket.to(socketRoom.name).emit('msg', opponentMsg);
+  socketRoomUser = getSocketRoomUser(socketRoom, socket.id);
+  GAME_NS.in(socketRoom.name).emit('logMsg', `${socketRoomUser.name} got an extra turn!`);
 }
 
 function specialTreasureRow(socket, socketRoom) {

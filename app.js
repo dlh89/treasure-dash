@@ -158,13 +158,14 @@ GAME_NS.on('connection', function(socket) {
       GAME_NS.in(socketRoom.name).emit('gameStart', socketRoom.specialItemCells);
       GAME_NS.in(socketRoom.name).emit('logMsg', 'The game is now live!');
       
-      const activePlayerSocket = getSocketFromID(socketRoom.playerTurn);    
+      const activePlayerSocket = getSocketFromID(socketRoom.playerTurn);
+      const activePlayerName = getPlayerNameByID(playerTurn.id, socketRoom);
 
       activePlayerSocket.emit('msg', 'You have been chosen to go first!');
       activePlayerSocket.to(socketRoom.name).emit('msg', 'Your opponent has been chosen to go first.');
       activePlayerSocket.emit('activePlayer');
       activePlayerSocket.to(socketRoom.name).emit('activeOpponent');
-      GAME_NS.in(socketRoom.name).emit('logMsg', `${socketRoomUser.name} has been chosen to go first`);
+      GAME_NS.in(socketRoom.name).emit('logMsg', `${activePlayerName} has been chosen to go first`);
     } else if (socketRoom.users.length == PLAYERS_PER_GAME) {
       socket.emit('msg', 'Waiting for your opponent to pick a starting position.')
     }
@@ -656,6 +657,16 @@ function getIsValidMove(currentPos, newPos, roll) {
   }
 
   return false;
+}
+
+function getPlayerNameByID(playerId, socketRoom) {
+  var player = socketRoom.users.find(function(user) {
+    return user.id === playerId;
+  });
+
+  var playerName = player.hasOwnProperty('name') ? player.name : '';
+
+  return playerName;
 }
 
 function emitPositionUpdates(socketRoomUser, coordinates, preserveActionBox = false) {

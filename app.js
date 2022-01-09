@@ -187,7 +187,7 @@ GAME_NS.on('connection', function(socket) {
       }
       if (!isValidMove) { 
         const msgText = `Invalid move! You only rolled a ${socketRoomUser.roll}.`;
-        socket.emit('msg', msgText);
+        socket.emit('invalidMsg', msgText);
         return;
       }
 

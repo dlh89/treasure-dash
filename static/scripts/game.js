@@ -153,6 +153,12 @@ socket.on('msg', function(msg) {
   msgBoxText(msg);
 });
 
+socket.on('invalidMsg', function(msg) {
+    var msgBoxText = jQuery('.js-action-box-text');
+    msgBoxText.addClass('action-box__roll-text--small');
+    msgBoxText.text(msg);
+});
+
 socket.on('logMsg', function(msg) {
   var logTab = jQuery('[data-tab="log"]');
   var logText = logTab.find('.sidebar__text')
@@ -264,7 +270,7 @@ socket.on('roll', function(data) {
   var isOpponentRoll = data.isOpponentRoll;
   
   var actionBox = jQuery('.js-action-box-text');
-  actionBox.addClass('js-action-box-text--roll');
+  actionBox.addClass('action-box__roll-text');
   
   if (isOpponentRoll) {
     actionBox.text(`Your opponent rolled a ${roll}`);
@@ -414,6 +420,8 @@ function addReachableClasses(roll) {
 
 function msgBoxText(msg) {
   var msgBoxText = jQuery('.js-action-box-text');
+  msgBoxText.removeClass('action-box__roll-text--small');
+  msgBoxText.removeClass('action-box__roll-text');
   msgBoxText.text(msg);
 }
 

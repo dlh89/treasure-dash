@@ -538,6 +538,10 @@ body {
   font-size: 18px;
 }
 
+.action-box__roll-text--small {
+  font-size: 16px;
+}
+
 .action-box__die {
   margin-top: 6px;
 }
@@ -561,7 +565,7 @@ body {
     min-height: 126px;
   }
 
-  .js-action-box-text--roll {
+  .action-box__roll-text {
     font-size: 12.8px;
   }
 }

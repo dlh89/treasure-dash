@@ -16,7 +16,6 @@ global = {
   isTeleporting: false,
 }
 
-jQuery('.grid__cell').on('click', cellClick);
 var socket = io('/game');
 var sidebarTabButtons = jQuery('.js-sidebar-tab-button');
 sidebarTabButtons.on('click', changeSidebarTab);
@@ -133,6 +132,9 @@ socket.on('preGame', function() {
 
   var roomLink = jQuery('.js-copy-link-block');
   roomLink.hide();
+
+  jQuery('.grid__cell').off(); // remove any existing listeners
+  jQuery('.grid__cell').on('click', cellClick);
 });
 
 socket.on('gameStart', function(specialItemCells) {
@@ -500,9 +502,6 @@ function resetGame() {
   var scoreboard = jQuery('.scoreboard');
   scoreboard.removeClass('scoreboard--active-opponent');
   scoreboard.removeClass('scoreboard--active-player');
-
-  jQuery('.grid__cell').on('click', cellClick);
-
   socket.emit('playAgain');
 }
 

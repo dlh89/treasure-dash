@@ -118,7 +118,6 @@ FIND_ROOM_NS.on('connection', function(socket) {
 
 GAME_NS.on('connection', function(socket) {
   socket.emit('connection');
-  console.log('user connected:' + socket.id);
 
   socket.on('joinRoom', function(roomName, playerName) {
     if (!playerName || playerName.length > PLAYERNAME_MAX_LENGTH) {
